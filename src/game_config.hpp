@@ -1,6 +1,8 @@
 #ifndef GAME_CONFIG_HPP
 #define GAME_CONFIG_HPP
 
+#include "glm/vec2.hpp"
+
 /*
  *  Global config values for easy tweaking and changing
  */
@@ -14,5 +16,12 @@ static const float ACCELERATION_STEP = 0.2f;
 static const float DECELERATION_STEP = 0.15f;
 
 static const bool DEBUG = false; 
+
+static const float SPEED = 120;
+static const float VELOCITY_LOSS = 0.7;
+static const float GRAVITY = 10;
+static const float JUMP_SPEED = 400;
+static const glm::vec2 MAX_VELOCITY = glm::vec2(200.0f, 1000.0f);
+static const float MAX_JUMP = 1.5f;
 
 #endif

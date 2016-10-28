@@ -11,21 +11,21 @@
 #include <SDL2/SDL.h>
 
 class CollisionSystem : public entityx::System<CollisionSystem> {
-  public:
-    CollisionSystem() {
-    }
+    public:
+        CollisionSystem() { }
 
-    void update(entityx::EntityManager &es, entityx::EventManager &events, double dt) {
-        entityx::ComponentHandle<Position> first_position, second_position;
-        for (entityx::Entity first_entity : es.entities_with_components(first_position)) {
-            for (entityx::Entity second_entity : es.entities_with_components(second_position)) {
-                if (first_entity != second_entity &&
-                    SDL_HasIntersection(&first_position->rect(), &second_position->rect())) {
-                    events.emit<CollisionEvent>(first_entity, second_entity);
+        void update(entityx::EntityManager &es, entityx::EventManager &events, double dt) {
+            entityx::ComponentHandle<Position> firstPosition, secondPosition;
+            for (entityx::Entity firstEntity : es.entities_with_components(firstPosition)) {
+                for (entityx::Entity secondEntity : es.entities_with_components(secondPosition)) {
+                    // Todo
+                    (void) firstEntity;
+                    (void) secondEntity;
+                    (void) firstPosition;
+                    (void) secondPosition;
                 }
             }
         }
-    }
 };
 
 #endif

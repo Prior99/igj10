@@ -24,8 +24,7 @@ class DrawSystem : public entityx::System<DrawSystem> {
         SDL_DestroyTexture(m_drawtex);
     }
 
-    void update(entityx::EntityManager &es, entityx::EventManager &events,
-                entityx::TimeDelta dt) override {
+    void update(entityx::EntityManager &es, entityx::EventManager &events, entityx::TimeDelta dt) override {
 
         // Change to render into rendertexture for now
         SDL_SetRenderTarget(m_game->renderer(), m_drawtex);
@@ -40,8 +39,9 @@ class DrawSystem : public entityx::System<DrawSystem> {
             (void)entity;
 
             SDL_Rect dest;
-            dest.x = position->position()[0];
-            dest.y = position->position()[1];
+            auto pos = position->getPosition();
+            dest.x = pos[0];
+            dest.y = pos[1];
             dest.w = drawable->width();
             dest.h = drawable->height();
 
