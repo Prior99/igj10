@@ -2,6 +2,7 @@
 
 #include "components/drawable.hpp"
 #include "components/position.hpp"
+#include "components/light.hpp"
 #include "systems/collision.hpp"
 #include "systems/controls.hpp"
 #include "systems/draw.hpp"
@@ -24,7 +25,9 @@ int MainState::init() {
 
     entityx::Entity player = m_entities.create();
     player.assign<Position>(glm::vec2(300.f, 400.f));
-	player.assign<Drawable>("gradient", 100, 100);
+	player.assign<Drawable>("playerimg", 20, 20);
+    glm::i8vec3 testcolor = {255, 128, 32};
+    player.assign<Light>("gradient", 10, testcolor);
 	player.assign<Player>(10);
 
     return 0;
