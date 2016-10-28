@@ -2,6 +2,8 @@ image: ubuntu
 
 stages:
   - build
+before_script:
+  - apt-get install libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev emscripten build-essential cmake
 
 'build linux':
   stage: build
