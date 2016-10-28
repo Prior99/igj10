@@ -1,6 +1,7 @@
 #include "game.hpp"
 #include "components/drawable.hpp"
 #include "components/position.hpp"
+#include "components/text.hpp"
 
 #include "strapon/resource_manager/resource_manager.hpp"
 
@@ -24,6 +25,40 @@ class DrawSystem : public entityx::System<DrawSystem> {
         SDL_DestroyTexture(m_drawtex);
     }
 
+    void renderDrawable(entityx::Entity entity) {
+        entityx::ComponentHandle<Drawable> drawable = entity.component<Drawable>();
+        entityx::ComponentHandle<Position> position = entity.component<Position>();
+
+        SDL_Rect dest;
+        dest.x = position->position()[0];
+        dest.y = position->position()[1];
+        dest.w = drawable->width();
+        dest.h = drawable->height();
+
+        SDL_RenderCopyEx(m_game->renderer(),
+                         m_game->res_manager().texture(drawable->texture_key()), NULL, &dest, 0,
+                         NULL, SDL_FLIP_NONE);
+    }
+
+    void renderText(entityx::Entity entity) {
+        entityx::ComponentHandle<Text> textComponent = entity.component<Text>();
+        auto position = entity.component<Position>()->position();
+        auto color = textComponent->getColor();
+        auto surf = TTF_RenderText_Blended(m_game->res_manager().font("font20"), textComponent->getText().c_str(), color);
+        auto texture = SDL_CreateTextureFromSurface(m_game->renderer(), surf);
+        int w, h;
+        SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
+
+        SDL_Rect dest;
+        dest.x = position.x;
+        dest.y = position.y;
+        dest.w = w;
+        dest.h = h;
+
+        SDL_RenderCopy(m_game->renderer(), texture, NULL, &dest);
+        SDL_FreeSurface(surf);
+    }
+
     void update(entityx::EntityManager &es, entityx::EventManager &events,
                 entityx::TimeDelta dt) override {
 
@@ -32,29 +67,18 @@ class DrawSystem : public entityx::System<DrawSystem> {
         SDL_SetRenderDrawColor(m_game->renderer(), 0, 100, 200, 255);
         SDL_RenderClear(m_game->renderer());
 
-        entityx::ComponentHandle<Drawable> drawable;
         entityx::ComponentHandle<Position> position;
+        entityx::ComponentHandle<Drawable> drawable;
+        entityx::ComponentHandle<Text> text;
+        for (entityx::Entity entity : es.entities_with_components(position)) {
 
-        for (entityx::Entity entity : es.entities_with_components(drawable, position)) {
-
-            (void)entity;
-
-            SDL_Rect dest;
-            dest.x = position->position()[0];
-            dest.y = position->position()[1];
-            dest.w = drawable->width();
-            dest.h = drawable->height();
-
-            SDL_RenderCopyEx(m_game->renderer(),
-                             m_game->res_manager().texture(drawable->texture_key()), NULL, &dest, 0,
-                             NULL, SDL_FLIP_NONE);
+            if (entity.component<Drawable>()) {
+                renderDrawable(entity);
+            }
+            if (entity.component<Text>()) {
+                renderText(entity);
+            }
         }
-
-        auto surf = TTF_RenderText_Blended(m_game->res_manager().font("font20"), "LOL", {200, 100, 100, 150});
-        auto text = SDL_CreateTextureFromSurface(m_game->renderer(), surf);
-        SDL_Rect dest = {0, 0, 50, 50};
-        SDL_RenderCopy(m_game->renderer(), text, NULL, &dest); 
-        SDL_FreeSurface(surf);
 
         // Render to final window
         SDL_SetRenderTarget(m_game->renderer(), nullptr);

@@ -2,6 +2,7 @@
 
 #include "components/drawable.hpp"
 #include "components/position.hpp"
+#include "components/text.hpp"
 #include "systems/collision.hpp"
 #include "systems/controls.hpp"
 #include "systems/draw.hpp"
@@ -26,6 +27,10 @@ int MainState::init() {
     player.assign<Position>(glm::vec2(300.f, 400.f));
 	player.assign<Drawable>("gradient", 100, 100);
 	player.assign<Player>(10);
+
+    entityx::Entity lol = m_entities.create();
+    lol.assign<Position>(glm::vec2(0.f, 0.f));
+    lol.assign<Text>("LOL", SDL_Color {200, 100, 100, 150});
 
     return 0;
 }
