@@ -6,6 +6,7 @@ before_script:
   - apt-get update
   - apt-get upgrade --yes
   - apt-get install --fix-missing --yes libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev build-essential cmake
+  - git submodule update --init --recursive
 
 'build linux':
   stage: build
