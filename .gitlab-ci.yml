@@ -1,0 +1,19 @@
+image: ubuntu
+
+stages:
+  - build
+
+'build linux':
+  stage: build
+  script: 
+    - make
+  artifacts:
+    paths:
+      - build/innojam9
+
+'build web':
+  stage: build
+  script:
+    - make web
+  artifacts:
+    paths: build-web
