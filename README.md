@@ -5,7 +5,7 @@
 ### 0. Basics
 
 Use a Linux-based machine. Preferrably Arch Linux. Register at [git.92k.de](https://git.92k.de/). Join the group 'gamejam'. Add your public ssh-key.
-If you do not have one, run: ```ssh-keygen`` and see the new key using ```cat ~/.ssh/id_rsa.pub```.
+If you do not have one, run: ```ssh-keygen``` and see the new key using ```cat ~/.ssh/id_rsa.pub```.
 
 ### 1. Tools
 
@@ -28,7 +28,7 @@ On Arch Linux you could run: ```sudo pacman -S sdl2 sdl2_image sdl2_mixer sdl2_t
 
 ### 3. Clone this repository
 
-You need to clone this repository somewhere onto your laptop: ```git clone --recursive gitlab@git.92k.de:gamejam/innojam10.git```.
+You need to clone this repository somewhere onto your laptop: ```git clone --recursive gitlab@git.92k.de:gamejam/igj10.git```.
 Please note the ```--recursive``` which will also initialize the neccessary git submodules. If you did not use ```---recursive```, please initialize them manually.
 
 ### 4. Build the sources
