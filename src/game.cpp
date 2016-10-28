@@ -54,6 +54,7 @@ int Game::init() {
     }
 
     m_res_manager.load_texture("gradient", "res/gradient.png", m_render);
+    m_res_manager.load_texture("house", "res/house.png", m_render);
     m_res_manager.load_font("font20", "res/DejaVuSans.ttf", 20);
 
     SDL_RenderSetLogicalSize(m_render, WIDTH, HEIGHT);

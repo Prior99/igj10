@@ -4,6 +4,7 @@
 #include "components/position.hpp"
 #include "components/player.hpp"
 #include "components/velocity.hpp"
+#include "components/collidable.hpp"
 #include "events.hpp"
 
 #include "game_config.hpp"
@@ -20,8 +21,9 @@ class ControlSystem : public entityx::System<ControlSystem> {
             entityx::ComponentHandle<Player> player;
             entityx::ComponentHandle<Velocity> velocity;
             entityx::ComponentHandle<Position> position;
+            entityx::ComponentHandle<Collidable> collidable;
 
-            for (entityx::Entity entity : es.entities_with_components(player, velocity, position)) {
+            for (entityx::Entity entity : es.entities_with_components(player, velocity, position, collidable)) {
                 (void) entity;
 
                 const Uint8 *state = SDL_GetKeyboardState(NULL);
@@ -31,14 +33,13 @@ class ControlSystem : public entityx::System<ControlSystem> {
                 if (state[SDL_SCANCODE_D] || state[SDL_SCANCODE_RIGHT]) {
                     velocity->drag(glm::vec2(1.0f, 0.0f) * SPEED);
                 }
-                auto onGround = glm::abs(position->getPosition().y - 400.0f) < 0.1f;
                 if (state[SDL_SCANCODE_SPACE] || state[SDL_SCANCODE_W] || state[SDL_SCANCODE_UP]) {
                     player->jumping(dt);
                     if (player->getJumpTime() > 0) {
                         velocity->drag(glm::vec2(0, -JUMP_SPEED));
                     }
                 } else {
-                    if (onGround) {
+                    if (collidable->isTouching()) {
                         player->resetJumpTime();
                     }
                 }

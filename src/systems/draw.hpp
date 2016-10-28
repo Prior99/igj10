@@ -42,12 +42,10 @@ class DrawSystem : public entityx::System<DrawSystem> {
             auto pos = position->getPosition();
             dest.x = pos[0];
             dest.y = pos[1];
-            dest.w = drawable->width();
-            dest.h = drawable->height();
+            dest.w = drawable->getWidth();
+            dest.h = drawable->getHeight();
 
-            SDL_RenderCopyEx(m_game->renderer(),
-                             m_game->res_manager().texture(drawable->texture_key()), NULL, &dest, 0,
-                             NULL, SDL_FLIP_NONE);
+            SDL_RenderCopy(m_game->renderer(), m_game->res_manager().texture(drawable->texture_key()), NULL, &dest);
         }
 
         auto surf = TTF_RenderText_Blended(m_game->res_manager().font("font20"), "LOL", {200, 100, 100, 150});

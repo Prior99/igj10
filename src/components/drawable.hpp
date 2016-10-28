@@ -6,33 +6,32 @@
 #include <SDL2/SDL.h>
 
 struct Drawable : entityx::Component<Drawable> {
-    Drawable(std::string key, float new_height, float new_width)
-        : m_texture_map_key(key), m_height(new_height), m_width(new_width) {
+    Drawable(std::string key, float width, float height): textureKey(key), height(height), width(width) {
     }
 
-    float height() {
-        return m_height;
+    float getHeight() {
+        return height;
     }
 
-    float width() {
-        return m_width;
+    float getWidth() {
+        return width;
     }
 
-    void set_hight(float new_height) {
-        m_height = new_height;
+    void setHeight(float height) {
+        this->height = height;
     }
 
-    void set_width(float new_width) {
-        m_width = new_width;
+    void setWidth(float width) {
+        this->width = width;
     }
 
     std::string texture_key() {
-        return m_texture_map_key;
+        return textureKey;
     }
 
   private:
-    std::string m_texture_map_key;
-    float m_height;
-    float m_width;
+    std::string textureKey;
+    float height;
+    float width;
 };
 #endif

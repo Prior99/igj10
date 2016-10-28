@@ -11,13 +11,9 @@
 static const int WIDTH = 800;
 static const int HEIGHT = 600;
 
-static const float MAX_SPEED = 280.f;
-static const float ACCELERATION_STEP = 0.2f;
-static const float DECELERATION_STEP = 0.15f;
-
 static const bool DEBUG = false; 
 
-static const float SPEED = 120;
+static const float SPEED = 119;
 static const float VELOCITY_LOSS = 0.7;
 static const float GRAVITY = 10;
 static const float JUMP_SPEED = 400;

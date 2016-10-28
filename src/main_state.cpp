@@ -3,6 +3,7 @@
 #include "components/drawable.hpp"
 #include "components/position.hpp"
 #include "components/velocity.hpp"
+#include "components/box.hpp"
 #include "components/gravity.hpp"
 #include "systems/collision.hpp"
 #include "systems/controls.hpp"
@@ -23,16 +24,27 @@ MainState::~MainState() {
 int MainState::init() {
     m_systems.add<DrawSystem>(m_game);
     m_systems.add<ControlSystem>();
-    m_systems.add<CollisionSystem>();
     m_systems.add<MovementSystem>();
     m_systems.add<GravitySystem>();
+    m_systems.add<CollisionSystem>();
     m_systems.configure();
 
-    entityx::Entity player = m_entities.create();
-    player.assign<Position>(glm::vec2(300.f, 400.f));
+    entityx::Entity box1 = entities.create();
+    box1.assign<Position>(glm::vec2(0.0f, 200.f));
+    box1.assign<Box>(glm::vec2(200.0f, 400.0f));
+	box1.assign<Drawable>("house", 200, 400);
+
+    entityx::Entity box2 = entities.create();
+    box2.assign<Position>(glm::vec2(400.0f, 400.f));
+    box2.assign<Box>(glm::vec2(400.0f, 200.0f));
+	box2.assign<Drawable>("house", 400, 200);
+
+    entityx::Entity player = entities.create();
+    player.assign<Position>(glm::vec2(000.f, 000.f));
 	player.assign<Drawable>("gradient", 100, 100);
 	player.assign<Velocity>();
 	player.assign<Gravity>();
+	player.assign<Collidable>(50.0f);
 	player.assign<Player>();
 
     return 0;
@@ -54,6 +66,6 @@ void MainState::update(double dt) {
     m_systems.update<DrawSystem>(dt);
     m_systems.update<MovementSystem>(dt);
     m_systems.update<ControlSystem>(dt);
-    m_systems.update<CollisionSystem>(dt);
     m_systems.update<GravitySystem>(dt);
+    m_systems.update<CollisionSystem>(dt);
 }

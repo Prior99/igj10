@@ -23,7 +23,7 @@ class MovementSystem : public entityx::System<MovementSystem> {
                 (void) entity;
                 auto delta = velocity->getVelocity() * (float)dt;
                 auto newPosition = position->getPosition() + delta;
-                position->setPosition(glm::vec2(newPosition.x, glm::min(newPosition.y, 400.0f)));
+                position->setPosition(glm::vec2(newPosition.x, newPosition.y));
                 velocity->update(dt);
             }
         }
