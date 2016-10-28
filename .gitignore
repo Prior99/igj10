@@ -1,2 +1,4 @@
 build/
 build-web/
+__pycache__
+.ycm_extra_conf.py

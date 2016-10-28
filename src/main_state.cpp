@@ -5,7 +5,6 @@
 #include "systems/collision.hpp"
 #include "systems/controls.hpp"
 #include "systems/draw.hpp"
-#include "systems/movement.hpp"
 
 #include "entityx/entityx.h"
 
@@ -21,12 +20,12 @@ int MainState::init() {
     m_systems.add<DrawSystem>(m_game);
     m_systems.add<ControlSystem>();
     m_systems.add<CollisionSystem>();
-    m_systems.add<MovementSystem>();
     m_systems.configure();
 
     entityx::Entity player = m_entities.create();
     player.assign<Position>(glm::vec2(300.f, 400.f));
-    player.assign<Drawable>("gradient", 100, 100);
+	player.assign<Drawable>("gradient", 100, 100);
+	player.assign<Player>(10);
 
     return 0;
 }
@@ -47,5 +46,4 @@ void MainState::update(double dt) {
     m_systems.update<DrawSystem>(dt);
     m_systems.update<ControlSystem>(dt);
     m_systems.update<CollisionSystem>(dt);
-    m_systems.update<MovementSystem>(dt);
 }

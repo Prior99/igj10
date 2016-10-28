@@ -1,6 +1,7 @@
 #include "game.hpp"
 
 #include "main_state.hpp"
+#include "game_config.hpp"
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
@@ -24,10 +25,7 @@ int Game::init() {
         return 1;
     }
 
-    int width = 800;
-    int height = 600;
-
-    m_window = SDL_CreateWindow("Innojam #10", 100, 100, width, height, SDL_WINDOW_SHOWN);
+    m_window = SDL_CreateWindow("Innojam #10", 100, 100, WIDTH, HEIGHT, SDL_WINDOW_SHOWN);
     if (m_window == nullptr) {
         std::cerr << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
         SDL_Quit();
@@ -58,7 +56,7 @@ int Game::init() {
     m_res_manager.load_texture("gradient", "res/gradient.png", m_render);
     m_res_manager.load_font("font20", "res/DejaVuSans.ttf", 20);
 
-    SDL_RenderSetLogicalSize(m_render, width, height);
+    SDL_RenderSetLogicalSize(m_render, WIDTH, HEIGHT);
 
     entityx::Entity entity = m_ex.entities.create();
     entity.assign<Position>();
