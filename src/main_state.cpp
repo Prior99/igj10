@@ -1,10 +1,16 @@
 #include "main_state.hpp"
 
 #include "components/drawable.hpp"
-#include "components/position.hpp"
 #include "components/text.hpp"
+#include "components/position.hpp"
+#include "components/light.hpp"
+#include "components/velocity.hpp"
+#include "components/box.hpp"
+#include "components/gravity.hpp"
 #include "systems/collision.hpp"
 #include "systems/controls.hpp"
+#include "systems/movement.hpp"
+#include "systems/gravity.hpp"
 #include "systems/draw.hpp"
 
 #include "entityx/entityx.h"
@@ -20,15 +26,32 @@ MainState::~MainState() {
 int MainState::init() {
     m_systems.add<DrawSystem>(m_game);
     m_systems.add<ControlSystem>();
+    m_systems.add<MovementSystem>();
+    m_systems.add<GravitySystem>();
     m_systems.add<CollisionSystem>();
     m_systems.configure();
 
-    entityx::Entity player = m_entities.create();
-    player.assign<Position>(glm::vec2(300.f, 400.f));
-	player.assign<Drawable>("gradient", 100, 100);
-	player.assign<Player>(10);
+    entityx::Entity box1 = entities.create();
+    box1.assign<Position>(glm::vec2(0.0f, 200.f));
+    box1.assign<Box>(glm::vec2(200.0f, 400.0f));
+	box1.assign<Drawable>("house", 200, 400);
 
-    entityx::Entity lol = m_entities.create();
+    entityx::Entity box2 = entities.create();
+    box2.assign<Position>(glm::vec2(400.0f, 400.f));
+    box2.assign<Box>(glm::vec2(400.0f, 200.0f));
+	box2.assign<Drawable>("house", 400, 200);
+
+    entityx::Entity player = entities.create();
+    player.assign<Position>(glm::vec2(000.f, 000.f));
+	player.assign<Drawable>("playerimg", 20, 20);
+    glm::i8vec3 testcolor = {255, 128, 32};
+    player.assign<Light>("gradient", 10, testcolor);
+	player.assign<Velocity>();
+	player.assign<Gravity>();
+	player.assign<Collidable>(50.0f);
+	player.assign<Player>();
+
+    entityx::Entity lol = entities.create();
     lol.assign<Position>(glm::vec2(0.f, 0.f));
     lol.assign<Text>("LOL", SDL_Color {200, 100, 100, 150});
 
@@ -49,6 +72,8 @@ void MainState::update(double dt) {
     }
 
     m_systems.update<DrawSystem>(dt);
+    m_systems.update<MovementSystem>(dt);
     m_systems.update<ControlSystem>(dt);
+    m_systems.update<GravitySystem>(dt);
     m_systems.update<CollisionSystem>(dt);
 }

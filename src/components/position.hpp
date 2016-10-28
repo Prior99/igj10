@@ -6,28 +6,19 @@
 #include <SDL2/SDL.h>
 
 struct Position : entityx::Component<Position> {
-    Position(glm::vec2 new_position = glm::vec2(0.0f, 0.0f), int width = 0, int height = 0)
-        : m_position(new_position),
-          m_rect{int(new_position.x), int(new_position.y), width, height} {
+    Position(glm::vec2 new_position = glm::vec2(0.0f, 0.0f)): position(new_position) {
     }
 
-    glm::vec2 position() {
-        return m_position;
+    glm::vec2 getPosition() {
+        return position;
     }
 
-    SDL_Rect &rect() {
-        return m_rect;
-    }
-
-    void set_position(glm::vec2 new_position) {
-        m_position = new_position;
-        m_rect.x = new_position.x;
-        m_rect.y = new_position.y;
+    void setPosition(glm::vec2 newPos) {
+        this->position = newPos;
     }
 
   private:
-    glm::vec2 m_position;
-    SDL_Rect m_rect;
+    glm::vec2 position;
 };
 
 #endif

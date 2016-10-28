@@ -3,23 +3,28 @@
 
 #include "entityx/entityx.h"
 #include <iostream>
-
-#define MAX(a, b) ((a) > (b) ? (a) : (b))
+#include "game_config.hpp"
+#include "glm/common.hpp"
 
 struct Player : entityx::Component<Player> {
-    Player(float hp) : m_max_hp(hp), m_hp(hp) {
+    Player(): jumpTime(MAX_JUMP) {
+    
     }
 
-    float m_max_hp;
-    float m_hp;
-
-    void damage(float f) {
-        m_hp -= f;
+    resetJumpTime() {
+        this->jumpTime = MAX_JUMP;
     }
 
-    bool is_dead() {
-        return m_hp < 0;
+    jumping(double dt) {
+        this->jumpTime = glm::max(this->jumpTime - (float)dt, 0.0f);
     }
+
+    getJumpTime() {
+        return this->jumpTime;
+    }
+
+  private:
+    float jumpTime;
 };
 
 #endif
