@@ -1,11 +1,11 @@
 #include "main_state.hpp"
 
-#include "component_drawable.hpp"
-#include "component_position.hpp"
-#include "system_collision.hpp"
-#include "system_controls.hpp"
-#include "system_draw.hpp"
-#include "system_movement.hpp"
+#include "components/drawable.hpp"
+#include "components/position.hpp"
+#include "systems/collision.hpp"
+#include "systems/controls.hpp"
+#include "systems/draw.hpp"
+#include "systems/movement.hpp"
 
 #include "entityx/entityx.h"
 

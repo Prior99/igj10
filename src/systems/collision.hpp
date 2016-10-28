@@ -1,7 +1,7 @@
 #ifndef COLLISION_SYSTEM_CPP
 #define COLLISION_SYSTEM_CPP
 
-#include "component_position.hpp"
+#include "components/position.hpp"
 #include "events.hpp"
 #include "game.hpp"
 

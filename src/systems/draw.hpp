@@ -1,6 +1,6 @@
 #include "game.hpp"
-#include "component_drawable.hpp"
-#include "component_position.hpp"
+#include "components/drawable.hpp"
+#include "components/position.hpp"
 
 #include "strapon/resource_manager/resource_manager.hpp"
 

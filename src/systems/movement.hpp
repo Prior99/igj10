@@ -3,7 +3,7 @@
 
 #include "events.hpp"
 #include "game.hpp"
-#include "component_position.hpp"
+#include "components/position.hpp"
 
 #include "entityx/entityx.h"
 

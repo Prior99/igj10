@@ -1,7 +1,7 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 
-#include "component_position.hpp"
+#include "components/position.hpp"
 
 #include "strapon/state/state.hpp"
 #include "strapon/resource_manager/resource_manager.hpp"

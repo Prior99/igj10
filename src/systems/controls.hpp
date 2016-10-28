@@ -1,7 +1,7 @@
 #ifndef SYSTEM_CONTROLS_HPP
 #define SYSTEM_CONTROLS_HPP
 
-#include "component_position.hpp"
+#include "components/position.hpp"
 #include "events.hpp"
 
 #include <glm/vec2.hpp>
