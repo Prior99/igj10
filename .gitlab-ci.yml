@@ -16,4 +16,5 @@ stages:
   script:
     - make web
   artifacts:
-    paths: build-web
+    paths:
+      - build-web
