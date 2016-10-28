@@ -2,30 +2,73 @@
 #define COLLISION_SYSTEM_CPP
 
 #include "components/position.hpp"
+#include "components/box.hpp"
+#include "components/collidable.hpp"
 #include "events.hpp"
 #include "game.hpp"
 
 #include "entityx/entityx.h"
 
+#include <glm/common.hpp>
 #include <glm/vec2.hpp>
 #include <SDL2/SDL.h>
+#include <iostream>
 
 class CollisionSystem : public entityx::System<CollisionSystem> {
-  public:
-    CollisionSystem() {
-    }
+    public:
+        CollisionSystem() { }
 
-    void update(entityx::EntityManager &es, entityx::EventManager &events, double dt) {
-        entityx::ComponentHandle<Position> first_position, second_position;
-        for (entityx::Entity first_entity : es.entities_with_components(first_position)) {
-            for (entityx::Entity second_entity : es.entities_with_components(second_position)) {
-                if (first_entity != second_entity &&
-                    SDL_HasIntersection(&first_position->rect(), &second_position->rect())) {
-                    events.emit<CollisionEvent>(first_entity, second_entity);
+        void update(entityx::EntityManager &es, entityx::EventManager &events, double dt) {
+            entityx::ComponentHandle<Position> collidingPos, boxPos;
+            entityx::ComponentHandle<Collidable> collidable;
+            entityx::ComponentHandle<Box> box;
+            for (entityx::Entity colliding : es.entities_with_components(collidingPos, collidable)) {
+                for (entityx::Entity obstacle : es.entities_with_components(boxPos, box)) {
+                    (void) colliding;
+                    (void) obstacle;
+                    auto colCoord = collidingPos->getPosition();
+                    auto r = collidable->getRadius();
+                    auto boxCoord = boxPos->getPosition();
+                    auto boxSize = box->getSize();
+                    
+                    bool isInBox = (colCoord.x >= boxCoord.x && colCoord.x <= boxCoord.x + boxSize.x) &&
+                        (colCoord.y >= boxCoord.y && colCoord.y <= boxCoord.y + boxSize.y);
+                    bool isTouchingBox = 
+                        (
+                            (colCoord.x + r >= boxCoord.x && colCoord.x <= boxCoord.x + boxSize.x) ||
+                            (colCoord.x - r <= boxCoord.x + boxSize.x && colCoord.x >= boxCoord.x)
+                        ) && (
+                            (colCoord.y + r >= boxCoord.y && colCoord.y <= boxCoord.y + boxSize.y) ||
+                            (colCoord.y - r <= boxCoord.y + boxSize.y && colCoord.y >= boxCoord.y)
+                        );
+                    if (isInBox || isTouchingBox) {
+                        glm::vec2 outPos;
+
+                        auto up = colCoord.y - boxCoord.y;
+                        auto down = boxCoord.y + boxSize.y - colCoord.y;
+                        auto left = colCoord.x - boxCoord.x;
+                        auto right = boxCoord.x + boxSize.x - colCoord.x;
+
+                        auto min = glm::min(up, glm::min(down, glm::min(left, right)));
+                        if (min == up) {
+                            outPos.x = colCoord.x;
+                            outPos.y = boxCoord.y - r;
+                        } else if (min == down) {
+                            outPos.x = colCoord.x;
+                            outPos.y = boxCoord.y + boxSize.y + r;
+                        } else if (min == left) {
+                            outPos.x = boxCoord.x - r;
+                            outPos.y = colCoord.y;
+                        } else if (min == right) {
+                            outPos.x = boxCoord.x + boxSize.x + r;
+                            outPos.y = colCoord.y;
+                        }
+                        collidingPos->setPosition(outPos);
+                    }
+                    collidable->setIsTouching(isTouchingBox || isInBox);
                 }
             }
         }
-    }
 };
 
 #endif

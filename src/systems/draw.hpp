@@ -20,9 +20,7 @@ class DrawSystem : public entityx::System<DrawSystem> {
     ~DrawSystem() {
     }
 
-    void update(entityx::EntityManager &es, entityx::EventManager &events,
-                entityx::TimeDelta dt) override {
-
+    void update(entityx::EntityManager &es, entityx::EventManager &events, entityx::TimeDelta dt) override {
         entityDrawSystem.update(es, events, dt);
         lightDrawSystem.update(es, events, dt);
 
