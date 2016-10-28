@@ -17,7 +17,7 @@ static const float SPEED = 119;
 static const float VELOCITY_LOSS = 0.7;
 static const float GRAVITY = 10;
 static const float JUMP_SPEED = 400;
-static const glm::vec2 MAX_VELOCITY = glm::vec2(200.0f, 1000.0f);
+static const glm::vec2 MAX_VELOCITY = glm::vec2(300.0f, 1000.0f);
 static const float MAX_JUMP = 1.5f;
 
 #endif
