@@ -15,6 +15,10 @@ web:
 	mkdir -p build-web
 	cd build-web; /usr/lib/emscripten/emcmake cmake ..; make
 
+ci-web:
+	mkdir -p build-web
+	cd build-web; /usr/local/bin/emcmake cmake ..; make
+
 webrun:
 	emrun build-web/index.html
 
