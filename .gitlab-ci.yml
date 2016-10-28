@@ -1,0 +1,23 @@
+image: trzeci/emscripten:sdk-tag-1.36.6-64bit
+
+before_script:
+  - apt-get update
+  - apt-get upgrade --yes
+  - apt-get install --fix-missing --yes libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev build-essential cmake git
+  - git submodule update --init --recursive
+
+build-linux:
+  stage: build
+  script: 
+    - make
+  artifacts:
+    paths:
+      - build/innojam9
+
+build-web:
+  stage: build
+  script:
+    - make ci-web
+  artifacts:
+    paths:
+      - build-web

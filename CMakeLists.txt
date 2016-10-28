@@ -25,11 +25,9 @@ include_directories(SYSTEM
     entityx/
     strapon/
     src/
-    yaml-cpp/yaml-cpp-config.cmake
 )
 
 target_link_libraries(innojam10
     ${SDL2_LIBRARIES}
     entityx
-    yaml-cpp
 )
