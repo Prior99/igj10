@@ -26,7 +26,7 @@
 
 class ControlSystem : public entityx::System<ControlSystem>, public entityx::Receiver<ControlSystem> {
     public:
-        ControlSystem(Game *game): game(game), stoppedSpace(false), died(false) {}
+        ControlSystem(Game *game): game(game), stoppedSpace(false), died(false), count(0) {}
 
         void receive(const GameOver &event) {
             (void)event;
@@ -44,13 +44,18 @@ class ControlSystem : public entityx::System<ControlSystem>, public entityx::Rec
                 return;
             }
 
+            count += dt;
             for (entityx::Entity entity : es.entities_with_components(player, velocity, position, collidable, drawable)) {
                 (void) entity;
 
                 const Uint8 *state = SDL_GetKeyboardState(NULL);
                 bool walking = false;
+                std::cout << count << std::endl;
                 if (state[SDL_SCANCODE_RETURN]) {
-                    this->game->toggleFreeze();
+                    if (count > 0.5) {
+                      this->game->toggleFreeze();
+                      count = 0;
+                    }
                 }
                 if ((state[SDL_SCANCODE_A] || state[SDL_SCANCODE_LEFT]) && !player->isJumping()) {
                     velocity->drag(glm::vec2(-.3f, 0.0f) * SPEED);
@@ -97,6 +102,7 @@ class ControlSystem : public entityx::System<ControlSystem>, public entityx::Rec
         Game *game;
         bool stoppedSpace;
         bool died;
+        double count;
 };
 
 #endif
