@@ -24,6 +24,7 @@ struct Velocity : entityx::Component<Velocity> {
 
     void update(double dt) {
         if (abs(this->velocity.x) > MAX_VELOCITY.x) {
+            //std::cout << "max" << std::endl;
             if(this->velocity.x < 0){
                 this->velocity.x = -MAX_VELOCITY.x;
             }
@@ -31,6 +32,9 @@ struct Velocity : entityx::Component<Velocity> {
                 this->velocity.x = MAX_VELOCITY.x;
             }
         }
+        // else {
+        //     std::cout << " " << std::endl;
+        // }
 
         if (abs(this->velocity.x) < VELOCITY_THRESHOLD.x) {
             this->velocity.x = 0;

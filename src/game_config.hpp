@@ -15,10 +15,10 @@ static const int GAME_HEIGHT = 225;
 
 static const bool DEBUG = false;
 
-static const float SPEED = 150;
-static const float VELOCITY_LOSS = 0.7;
+static const float SPEED = 66;
+static const float VELOCITY_LOSS = 0.8;
 static const float GRAVITY = 10;
-static const float JUMP_SPEED = 400;
+static const float JUMP_SPEED = 250;
 static const glm::vec2 MAX_VELOCITY = glm::vec2(300.0f, 1000.0f);
 static const glm::vec2 VELOCITY_THRESHOLD = glm::vec2(0.01f, 0.01f);
 //time it takes to increase the insanity again (in seconds)
