@@ -11,6 +11,7 @@
 #include "components/stomper.hpp"
 #include "components/gravity.hpp"
 #include "components/multipartDrawable.hpp"
+#include "components/foreground.hpp"
 #include "systems/collision.hpp"
 #include "systems/controls.hpp"
 #include "systems/movement.hpp"
@@ -64,6 +65,7 @@ int MainState::init() {
     player.assign<Gravity>();
     player.assign<Collidable>(24.0f);
     player.assign<Player>();
+    player.assign<Foreground>();
     m_game->setPlayer(player);
 
     entityx::Entity lol = entities.create();
