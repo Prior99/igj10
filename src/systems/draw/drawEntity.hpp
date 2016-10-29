@@ -5,6 +5,7 @@
 #include "components/position.hpp"
 #include "components/light.hpp"
 #include "components/foreground.hpp"
+#include "components/game-text.hpp"
 
 #include "utils.hpp"
 
@@ -81,11 +82,51 @@ class EntityDrawSystem {
         SDL_RenderCopy(game->renderer(), texture, clip, &dest);
     }
 
-    void renderEntity(entityx::Entity entity, glm::vec2 offset) {
+    void renderText(entityx::Entity entity, glm::vec2 offset, double dt) {
+        entityx::ComponentHandle<Position> position = entity.component<Position>();
+        entityx::ComponentHandle<GameText> text = entity.component<GameText>();
+
+        auto pos = position->getPosition() - offset;
+        float progress = text->getTime() / TEXT_DURATION;
+        std::cout << (int)(255 * progress) << std::endl;
+        auto color = SDL_Color{255, 255, 255};
+        auto surf = TTF_RenderText_Blended(game->res_manager().font("font-small"), text->getText().c_str(), color);
+        SDL_LockSurface(surf);
+        SDL_PixelFormat* fmt = surf->format;
+        unsigned bpp = fmt->BytesPerPixel;
+        for (int y = 0; y < surf->h; y++) 
+            for (int x = 0; x < surf->w; x++) {
+                Uint32* pixel_ptr = (Uint32 *)((Uint8 *)surf->pixels + y * surf->pitch + x * bpp);
+                Uint8 r, g, b, a;
+                SDL_GetRGBA( *pixel_ptr, fmt, &r, &g, &b, &a );
+                *pixel_ptr = SDL_MapRGBA( fmt, r, g, b, (int)(a * (0.5f + 0.5f * (1.0 - progress))));
+            }   
+
+        SDL_UnlockSurface(surf);
+        auto texture = SDL_CreateTextureFromSurface(game->renderer(), surf);
+        int w, h;
+        SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
+        auto progressSize = glm::min(progress * 2, 1.0f);
+        int nW = w * progressSize;
+        int offsetX = pos.x + (w - nW) / 2;
+        SDL_Rect dest{pos.x + offsetX, pos.y - progress * 100, nW, h * progressSize};
+
+        SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
+        SDL_RenderCopy(game->renderer(), texture, NULL, &dest);
+        SDL_FreeSurface(surf);
+        text->updateTime(dt);
+        if (text->getTime() > TEXT_DURATION) {
+            entity.destroy();
+        }
+    }
+
+    void renderEntity(entityx::Entity entity, glm::vec2 offset, double dt) {
         if(entity.component<MultipartDrawable>()) {
             renderMultiPart(entity, offset);
         } else if (entity.component<Drawable>()) {
             renderSinglePart(entity, offset);
+        } else if(entity.component<GameText>()) {
+            renderText(entity, offset, dt);
         }
     }
 
@@ -105,12 +146,12 @@ class EntityDrawSystem {
 
         for (entityx::Entity entity : es.entities_with_components(position)) {
             if(!entity.component<Foreground>()) {
-                renderEntity(entity, offset);
+                renderEntity(entity, offset, dt);
             }
         }
 
         for(entityx::Entity entity: es.entities_with_components(position, foreground)) {
-            renderEntity(entity, offset);
+            renderEntity(entity, offset, dt);
         }
     }
 

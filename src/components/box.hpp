@@ -8,10 +8,13 @@
 #include <iostream>
 
 struct Box : entityx::Component<Box> {
-    Box(glm::vec2 size): size(size), dangerous(false) {
+    Box(glm::vec2 size): size(size), dangerousUp(false), dangerousRight(false), dangerousDown(false), dangerousLeft(false) {
     }
 
-    Box(glm::vec2 size, bool dangerous): size(size), dangerous(dangerous) {
+    Box(glm::vec2 size, bool dUp, bool dRight, bool dDown, bool dLeft): size(size), dangerousUp(dUp), dangerousRight(dRight), dangerousDown(dDown), dangerousLeft(dLeft) {
+    }
+
+    Box(glm::vec2 size, bool dangerous): size(size), dangerousUp(dangerous), dangerousRight(dangerous), dangerousDown(dangerous), dangerousLeft(dangerous) {
     }
 
     glm::vec2 getSize() {
@@ -24,13 +27,31 @@ struct Box : entityx::Component<Box> {
         this->size.y = h;
     }
 
-    bool isDangerous() {
-        return this-> dangerous;
+    bool isDangerous(int direction) {
+        switch(direction){
+            case 1 :
+                return this->dangerousUp;
+                break;
+            case 2 :
+                return this->dangerousRight;
+                break;
+            case 3 :
+                return this->dangerousDown;
+                break;
+            case 4 :
+                return this->dangerousLeft;
+                break;
+            default :
+                return this->dangerousUp || this->dangerousRight || this->dangerousDown || this->dangerousLeft;
+        }
     }
 
   private:
     glm::vec2 size;
-    bool dangerous;
+    bool dangerousUp;
+    bool dangerousRight;
+    bool dangerousDown;
+    bool dangerousLeft;
 };
 
 #endif
