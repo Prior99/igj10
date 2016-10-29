@@ -37,7 +37,7 @@ class MapSystem : public entityx::System<MapSystem> {
                     if (heightChange == 0 && height != 6) {
                         margin -= 40 + rand() % 40;
                     } else if (heightChange == 2 && height != 1) {
-                        margin += rand() % 40;
+                        margin += rand() % 20;
                     }
                     mapGeneratedX += glm::max(margin, housewidth);
                 }
