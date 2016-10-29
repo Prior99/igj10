@@ -52,8 +52,8 @@ class ControlSystem : public entityx::System<ControlSystem>, public entityx::Rec
                 if (state[SDL_SCANCODE_RETURN]) {
                     this->game->toggleFreeze();
                 }
-                if (state[SDL_SCANCODE_A] || state[SDL_SCANCODE_LEFT]) {
-                    velocity->drag(glm::vec2(-1.0f, 0.0f) * SPEED);
+                if ((state[SDL_SCANCODE_A] || state[SDL_SCANCODE_LEFT]) && !player->isJumping()) {
+                    velocity->drag(glm::vec2(-.3f, 0.0f) * SPEED);
                     walking = true;
                 }
                 if (state[SDL_SCANCODE_D] || state[SDL_SCANCODE_RIGHT]) {
