@@ -20,6 +20,7 @@ Game::~Game() {
 }
 
 int Game::init() {
+	this->freeze = false;
     this->player = m_ex.entities.create();
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
         std::cerr << "SDL_Init Error: " << SDL_GetError() << std::endl;
@@ -57,6 +58,7 @@ int Game::init() {
     m_res_manager.load_texture("gradient", "res/gradient.png", m_render);
     m_res_manager.load_texture("playerimg", "res/0.png", m_render);
     m_res_manager.load_texture("player-small", "res/player-small.png", m_render);
+    m_res_manager.load_texture("player", "res/player.png", m_render);
     m_res_manager.load_texture("house", "res/house-1.png", m_render);
     m_res_manager.load_texture("background", "res/background.png", m_render);
     m_res_manager.load_font("font20", "res/DejaVuSans.ttf", 20);
@@ -72,6 +74,13 @@ int Game::init() {
     return 0;
 }
 
+void Game::toggleFreeze() {
+    this->freeze = !this->freeze;
+    if (!this->freeze) {
+        this->setInsanity(1.0f);
+    }
+}
+
 
 entityx::Entity Game::getPlayer() {
     return this->player;
@@ -83,6 +92,10 @@ void Game::mainloop() {
     m_last_frame_time = current_time;
 
     m_states.top().second->update(dt);
+}
+
+bool Game::isFrozen() {
+	return this->freeze;
 }
 
 SDL_Renderer *Game::renderer() {
@@ -103,6 +116,18 @@ std::stack<std::pair<std::string, std::unique_ptr<State>>> &Game::states() {
 
 bool Game::is_running() {
     return m_running;
+}
+
+float Game::getInsanity() {
+    return insanity;
+}
+
+void Game::setInsanity(float f) {
+    this->insanity = f;
+}
+
+void Game::addInsanity(float f) {
+    this->insanity += f;
 }
 
 void Game::shutdown() {

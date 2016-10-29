@@ -1,5 +1,6 @@
 #include "main_state.hpp"
 
+#include "animation.hpp"
 #include "components/drawable.hpp"
 #include "components/text.hpp"
 #include "components/position.hpp"
@@ -14,6 +15,8 @@
 #include "systems/draw.hpp"
 #include "systems/death.hpp"
 #include "systems/map.hpp"
+#include "systems/insanity.hpp"
+#include "systems/animation.hpp"
 
 #include "entityx/entityx.h"
 
@@ -28,17 +31,24 @@ MainState::~MainState() {
 
 int MainState::init() {
     m_systems.add<DrawSystem>(m_game);
-    m_systems.add<ControlSystem>();
+    m_systems.add<ControlSystem>(m_game);
     m_systems.add<MovementSystem>();
     m_systems.add<GravitySystem>();
     m_systems.add<CollisionSystem>();
     m_systems.add<DeathSystem>(m_game);
     m_systems.add<MapSystem>();
+    m_systems.add<InsanitySystem>(m_game);
+    m_systems.add<AnimationSystem>();
     m_systems.configure();
 
+    auto playerAnimations = AnimationCollection("player");
+    playerAnimations.addAnimation("run", 0, 4, 1, glm::vec2(16, 24));
+    playerAnimations.addAnimation("jump", 24, 3, 1, glm::vec2(16, 24));
+    playerAnimations.setAnimation("run", AnimationPlaybackType::LOOP);
+
     entityx::Entity player = entities.create();
-    player.assign<Position>(glm::vec2(10, GAME_HEIGHT));
-	player.assign<Drawable>("player-small", 16, 24);
+    player.assign<Position>(glm::vec2(000.f, 000.f));
+	player.assign<Drawable>("player-small", 16, 24, playerAnimations);
     glm::i8vec3 testcolor = {255, 128, 32};
     player.assign<Light>("gradient", 100, testcolor);
 	player.assign<Velocity>();
@@ -69,9 +79,11 @@ void MainState::update(double dt) {
 
     m_systems.update<MapSystem>(dt);
     m_systems.update<DeathSystem>(dt);
+    m_systems.update<AnimationSystem>(dt);
     m_systems.update<DrawSystem>(dt);
     m_systems.update<MovementSystem>(dt);
     m_systems.update<ControlSystem>(dt);
     m_systems.update<GravitySystem>(dt);
     m_systems.update<CollisionSystem>(dt);
+    m_systems.update<InsanitySystem>(dt);
 }
