@@ -1,7 +1,9 @@
 #include "main_state.hpp"
 
 #include "components/drawable.hpp"
+#include "components/text.hpp"
 #include "components/position.hpp"
+#include "components/light.hpp"
 #include "components/velocity.hpp"
 #include "components/box.hpp"
 #include "components/gravity.hpp"
@@ -39,13 +41,24 @@ int MainState::init() {
     box2.assign<Box>(glm::vec2(400.0f, 200.0f));
 	box2.assign<Drawable>("house", 400, 200);
 
+    entityx::Entity sun = entities.create();
+    sun.assign<Position>(glm::vec2(m_game->world_size().w / 2, -100));
+    glm::i8vec3 sunColor = {255, 255, 255};
+    sun.assign<Light>("gradient", (m_game->world_size().h + 200) * 2 / 200, sunColor);
+
     entityx::Entity player = entities.create();
     player.assign<Position>(glm::vec2(000.f, 000.f));
-	player.assign<Drawable>("gradient", 100, 100);
+	player.assign<Drawable>("playerimg", 20, 20);
+    glm::i8vec3 testcolor = {255, 128, 32};
+    player.assign<Light>("gradient", 10, testcolor);
 	player.assign<Velocity>();
 	player.assign<Gravity>();
 	player.assign<Collidable>(50.0f);
 	player.assign<Player>();
+
+    entityx::Entity lol = entities.create();
+    lol.assign<Position>(glm::vec2(0.f, 0.f));
+    lol.assign<Text>("LOL", SDL_Color {200, 100, 100, 150});
 
     return 0;
 }

@@ -4,9 +4,11 @@
 #include "entityx/entityx.h"
 #include <glm/vec2.hpp>
 #include <glm/common.hpp>
+#include <glm/ext.hpp>
 #include <SDL2/SDL.h>
 #include "game_config.hpp"
 #include <iostream>
+#include <cstdlib>
 
 struct Velocity : entityx::Component<Velocity> {
     Velocity(glm::vec2 initialVelocity = glm::vec2(0.0f, 0.0f)): velocity(initialVelocity) {
@@ -21,7 +23,15 @@ struct Velocity : entityx::Component<Velocity> {
     }
 
     void update(double dt) {
-        this->velocity = glm::min(this->velocity, MAX_VELOCITY);
+        if (abs(this->velocity.x) > MAX_VELOCITY.x) {
+            if(this->velocity.x < 0){
+                this->velocity = -MAX_VELOCITY;
+            }
+            else{
+                this->velocity = MAX_VELOCITY;
+            }
+        }
+
         auto loss = VELOCITY_LOSS;
         this->velocity = this->velocity * loss;
     }
@@ -31,4 +41,3 @@ struct Velocity : entityx::Component<Velocity> {
 };
 
 #endif
-

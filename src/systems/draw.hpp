@@ -1,6 +1,8 @@
 #include "game.hpp"
-#include "components/drawable.hpp"
-#include "components/position.hpp"
+
+#include "systems/draw/drawEntity.hpp"
+#include "systems/draw/drawLight.hpp"
+#include "systems/draw/drawOverlay.hpp"
 
 #include "strapon/resource_manager/resource_manager.hpp"
 
@@ -9,59 +11,30 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 
+#include <iostream>
+
 class DrawSystem : public entityx::System<DrawSystem> {
   public:
-    DrawSystem(Game *game) : m_game(game) {
-        int w, h;
-        SDL_RenderGetLogicalSize(game->renderer(), &w, &h);
-        m_camera = SDL_Rect{0, 0, w, h};
-        m_drawtex =
-            SDL_CreateTexture(game->renderer(), SDL_PIXELTYPE_UNKNOWN, SDL_TEXTUREACCESS_TARGET,
-                              game->world_size().w, game->world_size().h);
+    DrawSystem(Game *game) : m_game(game),
+        entityDrawSystem(game),
+        lightDrawSystem(game),
+        overlayDrawSystem(game) {
     }
 
     ~DrawSystem() {
-        SDL_DestroyTexture(m_drawtex);
     }
 
     void update(entityx::EntityManager &es, entityx::EventManager &events, entityx::TimeDelta dt) override {
+        entityDrawSystem.update(es, events, dt);
+        lightDrawSystem.update(es, events, dt);
+        overlayDrawSystem.update(es, events, dt);
 
-        // Change to render into rendertexture for now
-        SDL_SetRenderTarget(m_game->renderer(), m_drawtex);
-        SDL_SetRenderDrawColor(m_game->renderer(), 0, 100, 200, 255);
-        SDL_RenderClear(m_game->renderer());
-
-        entityx::ComponentHandle<Drawable> drawable;
-        entityx::ComponentHandle<Position> position;
-
-        for (entityx::Entity entity : es.entities_with_components(drawable, position)) {
-
-            (void)entity;
-
-            SDL_Rect dest;
-            auto pos = position->getPosition();
-            dest.x = pos[0];
-            dest.y = pos[1];
-            dest.w = drawable->getWidth();
-            dest.h = drawable->getHeight();
-
-            SDL_RenderCopy(m_game->renderer(), m_game->res_manager().texture(drawable->texture_key()), NULL, &dest);
-        }
-
-        auto surf = TTF_RenderText_Blended(m_game->res_manager().font("font20"), "LOL", {200, 100, 100, 150});
-        auto text = SDL_CreateTextureFromSurface(m_game->renderer(), surf);
-        SDL_Rect dest = {0, 0, 50, 50};
-        SDL_RenderCopy(m_game->renderer(), text, NULL, &dest); 
-        SDL_FreeSurface(surf);
-
-        // Render to final window
-        SDL_SetRenderTarget(m_game->renderer(), nullptr);
-        SDL_RenderCopy(m_game->renderer(), m_drawtex, &m_camera, nullptr);
         SDL_RenderPresent(m_game->renderer());
     }
 
   private:
     Game *m_game;
-    SDL_Rect m_camera;
-    SDL_Texture *m_drawtex;
+    EntityDrawSystem entityDrawSystem;
+    LightDrawSystem lightDrawSystem;
+    OverlayDrawSystem overlayDrawSystem;
 };
