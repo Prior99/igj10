@@ -63,7 +63,6 @@ class ControlSystem : public entityx::System<ControlSystem>, public entityx::Rec
                 if (state[SDL_SCANCODE_SPACE] || state[SDL_SCANCODE_W] || state[SDL_SCANCODE_UP]) {
                     if (!stoppedSpace) {
                         if (!player->isJumping()) {
-                            std::cout << "Initial jumping" << std::endl;
                             drawable->getAnimation().setAnimation("jump", AnimationPlaybackType::FREEZE);
                         }
                         player->jumping(dt);
@@ -75,7 +74,7 @@ class ControlSystem : public entityx::System<ControlSystem>, public entityx::Rec
                     if (player->isJumping()) {
                         stoppedSpace = true;
                     }
-                    if (collidable->isTouching()){ 
+                    if (collidable->isTouching()){
                         player->resetJumpTime();
                         stoppedSpace = false;
                         auto& animation = drawable->getAnimation();

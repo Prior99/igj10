@@ -25,8 +25,8 @@ class Game {
     void addInsanity(float f);
     void shutdown();
     void popstate();
-	void toggleFreeze();
-	bool isFrozen();
+    void toggleFreeze();
+    bool isFrozen();
 
     std::stack<std::pair<std::string, std::unique_ptr<State>>> &states();
     const std::string &statename() const;
@@ -50,7 +50,7 @@ class Game {
     std::stack<std::pair<std::string, std::unique_ptr<State>>> m_states;
     entityx::EntityX m_ex;
     ResourceManager m_res_manager;
-	bool freeze;
+    bool freeze;
 };
 
 #endif /* end of include guard: GAME_HPP */

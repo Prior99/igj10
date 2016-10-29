@@ -4,56 +4,60 @@
 #include "entityx/entityx.h"
 
 struct PartialDrawable {
-	std::string texture;
-	int height;
+    std::string texture;
+    int height;
 };
 
 struct MultipartDrawable : entityx::Component<MultipartDrawable> {
     MultipartDrawable(int width, PartialDrawable top, PartialDrawable middle, PartialDrawable bottom):
-		top(top),
-		middle(middle),
-		bottom(bottom),
-		totalHeight(top.height + bottom.height),
-		width(width) {
+        top(top),
+        middle(middle),
+        bottom(bottom),
+        totalHeight(top.height + bottom.height),
+        width(width) {
     }
 
     PartialDrawable getTop() {
-		return top;
-	}
+        return top;
+    }
 
-	PartialDrawable getMiddle() {
-		return middle;
-	}
+    PartialDrawable getMiddle() {
+        return middle;
+    }
 
-	PartialDrawable getBottom() {
-		return bottom;
-	}
+    PartialDrawable getBottom() {
+        return bottom;
+    }
 
-	double getRepeat() {
-		return (totalHeight - top.height - bottom.height) / middle.height;
-	}
+    double getRepeat() {
+        return (totalHeight - top.height - bottom.height) / middle.height;
+    }
 
-	void setHeight(int height) {
-		totalHeight = height;
-		int minHeight = top.height + bottom.height;
-		if(totalHeight < minHeight) {
-			totalHeight = minHeight;
-		}
-	}
+    void setHeight(int height) {
+        totalHeight = height;
+        int minHeight = top.height + bottom.height;
+        if(totalHeight < minHeight) {
+            totalHeight = minHeight;
+        }
+    }
 
-	int getWidth() {
-		return width;
-	}
+    void addHeight(int height) {
+        setHeight(totalHeight + height);
+    }
 
-	int getHeight() {
-		return totalHeight;
-	}
+    int getWidth() {
+        return width;
+    }
+
+    int getHeight() {
+        return totalHeight;
+    }
 
   private:
     PartialDrawable top;
-	PartialDrawable middle;
-	PartialDrawable bottom;
-	int totalHeight;
-	int width;
+    PartialDrawable middle;
+    PartialDrawable bottom;
+    int totalHeight;
+    int width;
 };
 #endif

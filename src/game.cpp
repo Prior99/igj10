@@ -20,7 +20,7 @@ Game::~Game() {
 }
 
 int Game::init() {
-	this->freeze = false;
+    this->freeze = false;
     this->player = m_ex.entities.create();
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
         std::cerr << "SDL_Init Error: " << SDL_GetError() << std::endl;
@@ -56,7 +56,6 @@ int Game::init() {
     }
 
     m_res_manager.load_texture("gradient", "res/gradient.png", m_render);
-    m_res_manager.load_texture("playerimg", "res/0.png", m_render);
     m_res_manager.load_texture("player-small", "res/player-small.png", m_render);
     m_res_manager.load_texture("player", "res/player.png", m_render);
     m_res_manager.load_texture("house-01-bottom", "res/house-1/bottom.png", m_render);
@@ -117,7 +116,7 @@ void Game::mainloop() {
 }
 
 bool Game::isFrozen() {
-	return this->freeze;
+    return this->freeze;
 }
 
 SDL_Renderer *Game::renderer() {

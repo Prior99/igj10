@@ -47,7 +47,6 @@ class MapSystem : public entityx::System<MapSystem> {
                     roof.assign<Position>(glm::vec2(x, 400 - 32 - height * 63 - 16));
                     roof.assign<Drawable>("house-01-roof", 128, 32);
                     roof.assign<Box>(glm::vec2(128.0f, 32.0f));
-                    std::cout << i << std::endl;
                     x += margin;
                 }
                 // create sidewalk
@@ -61,8 +60,6 @@ class MapSystem : public entityx::System<MapSystem> {
                     entityx::Entity invisibleFloor = es.create();
                     invisibleFloor.assign<Box>(glm::vec2(64.f, 48.f), true);
                     invisibleFloor.assign<Position>(glm::vec2(0.f + i * streetwidth, 410));
-
-                    std::cout << i << std::endl;
                 }
                 created = true;
             }

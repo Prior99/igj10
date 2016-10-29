@@ -8,6 +8,7 @@
 #include "components/velocity.hpp"
 #include "components/stepping.hpp"
 #include "components/box.hpp"
+#include "components/stomper.hpp"
 #include "components/gravity.hpp"
 #include "components/multipartDrawable.hpp"
 #include "systems/collision.hpp"
@@ -20,6 +21,7 @@
 #include "systems/insanity.hpp"
 #include "systems/animation.hpp"
 #include "systems/stepping.hpp"
+#include "systems/stomper.hpp"
 
 #include "entityx/entityx.h"
 
@@ -42,6 +44,7 @@ int MainState::init() {
     m_systems.add<MapSystem>();
     m_systems.add<InsanitySystem>(m_game);
     m_systems.add<AnimationSystem>();
+    m_systems.add<StomperSystem>();
     m_systems.add<SteppingSystem>(m_game);
     m_systems.configure();
 
@@ -67,13 +70,14 @@ int MainState::init() {
     lol.assign<Position>(glm::vec2(0.f, 0.f));
     lol.assign<Text>("LOL", SDL_Color {200, 100, 100, 150});
 
-
     PartialDrawable top = {"stomper-top", 39};
     PartialDrawable middle = {"stomper-middle", 8};
     PartialDrawable bottom = {"stomper-bottom", 8};
     entityx::Entity stomper = entities.create();
     stomper.assign<Position>(glm::vec2(200.f, 100.f));
     stomper.assign<MultipartDrawable>(36, top, middle, bottom);
+    stomper.assign<Box>(glm::vec2(36.f, 47.f));
+    stomper.assign<Stomper>(0, true);
     stomper.component<MultipartDrawable>()->setHeight(80);
     return 0;
 }
@@ -101,4 +105,5 @@ void MainState::update(double dt) {
     m_systems.update<CollisionSystem>(dt);
     m_systems.update<InsanitySystem>(dt);
     m_systems.update<SteppingSystem>(dt);
+    m_systems.update<StomperSystem>(dt);
 }
