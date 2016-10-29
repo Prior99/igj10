@@ -14,19 +14,11 @@ class InsanitySystem : public entityx::System<InsanitySystem> {
         }
 
         void update(entityx::EntityManager &es, entityx::EventManager &events, double dt) {
-            entityx::ComponentHandle<Velocity> velocity;
-            entityx::ComponentHandle<Player> player;
-            timeSinceIncrease += dt;
-            for (entityx::Entity playerEntity : es.entities_with_components(velocity, player)) {
-                (void) playerEntity;
-                if(velocity->getVelocity().x == 0 && velocity->getVelocity().y == 0 && timeSinceIncrease >= INSANITY_SPEED){
-                    m_game->addInsanity(1);
-                    timeSinceIncrease = 0;
-                }
+            if(this->m_game->isFrozen()){
+                m_game->addInsanity(dt * INSANITY_SPEED);
             }
         }
     private:
       Game *m_game;
-      double timeSinceIncrease = 0;
 };
 #endif

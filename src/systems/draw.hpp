@@ -53,8 +53,10 @@ class DrawSystem : public entityx::System<DrawSystem> {
         auto overlayTexture = overlayDrawSystem.getTexture();
         SDL_SetTextureBlendMode(entityTexture, SDL_BLENDMODE_BLEND);
         SDL_RenderCopy(renderer, entityTexture, &src, &dest);
-        SDL_SetTextureBlendMode(lightTexture, SDL_BLENDMODE_MOD);
-        SDL_RenderCopy(renderer, lightTexture, &src, &dest);
+        if (this->game->isFrozen()) {
+            SDL_SetTextureBlendMode(lightTexture, SDL_BLENDMODE_MOD);
+            SDL_RenderCopy(renderer, lightTexture, &src, &dest);
+        }
         SDL_SetTextureBlendMode(overlayTexture, SDL_BLENDMODE_BLEND);
         SDL_RenderCopy(renderer, overlayTexture, &src, &dest);
         SDL_SetRenderTarget(renderer, nullptr);

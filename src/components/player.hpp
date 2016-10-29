@@ -11,16 +11,20 @@ struct Player : entityx::Component<Player> {
     
     }
 
-    resetJumpTime() {
+    void resetJumpTime() {
         this->jumpTime = MAX_JUMP;
     }
 
-    jumping(double dt) {
+    void jumping(double dt) {
         this->jumpTime = glm::max(this->jumpTime - (float)dt, 0.0f);
     }
 
-    getJumpTime() {
+    float getJumpTime() {
         return this->jumpTime;
+    }
+
+    bool isJumping() {
+        return this->jumpTime < MAX_JUMP;
     }
 
   private:

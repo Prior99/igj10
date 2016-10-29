@@ -56,8 +56,8 @@ class LightDrawSystem {
                 SDL_QueryTexture(tex, nullptr, nullptr, &wPlayer, &hPlayer);
             }
 
-            auto wLight = wPlayer * light->scale() / m_game->getInsanity();
-            auto hLight = hPlayer * light->scale() / m_game->getInsanity();
+            auto wLight = wPlayer * light->scale() / game->getInsanity();
+            auto hLight = hPlayer * light->scale() / game->getInsanity();
 
             // Converted position
             auto pos = glm::vec2(coord.x + wPlayer / 2 - wLight / 2, coord.y + hPlayer / 2 - hLight / 2) - offset;

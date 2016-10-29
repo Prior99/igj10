@@ -20,6 +20,7 @@ Game::~Game() {
 }
 
 int Game::init() {
+	this->freeze = false;
     this->player = m_ex.entities.create();
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
         std::cerr << "SDL_Init Error: " << SDL_GetError() << std::endl;
@@ -73,6 +74,13 @@ int Game::init() {
     return 0;
 }
 
+void Game::toggleFreeze() {
+    this->freeze = !this->freeze;
+    if (!this->freeze) {
+        this->setInsanity(1.0f);
+    }
+}
+
 
 entityx::Entity Game::getPlayer() {
     return this->player;
@@ -84,6 +92,10 @@ void Game::mainloop() {
     m_last_frame_time = current_time;
 
     m_states.top().second->update(dt);
+}
+
+bool Game::isFrozen() {
+	return this->freeze;
 }
 
 SDL_Renderer *Game::renderer() {
@@ -106,16 +118,16 @@ bool Game::is_running() {
     return m_running;
 }
 
-int Game::getInsanity() {
+float Game::getInsanity() {
     return insanity;
 }
 
-void Game::setInsanity(int i) {
-    this->insanity = i;
+void Game::setInsanity(float f) {
+    this->insanity = f;
 }
 
-void Game::addInsanity(int i) {
-    this->insanity += i;
+void Game::addInsanity(float f) {
+    this->insanity += f;
 }
 
 void Game::shutdown() {

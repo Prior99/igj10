@@ -29,7 +29,7 @@ MainState::~MainState() {
 
 int MainState::init() {
     m_systems.add<DrawSystem>(m_game);
-    m_systems.add<ControlSystem>();
+    m_systems.add<ControlSystem>(m_game);
     m_systems.add<MovementSystem>();
     m_systems.add<GravitySystem>();
     m_systems.add<CollisionSystem>();
@@ -45,14 +45,9 @@ int MainState::init() {
         box1.assign<Drawable>("house", 128, 128);
     }
 
-    entityx::Entity sun = entities.create();
-    sun.assign<Position>(glm::vec2(GAME_WIDTH / 2, -100));
-    glm::i8vec3 sunColor = {255, 255, 255};
-    sun.assign<Light>("gradient", (GAME_HEIGHT + 200) * 2 / 200, sunColor);
-
     auto playerAnimations = AnimationCollection("player");
     playerAnimations.addAnimation("run", 0, 4, 1, glm::vec2(16, 24));
-    playerAnimations.addAnimation("jump", 0, 4, 1, glm::vec2(16, 24));
+    playerAnimations.addAnimation("jump", 24, 3, 1, glm::vec2(16, 24));
     playerAnimations.setAnimation("run", AnimationPlaybackType::LOOP);
 
     entityx::Entity player = entities.create();

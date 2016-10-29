@@ -93,7 +93,7 @@ struct AnimationCollection {
                     paused = true;
                     break;
                 case AnimationPlaybackType::LOOP:
-                    // Nothing to do here
+                    animation->runTime = 0;
                     break;
             }
         }

@@ -20,11 +20,13 @@ class Game {
     int init();
     void mainloop();
     bool is_running();
-    int getInsanity();
-    void setInsanity(int i);
-    void addInsanity(int i);
+    float getInsanity();
+    void setInsanity(float f);
+    void addInsanity(float f);
     void shutdown();
     void popstate();
+	void toggleFreeze();
+	bool isFrozen();
 
     std::stack<std::pair<std::string, std::unique_ptr<State>>> &states();
     const std::string &statename() const;
@@ -39,7 +41,7 @@ class Game {
 
   private:
     entityx::Entity player;
-    int insanity = 1;
+    float insanity = 1.0f;
     bool m_running = true;
     int m_last_frame_time = 0;
 
@@ -48,6 +50,7 @@ class Game {
     std::stack<std::pair<std::string, std::unique_ptr<State>>> m_states;
     entityx::EntityX m_ex;
     ResourceManager m_res_manager;
+	bool freeze;
 };
 
 #endif /* end of include guard: GAME_HPP */
