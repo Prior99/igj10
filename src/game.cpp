@@ -49,27 +49,33 @@ int Game::init() {
                   << std::endl;
         return 1;
     }
+    Mix_AllocateChannels(100);
 
     if (TTF_Init() != 0) {
         std::cerr << "SDL_ttf could not initialize! SDL_ttf Error: " << TTF_GetError() << std::endl;
         return 1;
     }
 
-    m_res_manager.load_texture("gradient", "res/gradient.png", m_render);
-    m_res_manager.load_texture("player-small", "res/player-small.png", m_render);
-    m_res_manager.load_texture("player", "res/player.png", m_render);
-    m_res_manager.load_texture("house-01-bottom", "res/house-1/bottom.png", m_render);
-    m_res_manager.load_texture("house-01-middle", "res/house-1/middle.png", m_render);
-    m_res_manager.load_texture("house-01-roof", "res/house-1/roof.png", m_render);
-    m_res_manager.load_texture("sidewalk", "res/sidewalk.png", m_render);
-    m_res_manager.load_texture("street", "res/street.png", m_render);
-    m_res_manager.load_texture("background", "res/background.png", m_render);
+    // Stomper
     m_res_manager.load_texture("stomper-top", "res/stomper.png", m_render);
     m_res_manager.load_texture("stomper-middle", "res/stomper-worm.png", m_render);
     m_res_manager.load_texture("stomper-bottom", "res/stomper-head.png", m_render);
+    // House 1
+    m_res_manager.load_texture("house-01-bottom", "res/house-1/bottom.png", m_render);
+    m_res_manager.load_texture("house-01-middle", "res/house-1/middle.png", m_render);
+    m_res_manager.load_texture("house-01-roof", "res/house-1/roof.png", m_render);
+    // Other
+    m_res_manager.load_texture("gradient", "res/gradient.png", m_render);
+    m_res_manager.load_texture("player", "res/player.png", m_render);
+    m_res_manager.load_texture("sidewalk", "res/sidewalk.png", m_render);
+    m_res_manager.load_texture("street", "res/street.png", m_render);
+    m_res_manager.load_texture("background", "res/background.png", m_render);
     m_res_manager.load_texture("splatter", "res/Splatter.png", m_render);
+    m_res_manager.load_texture("splatter-splatter", "res/SplatterHouse.png", m_render);
+    // Fonts
     m_res_manager.load_font("font-big", "res/Munro.ttf", 20);
     m_res_manager.load_font("font-small", "res/Munro.ttf", 10);
+    // Steps
     m_res_manager.load_sound("step-01", "res/sounds/Step1.wav");
     m_res_manager.load_sound("step-02", "res/sounds/Step2.wav");
     m_res_manager.load_sound("step-03", "res/sounds/Step3.wav");
@@ -77,6 +83,14 @@ int Game::init() {
     m_res_manager.load_sound("step-05", "res/sounds/Step5.wav");
     m_res_manager.load_sound("step-06", "res/sounds/Step6.wav");
     m_res_manager.load_sound("step-07", "res/sounds/Step7.wav");
+    // Stomper
+    m_res_manager.load_sound("stomper-down", "res/sounds/StomperDownNew.wav");
+    m_res_manager.load_sound("stomper-lock", "res/sounds/StomperLockNew.wav");
+    m_res_manager.load_sound("stomper-smash", "res/sounds/StomperSmashNew.wav");
+    m_res_manager.load_sound("stomper-up", "res/sounds/StomperUpNew.wav");
+    m_res_manager.load_sound("stomper-warning", "res/sounds/StomperWarningNew.wav");
+    // Other
+    m_res_manager.load_sound("splatter", "res/sounds/SplatterNew.wav");
     m_res_manager.load_sound("landing", "res/sounds/CrappyLanding.wav");
     m_res_manager.load_sound("heartbeat", "res/sounds/HeartBeatSoftLoop.wav");
     m_res_manager.load_music("chill-song", "res/sounds/ChillSongBeta.wav");
