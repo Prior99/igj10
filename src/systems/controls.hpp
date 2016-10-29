@@ -22,7 +22,6 @@
 #include <SDL_mixer.h>
 #endif
 
-#include <stdlib.h>
 #include<iostream>
 
 class ControlSystem : public entityx::System<ControlSystem> {
@@ -66,11 +65,10 @@ class ControlSystem : public entityx::System<ControlSystem> {
                         player->resetJumpTime();
                         auto& animation = drawable->getAnimation();
                         if(animation.getCurrentAnimation() != "run") {
-                            int rnd = (rand() % 7) + 1;
                             animation.pause(false);
                             animation.setAnimation("run", AnimationPlaybackType::LOOP);
-                            Mix_Volume(1, 70);
-                            Mix_PlayChannel(1, game->res_manager().sound("step-0" + std::to_string(rnd)), 0);
+                            Mix_Volume(2, 50);
+                            Mix_PlayChannel(2, game->res_manager().sound("landing"), 0);
                         }
                     }
                 }

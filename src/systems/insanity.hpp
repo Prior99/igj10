@@ -27,8 +27,8 @@ class InsanitySystem : public entityx::System<InsanitySystem> {
                 if (this->time > glm::max(glm::min(20.0f / game->getInsanity(), 4.0f), 1.0f)) {
                     game->addInsanity(-0.5);
                     this->time = 0.0f;
-                    Mix_Volume(1, 100);
-                    Mix_PlayChannel(1, game->res_manager().sound("heartbeat"), 0);
+                    Mix_Volume(3, 100);
+                    Mix_PlayChannel(3, game->res_manager().sound("heartbeat"), 0);
                 }
             } else {
                 factor = 1.0f;

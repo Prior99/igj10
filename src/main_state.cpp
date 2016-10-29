@@ -52,8 +52,8 @@ int MainState::init() {
     entityx::Entity player = entities.create();
     player.assign<Position>(glm::vec2(000.f, 000.f));
 	player.assign<Drawable>("player-small", 16, 24, playerAnimations);
-    glm::i8vec3 testcolor = {255, 128, 32};
-    player.assign<Light>("gradient", 100, testcolor);
+    glm::i8vec3 testcolor = {255, 64, 16};
+    player.assign<Light>("gradient", 500, testcolor);
 	player.assign<Velocity>();
 	player.assign<Stepping>();
 	player.assign<Gravity>();

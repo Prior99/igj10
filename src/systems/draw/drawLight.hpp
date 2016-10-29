@@ -32,7 +32,7 @@ class LightDrawSystem {
 
         // Change to render into light rendertexture for now
         SDL_SetRenderTarget(game->renderer(), lightTexture);
-        SDL_SetRenderDrawColor(game->renderer(), 20, 20, 20, 255);
+        SDL_SetRenderDrawColor(game->renderer(), 0, 0, 0, 255);
         SDL_RenderClear(game->renderer());
 
         entityx::ComponentHandle<Drawable> drawable;
@@ -56,12 +56,11 @@ class LightDrawSystem {
                 SDL_QueryTexture(tex, nullptr, nullptr, &wPlayer, &hPlayer);
             }
 
-            auto wLight = wPlayer * light->scale() / game->getInsanity();
-            auto hLight = hPlayer * light->scale() / game->getInsanity();
+            auto wLight = light->scale() / game->getInsanity();
 
             // Converted position
-            auto pos = glm::vec2(coord.x + wPlayer / 2 - wLight / 2, coord.y + hPlayer / 2 - hLight / 2) - offset;
-            SDL_Rect dest{pos.x, pos.y, wLight, hLight};
+            auto pos = glm::vec2(coord.x + wPlayer / 2 - wLight / 2, coord.y + hPlayer / 2 - wLight / 2) - offset;
+            SDL_Rect dest{pos.x, pos.y, wLight, wLight};
 
             SDL_SetTextureBlendMode(tex, SDL_BLENDMODE_ADD);
             SDL_SetTextureColorMod(tex, light->color().r, light->color().g, light->color().b);
