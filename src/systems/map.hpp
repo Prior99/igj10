@@ -32,9 +32,17 @@ class MapSystem : public entityx::System<MapSystem> {
                 int height = rand() % 5;
                 for (int i = 0; i < maplength * floor(housewidth/housewidth); i++) {
                     bool up = rand() % 2 == 1;
+                    if (i != 0) {
+                        auto margin = housewidth + rand() % 180;
+                        if (up && height != 6) {
+                            margin -= 40 + rand() % 40;
+                        } else if (height != 1) {
+                            margin += rand() % 40;
+                        }
+                        x += glm::max(margin, housewidth);
+                    }
                     height = up ? height + 1 : height - 1;
                     height = glm::min(glm::max(height, 1), 6);
-                    auto margin = housewidth + 60 + rand() % 120;
                     entityx::Entity bottom = es.create();
                     bottom.assign<Position>(glm::vec2(x, 400 - 32));
                     bottom.assign<Drawable>("house-01-bottom", 128, 32);
@@ -47,7 +55,6 @@ class MapSystem : public entityx::System<MapSystem> {
                     roof.assign<Position>(glm::vec2(x, 400 - 32 - height * 63 - 16));
                     roof.assign<Drawable>("house-01-roof", 128, 32);
                     roof.assign<Box>(glm::vec2(128.0f, 32.0f));
-                    x += margin;
                 }
                 // create sidewalk
                 for (int i = 0; i < maplength * (floor(housewidth/sidewalkwidth)+floor(250.f/sidewalkwidth)); i++) {
