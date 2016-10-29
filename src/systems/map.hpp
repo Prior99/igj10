@@ -41,11 +41,14 @@ class MapSystem : public entityx::System<MapSystem> {
                 for (int i = 0; i < maplength * (floor(housewidth/sidewalkwidth)+floor(housemargin/sidewalkwidth)); i++) {
                     entityx::Entity sidewalk = es.create();
                     sidewalk.assign<Position>(glm::vec2(0.f + i * sidewalkwidth, 400));
-                    sidewalk.assign<Box>(glm::vec2(64.f, 48.f));
                     sidewalk.assign<Drawable>("sidewalk", sidewalkwidth, 48);
                     entityx::Entity street = es.create();
                     street.assign<Position>(glm::vec2(0.f + i * streetwidth, 404));
                     street.assign<Drawable>("street", streetwidth, 48);
+                    entityx::Entity invisibleFloor = es.create();
+                    invisibleFloor.assign<Box>(glm::vec2(64.f, 48.f));
+                    invisibleFloor.assign<Position>(glm::vec2(0.f + i * streetwidth, 416));
+
                     std::cout << i << std::endl;
                 }
                 created = true;
