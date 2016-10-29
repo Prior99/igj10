@@ -30,6 +30,8 @@ static const float MAX_JUMP = 0.25f;
 static const float PARALLAXITY = 4.0;
 static const float TEXT_DURATION = 2.0f;
 static const int DEATH_MESSAGE_COUNT = 11;
+static const int PREGENERATE = 1200;
+static const int GAME_BOTTOM = 400;
 static const std::string DEATH_MESSAGES[DEATH_MESSAGE_COUNT] = {
     "Noob",
     "Lol",

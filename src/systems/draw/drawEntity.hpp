@@ -88,7 +88,6 @@ class EntityDrawSystem {
 
         auto pos = position->getPosition() - offset;
         float progress = text->getTime() / TEXT_DURATION;
-        std::cout << (int)(255 * progress) << std::endl;
         auto color = SDL_Color{255, 255, 255};
         auto surf = TTF_RenderText_Blended(game->res_manager().font("font-small"), text->getText().c_str(), color);
         SDL_LockSurface(surf);

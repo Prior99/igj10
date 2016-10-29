@@ -11,6 +11,13 @@
 #include <glm/vec2.hpp>
 
 #include <iostream>
+#include <math.h>
+
+static const int houseWidth = 128;
+
+int tobergteDifficultyFunction(int x, int max) {
+    return glm::min(glm::max(log(x*x) * 2.0, 1.0), (double)max);
+}
 
 class MapSystem : public entityx::System<MapSystem> {
     public:
@@ -18,74 +25,98 @@ class MapSystem : public entityx::System<MapSystem> {
             srand (time(0));
         }
 
-        void update(entityx::EntityManager &es, entityx::EventManager &events, double dt) {
-            glm::vec2 pos;
-            if(!created) {
-                pos = glm::vec2(0, 0);
-            } else {
-                auto player = game->getPlayer();
-                pos = player.component<Position>()->getPosition();
-            }
-            //calculate values
-            int housewidth = 128;
-
-            // create foregroundhouses
-            while (mapGeneratedX < pos.x + 1200) {
-                int heightChange = rand() % 3;
-                if (mapGeneratedX != 0) {
-                    auto margin = housewidth + 60 + rand() % 90;
-                    if (heightChange == 0 && height != 6) {
-                        margin -= 40 + rand() % 40;
-                    } else if (heightChange == 2 && height != 1) {
-                        margin += rand() % 20;
-                    }
-                    mapGeneratedX += glm::max(margin, housewidth);
-                }
-                if (heightChange == 0 && height < 10) {
-                    height++;
-                }
-                if (heightChange == 2 && height > 1) {
-                    height --;
-                }
-                entityx::Entity bottom = es.create();
-                bottom.assign<Position>(glm::vec2(mapGeneratedX, 400 - 32));
-                bottom.assign<Drawable>("house-01-bottom", 128, 32);
-                for (int j = 0; j < height; j++) {
-                    entityx::Entity middle = es.create();
-                    middle.assign<Position>(glm::vec2(mapGeneratedX, 400 - 32 - (j + 1) * 63));
-                    middle.assign<Drawable>("house-01-middle", 128, 63);
-                }
-                entityx::Entity roof = es.create();
-                roof.assign<Position>(glm::vec2(mapGeneratedX, 400 - 32 - height * 63 - 16));
-                roof.assign<Drawable>("house-01-roof", 128, 32);
-                roof.assign<Box>(glm::vec2(128.0f, 32.0f));
-                if (mapGeneratedX == 0) {
-                    mapGeneratedX = 1;
-                }
-            }
-            while(sidewalkGeneratedX < pos.x + 1200) {
+        void generateStreet(entityx::EntityManager &es, glm::vec2 pos) {
+            const int streetChunkWidth = 64;
+            while(sidewalkGeneratedX < pos.x + PREGENERATE) {
+                // Generate sidewalk texture
                 entityx::Entity sidewalk = es.create();
-                sidewalk.assign<Position>(glm::vec2(0.f + sidewalkGeneratedX, 400));
-                sidewalk.assign<Drawable>("sidewalk", 64, 48);
+                sidewalk.assign<Position>(glm::vec2((float)sidewalkGeneratedX, GAME_BOTTOM));
+                sidewalk.assign<Drawable>("sidewalk", streetChunkWidth, 48);
+                // Generate street texture
                 entityx::Entity street = es.create();
-                street.assign<Position>(glm::vec2(0.f + sidewalkGeneratedX, 404));
-                street.assign<Drawable>("street", 64, 48);
+                street.assign<Position>(glm::vec2((float)sidewalkGeneratedX, GAME_BOTTOM + 4));
+                street.assign<Drawable>("street", streetChunkWidth, 48);
+                // Generate invisble floor of death
                 entityx::Entity invisibleFloor = es.create();
-                invisibleFloor.assign<Box>(glm::vec2(64.f, 48.f), true);
-                invisibleFloor.assign<Position>(glm::vec2(0.f + sidewalkGeneratedX, 410));
-                sidewalkGeneratedX += 64;
+                invisibleFloor.assign<Box>(glm::vec2((float)streetChunkWidth, 48.f), true);
+                invisibleFloor.assign<Position>(glm::vec2((float)sidewalkGeneratedX, GAME_BOTTOM + 10));
+                // All of them were streetChunkWid pixel wide, so increase accordingly
+                sidewalkGeneratedX += streetChunkWidth;
             }
-            created = true;
+        }
+
+        void createHouse(entityx::EntityManager &es, int height, int x) {
+            static const int roofHeight = 16;
+            static const int bottomHeight = 32;
+            static const int middleHeight = 63;
+            // Generate bottom part of house
+            entityx::Entity bottom = es.create();
+            bottom.assign<Position>(glm::vec2(x, GAME_BOTTOM - bottomHeight));
+            bottom.assign<Drawable>("house-01-bottom", houseWidth, bottomHeight);
+            // Generate middle parts of house, dependend on height
+            for (int j = 0; j < height; j++) {
+                entityx::Entity middle = es.create();
+                middle.assign<Position>(glm::vec2(x, GAME_BOTTOM - bottomHeight - (j + 1) * middleHeight));
+                middle.assign<Drawable>("house-01-middle", houseWidth, middleHeight);
+            }
+            const int totalMiddleHeight = middleHeight * height;
+            // Generate roof part of house
+            entityx::Entity roof = es.create();
+            roof.assign<Position>(glm::vec2(x, GAME_BOTTOM - bottomHeight - totalMiddleHeight - roofHeight));
+            roof.assign<Drawable>("house-01-roof", houseWidth, roofHeight);
+            roof.assign<Box>(glm::vec2((float)houseWidth, (float)roofHeight));
+        }
+
+        void generateBuildings(entityx::EntityManager &es, glm::vec2 pos) {
+            static const int BUILDING_HIGHER_1 = 0;
+            static const int BUILDING_HIGHER_2 = 1;
+            static const int BUILDING_SAME = 2;
+            static const int BUILDING_LOWER = 3;
+            static const int BUILDING_LOWER_TWICE = 4;
+            static const int minGap = 10;
+            static const int variableGapSize = 80;
+            while (mapGeneratedX < pos.x + PREGENERATE) {
+                int heightChange = rand() % 5; // 0 = higher, 1 = same height, 2 = lower, 3 = twice lower
+                int heightDifferenceModifier;
+                if ((heightChange == BUILDING_HIGHER_1 || heightChange == BUILDING_HIGHER_2) && height < 10) {
+                    height++;
+                    heightDifferenceModifier = 0;
+                }
+                if (heightChange == BUILDING_SAME && height > 1) {
+                    heightDifferenceModifier = rand() % tobergteDifficultyFunction(mapGeneratedX, 20);
+                }
+                if (heightChange == BUILDING_LOWER && height > 1) {
+                    height --;
+                    heightDifferenceModifier = rand() % tobergteDifficultyFunction(mapGeneratedX, 50);
+                }
+                if (heightChange == BUILDING_LOWER_TWICE && height > 2) {
+                    height -= 2;
+                    heightDifferenceModifier = rand() % tobergteDifficultyFunction(mapGeneratedX, 100);
+                }
+                createHouse(es, height, mapGeneratedX);
+                mapGeneratedX += houseWidth + minGap + rand() % variableGapSize + heightDifferenceModifier;
+            }
+        }
+
+        void cleanup(entityx::EntityManager &es, glm::vec2 pos) {
             entityx::ComponentHandle<Position> position;
             for (entityx::Entity entity : es.entities_with_components(position)) {
-                if (position->getPosition().x < pos.x - 1200) {
+                if (position->getPosition().x < pos.x - PREGENERATE) {
                     entity.destroy();
                 }
             }
         }
 
+        void update(entityx::EntityManager &es, entityx::EventManager &events, double dt) {
+            glm::vec2 pos;
+            auto player = game->getPlayer();
+            pos = player.component<Position>()->getPosition();
+            generateStreet(es, pos);
+            generateBuildings(es, pos);
+            cleanup(es, pos);
+        }
+
     private:
-        bool created;
         Game *game;
         int x;
         int mapGeneratedX;

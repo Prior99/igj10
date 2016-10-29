@@ -49,8 +49,6 @@ int MainState::init() {
     m_systems.add<SteppingSystem>(m_game);
     m_systems.configure();
 
-    m_systems.update<MapSystem>(0.0f);
-
     auto playerAnimations = AnimationCollection("player");
     playerAnimations.addAnimation("run", 0, 4, 0.3, glm::vec2(16, 24));
     playerAnimations.addAnimation("jump", 24, 3, 0.5, glm::vec2(16, 24));
