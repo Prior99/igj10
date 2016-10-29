@@ -33,17 +33,21 @@ class ControlSystem : public entityx::System<ControlSystem> {
                 (void) entity;
 
                 const Uint8 *state = SDL_GetKeyboardState(NULL);
+                bool walking = false;
                 if (state[SDL_SCANCODE_RETURN]) {
                     this->game->toggleFreeze();
                 }
                 if (state[SDL_SCANCODE_A] || state[SDL_SCANCODE_LEFT]) {
                     velocity->drag(glm::vec2(-1.0f, 0.0f) * SPEED);
+                    walking = true;
                 }
                 if (state[SDL_SCANCODE_D] || state[SDL_SCANCODE_RIGHT]) {
                     velocity->drag(glm::vec2(1.0f, 0.0f) * SPEED);
+                    walking = true;
                 }
                 if (state[SDL_SCANCODE_SPACE] || state[SDL_SCANCODE_W] || state[SDL_SCANCODE_UP]) {
                     if (!player->isJumping()) {
+                        std::cout << "Initial jumping" << std::endl;
                         drawable->getAnimation().setAnimation("jump", AnimationPlaybackType::FREEZE);
                     }
                     player->jumping(dt);
@@ -51,11 +55,19 @@ class ControlSystem : public entityx::System<ControlSystem> {
                         velocity->drag(glm::vec2(0, -JUMP_SPEED));
                     }
                 } else {
-                    if (collidable->isTouching()) {
+                    if (collidable->isTouching()){ 
                         player->resetJumpTime();
-                        drawable->getAnimation().setAnimation("run", AnimationPlaybackType::LOOP);
-                        drawable->getAnimation().pause(false);
+                        auto& animation = drawable->getAnimation();
+                        if(animation.getCurrentAnimation() != "run") {
+                            animation.pause(false);
+                            animation.setAnimation("run", AnimationPlaybackType::LOOP);
+                        }
                     }
+                }
+                if (walking && !player->isJumping()) {
+                    drawable->getAnimation().pause(false);
+                } else {
+                    drawable->getAnimation().pause(true);
                 }
             }
         }

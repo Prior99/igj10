@@ -64,9 +64,9 @@ struct AnimationCollection {
 
     SDL_Rect* getAnimationFrame(SDL_Rect* rect) {
         if (animations.count(currentAnimation)) {
-            auto animation = animations[currentAnimation];
+            auto& animation = animations[currentAnimation];
 
-            int currentFrame = animation->runTime * animation->frames / animation->duration;
+            int currentFrame = (int)(animation->runTime * animation->frames / animation->duration) % animation->frames;
             rect->x = currentFrame * animation->size.x;
             rect->y = animation->offset;
             rect->w = animation->size.x;
@@ -78,18 +78,18 @@ struct AnimationCollection {
     }
 
     void update(double dt) {
-        auto animation = animations[currentAnimation];
+        auto& animation = animations[currentAnimation];
         if(!paused) {
             animation->runTime += dt;
         }
-        if (animation->runTime > animation->duration) {
+        if (animation->runTime >= animation->duration) {
             switch(playbackType) {
                 case AnimationPlaybackType::RESET:
                     animation->runTime = 0;
                     currentAnimation.erase();
                     break;
                 case AnimationPlaybackType::FREEZE:
-                    animation->runTime = animation->duration;
+                    animation->runTime = animation->duration - dt;
                     paused = true;
                     break;
                 case AnimationPlaybackType::LOOP:
@@ -97,6 +97,10 @@ struct AnimationCollection {
                     break;
             }
         }
+    }
+
+    std::string getCurrentAnimation() {
+        return this->currentAnimation;
     }
 
   private:

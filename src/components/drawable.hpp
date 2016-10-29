@@ -39,7 +39,7 @@ struct Drawable : entityx::Component<Drawable> {
         return !animation.getTextureKey().empty();
     }
 
-    auto getAnimation() {
+    AnimationCollection& getAnimation() {
         return animation;
     }
 

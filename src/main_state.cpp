@@ -46,8 +46,8 @@ int MainState::init() {
     }
 
     auto playerAnimations = AnimationCollection("player");
-    playerAnimations.addAnimation("run", 0, 4, 1, glm::vec2(16, 24));
-    playerAnimations.addAnimation("jump", 24, 3, 1, glm::vec2(16, 24));
+    playerAnimations.addAnimation("run", 0, 4, 0.3, glm::vec2(16, 24));
+    playerAnimations.addAnimation("jump", 24, 3, 0.5, glm::vec2(16, 24));
     playerAnimations.setAnimation("run", AnimationPlaybackType::LOOP);
 
     entityx::Entity player = entities.create();

@@ -45,7 +45,7 @@ class EntityDrawSystem {
             SDL_Texture* texture = game->res_manager().texture(drawable->texture_key());
             SDL_Rect *clip = &src;
             if(drawable->hasAnimation()){
-                auto animation = drawable->getAnimation();
+                auto& animation = drawable->getAnimation();
                 texture = game->res_manager().texture(animation.getTextureKey());
                 clip = animation.getAnimationFrame(clip);
             }
