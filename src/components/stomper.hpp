@@ -10,7 +10,7 @@
 struct Stomper : entityx::Component<Stomper> {
     Stomper() : extended(0) {
     }
-    Stomper(int extended, bool running) : extended(extended), running(running) {
+    Stomper(int extended, int speed, bool running) : extended(extended), speed(speed), running(running) {
     }
 
     int getExtended() {
@@ -46,9 +46,23 @@ struct Stomper : entityx::Component<Stomper> {
     void toggleDirection() {
         this->extending = !this->extending;
     }
+    int getSpeed() {
+        return this->speed;
+    }
+    void update(double dt){
+        if(isRunning()){
+            if(isExtending()){
+                addExtended(speed * dt);
+            }
+            else{
+                subExtended(speed * dt);
+            }
+        }
+    }
 
   private:
     int extended;
+    int speed;
     bool running;
     bool extending;
 };

@@ -27,15 +27,7 @@ class StomperSystem : public entityx::System<StomperSystem> {
         entityx::ComponentHandle<MultipartDrawable> drawableStomper;
         for(entityx::Entity stomperEntity: es.entities_with_components(positionStomper, boxStomper, stomper, drawableStomper)) {
             (void)stomperEntity;
-            if(stomper->isRunning()){
-
-                if(stomper->isExtending()){
-                    stomper->addExtended();
-                }
-                else{
-                    stomper->subExtended();
-                }
-            }
+            stomper->update(dt);
             if(stomper->getExtended() <= 0){
                 stomper->toggleDirection();
                 stomper->setExtended(0);
@@ -53,7 +45,7 @@ class StomperSystem : public entityx::System<StomperSystem> {
                     int boxTop = positionColliding->getPosition().y;
 
                     if(boxTop < stomperBottom && boxLeft < stomperRight && boxRight > stomperLeft) {
-                        stomper->subExtended(abs(stomperBottom - boxTop) + 1);
+                        stomper->subExtended(abs(stomperBottom - boxTop) + stomper->getSpeed() * dt);
                         stomper->toggleDirection();
                     }
                 }

@@ -48,7 +48,7 @@ int MainState::init() {
     m_systems.add<SteppingSystem>(m_game);
     m_systems.configure();
 
-    m_systems.update<MapSystem>(0.0f);	
+    m_systems.update<MapSystem>(0.0f);
 
     auto playerAnimations = AnimationCollection("player");
     playerAnimations.addAnimation("run", 0, 4, 0.3, glm::vec2(16, 24));
@@ -77,7 +77,7 @@ int MainState::init() {
     stomper.assign<Position>(glm::vec2(200.f, 100.f));
     stomper.assign<MultipartDrawable>(36, top, middle, bottom);
     stomper.assign<Box>(glm::vec2(36.f, 47.f));
-    stomper.assign<Stomper>(0, true);
+    stomper.assign<Stomper>(0, 300, true);
     stomper.component<MultipartDrawable>()->setHeight(80);
     return 0;
 }
