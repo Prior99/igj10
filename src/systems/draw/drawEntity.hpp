@@ -42,7 +42,14 @@ class EntityDrawSystem {
             SDL_Rect dest{pos.x, pos.y, drawable->getWidth(), drawable->getHeight()};
             SDL_Rect src{0, 0, drawable->getWidth(), drawable->getHeight()};
 
-            SDL_RenderCopy(game->renderer(), game->res_manager().texture(drawable->texture_key()), &src, &dest);
+            SDL_Texture* texture = game->res_manager().texture(drawable->texture_key());
+            SDL_Rect *clip = &src;
+            if(drawable->hasAnimation()){
+                auto animation = drawable->getAnimation();
+                texture = game->res_manager().texture(animation.getTextureKey());
+                clip = animation.getAnimationFrame(clip);
+            }
+            SDL_RenderCopy(game->renderer(), texture, clip, &dest);
         }
     }
 
