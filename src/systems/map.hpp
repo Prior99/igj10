@@ -29,7 +29,7 @@ class MapSystem : public entityx::System<MapSystem> {
             //calculate values
             int housewidth = 128;
 
-            // create houses
+            // create foregroundhouses
             while (mapGeneratedX < pos.x + 1200) {
                 int heightChange = rand() % 3;
                 if (mapGeneratedX != 0) {
