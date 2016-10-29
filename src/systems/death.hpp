@@ -27,15 +27,12 @@ class DeathSystem : public entityx::System<DeathSystem>, public entityx::Receive
         }
 
         void update(entityx::EntityManager &es, entityx::EventManager &events, double dt) {
-            (void) es;
             (void) events;
             (void) dt;
             if (died && !done) {
                 entityx::Entity splatter = es.create();
                 auto player = game->getPlayer();
                 auto pos = player.component<Position>()->getPosition();
-                (void) pos;
-                (void) splatter;
                 splatter.assign<Position>(pos + glm::vec2(0, 20));
                 auto splatterAnimation = AnimationCollection("splatter");
                 splatterAnimation.addAnimation("splatter", 0, 7, 1.0, glm::vec2(64, 24));
