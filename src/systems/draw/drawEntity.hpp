@@ -93,13 +93,13 @@ class EntityDrawSystem {
         SDL_LockSurface(surf);
         SDL_PixelFormat* fmt = surf->format;
         unsigned bpp = fmt->BytesPerPixel;
-        for (int y = 0; y < surf->h; y++) 
+        for (int y = 0; y < surf->h; y++)
             for (int x = 0; x < surf->w; x++) {
                 Uint32* pixel_ptr = (Uint32 *)((Uint8 *)surf->pixels + y * surf->pitch + x * bpp);
                 Uint8 r, g, b, a;
                 SDL_GetRGBA( *pixel_ptr, fmt, &r, &g, &b, &a );
                 *pixel_ptr = SDL_MapRGBA( fmt, r, g, b, (int)(a * (0.5f + 0.5f * (1.0 - progress))));
-            }   
+            }
 
         SDL_UnlockSurface(surf);
         auto texture = SDL_CreateTextureFromSurface(game->renderer(), surf);
@@ -132,6 +132,12 @@ class EntityDrawSystem {
     void update(entityx::EntityManager &es, entityx::EventManager &events,
                 entityx::TimeDelta dt) {
         auto playerPos = game->getPlayer().component<Position>()->getPosition();
+        entityx::ComponentHandle<Drawable> drawable = game->getPlayer().component<Drawable>();
+        if(drawable) {
+            auto playerWidth = drawable->getWidth();
+            auto playerHeight = drawable->getHeight();
+            playerPos = glm::vec2(playerPos.x + playerWidth / 2, playerPos.y + playerHeight / 2);
+        }
         auto offset = playerPos - glm::vec2(GAME_WIDTH / 4.0f, GAME_HEIGHT) / 2.0f;
         offset.y = glm::min(offset.y, 210.0f);
 
