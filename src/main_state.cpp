@@ -13,6 +13,8 @@
 #include "systems/movement.hpp"
 #include "systems/gravity.hpp"
 #include "systems/draw.hpp"
+#include "systems/death.hpp"
+#include "systems/map.hpp"
 #include "systems/insanity.hpp"
 #include "systems/animation.hpp"
 
@@ -33,17 +35,11 @@ int MainState::init() {
     m_systems.add<MovementSystem>();
     m_systems.add<GravitySystem>();
     m_systems.add<CollisionSystem>();
+    m_systems.add<DeathSystem>(m_game);
+    m_systems.add<MapSystem>();
     m_systems.add<InsanitySystem>(m_game);
     m_systems.add<AnimationSystem>();
     m_systems.configure();
-
-    srand (15);
-    for (int i = 0; i < 10; i++) {
-        entityx::Entity box1 = entities.create();
-        box1.assign<Position>(glm::vec2(i * 250.f, 200.f + rand() % 100 - 50));
-        box1.assign<Box>(glm::vec2(128.f, 128.f));
-        box1.assign<Drawable>("house", 128, 128);
-    }
 
     auto playerAnimations = AnimationCollection("player");
     playerAnimations.addAnimation("run", 0, 4, 0.3, glm::vec2(16, 24));
@@ -54,7 +50,7 @@ int MainState::init() {
     player.assign<Position>(glm::vec2(000.f, 000.f));
 	player.assign<Drawable>("player-small", 16, 24, playerAnimations);
     glm::i8vec3 testcolor = {255, 128, 32};
-    player.assign<Light>("gradient", 10, testcolor);
+    player.assign<Light>("gradient", 100, testcolor);
 	player.assign<Velocity>();
 	player.assign<Gravity>();
 	player.assign<Collidable>(24.0f);
@@ -81,6 +77,8 @@ void MainState::update(double dt) {
         }
     }
 
+    m_systems.update<MapSystem>(dt);
+    m_systems.update<DeathSystem>(dt);
     m_systems.update<AnimationSystem>(dt);
     m_systems.update<DrawSystem>(dt);
     m_systems.update<MovementSystem>(dt);

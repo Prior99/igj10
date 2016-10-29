@@ -1,3 +1,6 @@
+#ifndef SYSTEM_DRAW_HPP
+#define SYSTEM_DRAW_HPP
+
 #include "game.hpp"
 
 #include "systems/draw/drawEntity.hpp"
@@ -71,3 +74,5 @@ class DrawSystem : public entityx::System<DrawSystem> {
     OverlayDrawSystem overlayDrawSystem;
     SDL_Texture *gameTexture;
 };
+
+#endif
