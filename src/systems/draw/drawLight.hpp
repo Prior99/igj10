@@ -52,21 +52,21 @@ class LightDrawSystem {
             auto tex = m_game->res_manager().texture(light->texture_key());
             auto drawable = entity.component<Drawable>();
 
-            int w, h;
+            int wPlayer, hPlayer;
             if(drawable) {
-                w = drawable->getWidth();
-                h = drawable->getHeight();
+                wPlayer = drawable->getWidth();
+                hPlayer = drawable->getHeight();
             }
             else {
-                SDL_QueryTexture(tex, nullptr, nullptr, &w, &h);
+                SDL_QueryTexture(tex, nullptr, nullptr, &wPlayer, &hPlayer);
             }
 
-            auto width = w * light->scale();
-            auto height = h * light->scale();
+            auto wLight = wPlayer * light->scale() / m_game->getInsanity();
+            auto hLight = hPlayer * light->scale() / m_game->getInsanity();
 
             // Converted position
-            auto pos = glm::vec2(coord[0] - width / 2, coord[1] - height / 2) - offset;
-            SDL_Rect dest{pos.x, pos.y, width, height};
+            auto pos = glm::vec2(coord.x + wPlayer / 2 - wLight / 2, coord.y + hPlayer / 2 - hLight / 2) - offset;
+            SDL_Rect dest{pos.x, pos.y, wLight, hLight};
 
             SDL_SetTextureBlendMode(tex, SDL_BLENDMODE_ADD);
             SDL_SetTextureColorMod(tex, light->color().r, light->color().g, light->color().b);
