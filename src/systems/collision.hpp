@@ -25,6 +25,7 @@ class CollisionSystem : public entityx::System<CollisionSystem> {
             entityx::ComponentHandle<Box> box;
             for (entityx::Entity colliding : es.entities_with_components(collidingPos, collidable)) {
                 bool isTouchingAnything = false;
+                bool isTouchingBottom = false;
                 for (entityx::Entity obstacle : es.entities_with_components(boxPos, box)) {
                     (void) colliding;
                     (void) obstacle;
@@ -56,6 +57,7 @@ class CollisionSystem : public entityx::System<CollisionSystem> {
                         if (min == up) {
                             outPos.x = colCoord.x;
                             outPos.y = boxCoord.y - r;
+                            isTouchingBottom = true;
                         } else if (min == down) {
                             outPos.x = colCoord.x;
                             outPos.y = boxCoord.y + boxSize.y + r;
@@ -70,7 +72,7 @@ class CollisionSystem : public entityx::System<CollisionSystem> {
                     }
                     isTouchingAnything = isTouchingAnything || isTouchingBox || isInBox;
                 }
-                collidable->setIsTouching(isTouchingAnything);
+                collidable->setIsTouching(isTouchingAnything && isTouchingBottom);
             }
         }
 };

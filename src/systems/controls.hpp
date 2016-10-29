@@ -26,7 +26,7 @@
 
 class ControlSystem : public entityx::System<ControlSystem> {
     public:
-        ControlSystem(Game *game): game(game) {}
+        ControlSystem(Game *game): game(game), stoppedSpace(false) {}
 
         void update(entityx::EntityManager &es, entityx::EventManager &events, double dt) {
             entityx::ComponentHandle<Player> player;
@@ -52,17 +52,23 @@ class ControlSystem : public entityx::System<ControlSystem> {
                     walking = true;
                 }
                 if (state[SDL_SCANCODE_SPACE] || state[SDL_SCANCODE_W] || state[SDL_SCANCODE_UP]) {
-                    if (!player->isJumping()) {
-                        std::cout << "Initial jumping" << std::endl;
-                        drawable->getAnimation().setAnimation("jump", AnimationPlaybackType::FREEZE);
-                    }
-                    player->jumping(dt);
-                    if (player->getJumpTime() > 0) {
-                        velocity->drag(glm::vec2(0, -JUMP_SPEED));
+                    if (!stoppedSpace) {
+                        if (!player->isJumping()) {
+                            std::cout << "Initial jumping" << std::endl;
+                            drawable->getAnimation().setAnimation("jump", AnimationPlaybackType::FREEZE);
+                        }
+                        player->jumping(dt);
+                        if (player->getJumpTime() > 0) {
+                            velocity->drag(glm::vec2(0, -JUMP_SPEED));
+                        }
                     }
                 } else {
+                    if (player->isJumping()) {
+                        stoppedSpace = true;
+                    }
                     if (collidable->isTouching()){ 
                         player->resetJumpTime();
+                        stoppedSpace = false;
                         auto& animation = drawable->getAnimation();
                         if(animation.getCurrentAnimation() != "run") {
                             animation.pause(false);
@@ -81,6 +87,7 @@ class ControlSystem : public entityx::System<ControlSystem> {
         }
     private:
         Game *game;
+        bool stoppedSpace;
 };
 
 #endif
