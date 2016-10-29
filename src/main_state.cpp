@@ -6,6 +6,7 @@
 #include "components/position.hpp"
 #include "components/light.hpp"
 #include "components/velocity.hpp"
+#include "components/stepping.hpp"
 #include "components/box.hpp"
 #include "components/gravity.hpp"
 #include "systems/collision.hpp"
@@ -17,6 +18,7 @@
 #include "systems/map.hpp"
 #include "systems/insanity.hpp"
 #include "systems/animation.hpp"
+#include "systems/stepping.hpp"
 
 #include "entityx/entityx.h"
 
@@ -39,6 +41,7 @@ int MainState::init() {
     m_systems.add<MapSystem>();
     m_systems.add<InsanitySystem>(m_game);
     m_systems.add<AnimationSystem>();
+    m_systems.add<SteppingSystem>(m_game);
     m_systems.configure();
 
     auto playerAnimations = AnimationCollection("player");
@@ -52,6 +55,7 @@ int MainState::init() {
     glm::i8vec3 testcolor = {255, 128, 32};
     player.assign<Light>("gradient", 100, testcolor);
 	player.assign<Velocity>();
+	player.assign<Stepping>();
 	player.assign<Gravity>();
 	player.assign<Collidable>(24.0f);
 	player.assign<Player>();
@@ -86,4 +90,5 @@ void MainState::update(double dt) {
     m_systems.update<GravitySystem>(dt);
     m_systems.update<CollisionSystem>(dt);
     m_systems.update<InsanitySystem>(dt);
+    m_systems.update<SteppingSystem>(dt);
 }
