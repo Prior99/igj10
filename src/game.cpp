@@ -69,6 +69,10 @@ int Game::init() {
     m_res_manager.load_sound("step-05", "res/sounds/Step5.wav");
     m_res_manager.load_sound("step-06", "res/sounds/Step6.wav");
     m_res_manager.load_sound("step-07", "res/sounds/Step7.wav");
+    m_res_manager.load_sound("heartbeat", "res/sounds/HeartBeatSoftLoop.wav");
+    m_res_manager.load_music("chill-song", "res/sounds/ChillSongBeta.wav");
+    Mix_VolumeMusic(30);
+    Mix_PlayMusic(m_res_manager.music("chill-song"), -1);
 
     SDL_RenderSetLogicalSize(m_render, WIDTH, HEIGHT);
 
@@ -83,8 +87,10 @@ int Game::init() {
 
 void Game::toggleFreeze() {
     this->freeze = !this->freeze;
+    Mix_PauseMusic();
     if (!this->freeze) {
         this->setInsanity(1.0f);
+        Mix_ResumeMusic();
     }
 }
 
