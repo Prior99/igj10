@@ -71,7 +71,7 @@ int Game::init() {
     m_res_manager.load_texture("street", "res/street.png", m_render);
     m_res_manager.load_texture("background", "res/background.png", m_render);
     m_res_manager.load_texture("splatter", "res/Splatter.png", m_render);
-    m_res_manager.load_texture("splatter-splatter", "res/SplatterHouse.png", m_render);
+    m_res_manager.load_texture("splatter-house", "res/SplatterHouse.png", m_render);
     // Fonts
     m_res_manager.load_font("font-big", "res/Munro.ttf", 20);
     m_res_manager.load_font("font-small", "res/Munro.ttf", 10);

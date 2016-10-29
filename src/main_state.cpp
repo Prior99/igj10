@@ -39,7 +39,7 @@ int MainState::init() {
     m_systems.add<ControlSystem>(m_game);
     m_systems.add<MovementSystem>();
     m_systems.add<GravitySystem>();
-    m_systems.add<CollisionSystem>();
+    m_systems.add<CollisionSystem>(m_game);
     m_systems.add<DeathSystem>(m_game);
     m_systems.add<MapSystem>(m_game);
     m_systems.add<InsanitySystem>(m_game);

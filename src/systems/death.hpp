@@ -40,12 +40,22 @@ class DeathSystem : public entityx::System<DeathSystem>, public entityx::Receive
             auto pos = player.component<Position>()->getPosition();
             if (died) {
                 if (!done) {
+                    auto height = player.component<Drawable>()->getHeight();
                     entityx::Entity splatter = es.create();
                     splatter.assign<Position>(pos + glm::vec2(0, 20));
-                    auto splatterAnimation = AnimationCollection("splatter");
-                    splatterAnimation.addAnimation("splatter", 0, 7, 1.0, glm::vec2(64, 24));
-                    splatterAnimation.setAnimation("splatter", AnimationPlaybackType::FREEZE);
-                    splatter.assign<Drawable>("splatter", 64, 24, splatterAnimation);
+                    if(pos.y >= GAME_BOTTOM - height) {
+                        auto splatterAnimation = AnimationCollection("splatter");
+                        splatterAnimation.addAnimation("splatter", 0, 7, 1.0, glm::vec2(64, 24));
+                        splatterAnimation.setAnimation("splatter", AnimationPlaybackType::FREEZE);
+                        splatter.assign<Drawable>("splatter", 64, 24, splatterAnimation);
+                    }
+                    else {
+                        auto splatterAnimation = AnimationCollection("splatter-house");
+                        splatterAnimation.addAnimation("splatter-house", 0, 7, 1.0, glm::vec2(64, 128));
+                        splatterAnimation.setAnimation("splatter-house", AnimationPlaybackType::FREEZE);
+                        splatter.assign<Drawable>("splatter-house", 64, 128, splatterAnimation);
+                    }
+
                     splatter.assign<Foreground>();
                     done = true;
                     player.remove<Drawable>();
