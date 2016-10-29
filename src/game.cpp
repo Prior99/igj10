@@ -60,6 +60,7 @@ int Game::init() {
     m_res_manager.load_texture("player-small", "res/player-small.png", m_render);
     m_res_manager.load_texture("player", "res/player.png", m_render);
     m_res_manager.load_texture("house", "res/house-1.png", m_render);
+    m_res_manager.load_texture("sidewalk", "res/sidewalk.png", m_render);
     m_res_manager.load_texture("background", "res/background.png", m_render);
     m_res_manager.load_font("font20", "res/DejaVuSans.ttf", 20);
     m_res_manager.load_sound("step-01", "res/sounds/Step1.wav");
