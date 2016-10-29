@@ -49,7 +49,7 @@ int MainState::init() {
     glm::i8vec3 sunColor = {255, 255, 255};
     sun.assign<Light>("gradient", (m_game->world_size().h + 200) * 2 / 200, sunColor);
 
-    AnimationCollection playerAnimations("player");
+    auto playerAnimations = AnimationCollection("player");
     playerAnimations.addAnimation("run", 0, 4, 1, glm::vec2(16, 24));
     playerAnimations.addAnimation("jump", 0, 4, 1, glm::vec2(16, 24));
     playerAnimations.setAnimation("run", AnimationPlaybackType::LOOP);

@@ -8,114 +8,103 @@
 #include <iostream>
 
 enum struct AnimationPlaybackType {
-	LOOP,
-	RESET,
-	FREEZE
+    LOOP,
+    RESET,
+    FREEZE
 };
 
 struct Animation {
-	int offset;
-	int frames;
-	double duration;
-	glm::vec2 size;
+    int offset;
+    int frames;
+    double duration;
+    glm::vec2 size;
+    double runTime;
 
-	double runTime;
+    Animation():
+        offset(0),
+        frames(0),
+        duration(0),
+        size({0, 0}),
+        runTime(0) {
+        }
 
-	Animation():
-		offset(0),
-		frames(0),
-		duration(0),
-		size({0, 0}),
-		runTime(0) {
-		std::cout << "construct\n";
-	}
-
-	Animation(int offset, int frames, double duration, glm::vec2 size):
-		offset(offset),
-		frames(frames),
-		duration(duration),
-		size(size),
-		runTime(0) {
-
-	}
+    Animation(int offset, int frames, double duration, glm::vec2 size):
+        offset(offset),
+        frames(frames),
+        duration(duration),
+        size(size),
+        runTime(0.0) {
+        }
 };
 
 struct AnimationCollection {
-	AnimationCollection(std::string textureKey): textureKey(textureKey) {
+    AnimationCollection(std::string textureKey): textureKey(textureKey) {
 
-	}
+    }
 
-	void addAnimation(std::string animationKey, int offset, int frames, double duration, glm::vec2 size) {
-		Animation animation = {offset, frames, duration, size};
-		animations[animationKey] = animation;
-	}
+    void addAnimation(std::string animationKey, int offset, int frames, double duration, glm::vec2 size) {
+        animations[animationKey] = new Animation(offset, frames, duration, size);
+    }
 
-	void setAnimation(std::string animationKey, AnimationPlaybackType playbackType) {
-		if (!currentAnimation.empty()) {
-			std::cout << "reset animation\n";
-			animations[currentAnimation].runTime = 0;
-		}
-		this->playbackType = playbackType;
-		currentAnimation = animationKey;
-	}
+    void setAnimation(std::string animationKey, AnimationPlaybackType playbackType) {
+        if (!currentAnimation.empty()) {
+            animations[currentAnimation]->runTime = 0;
+        }
+        this->playbackType = playbackType;
+        currentAnimation = animationKey;
+    }
 
-	void pause(bool pause) {
-		paused = pause;
-	}
+    void pause(bool pause) {
+        paused = pause;
+    }
 
-	std::string getTextureKey() {
-		return textureKey;
-	}
+    std::string getTextureKey() {
+        return textureKey;
+    }
 
-	SDL_Rect* getAnimationFrame(SDL_Rect* rect) {
-		if (animations.count(currentAnimation)) {
-			auto animation = animations[currentAnimation];
+    SDL_Rect* getAnimationFrame(SDL_Rect* rect) {
+        if (animations.count(currentAnimation)) {
+            auto animation = animations[currentAnimation];
 
-			int currentFrame = animation.runTime * animation.frames / animation.duration;
-			std::cout << animation.runTime << " * " << animation.frames << " / " << animation.duration << " = " << currentFrame << "\n";
-			rect->x = currentFrame * animation.size.x;
-			rect->y = animation.offset;
-			rect->w = animation.size.x;
-			rect->h = animation.size.y;
-			return rect;
-		} else {
-			return NULL;
-		}
-	}
+            int currentFrame = animation->runTime * animation->frames / animation->duration;
+            rect->x = currentFrame * animation->size.x;
+            rect->y = animation->offset;
+            rect->w = animation->size.x;
+            rect->h = animation->size.y;
+            return rect;
+        } else {
+            return NULL;
+        }
+    }
 
-	void update(double dt) {
-		auto animation = animations[currentAnimation];
-		if(!paused) {
-			std::cout << "runtime: " << animation.runTime << " + " << dt << " = ";
-			animation.runTime += dt;
-			std::cout << animation.runTime << "\n";
-		}
-		if (animation.runTime > animation.duration) {
-			std::cout << "end\n";
-			switch(playbackType) {
-				case AnimationPlaybackType::RESET:
-					animation.runTime = 0;
-					currentAnimation.erase();
-					break;
-				case AnimationPlaybackType::FREEZE:
-					animation.runTime = animation.duration;
-					paused = true;
-					break;
-				case AnimationPlaybackType::LOOP:
-					// Nothing to do here
-					break;
-			}
-		}
-		animations[currentAnimation] = animation;
-		std::cout << paused << " " << animation.runTime << "\n";
-	}
+    void update(double dt) {
+        auto animation = animations[currentAnimation];
+        if(!paused) {
+            animation->runTime += dt;
+        }
+        if (animation->runTime > animation->duration) {
+            switch(playbackType) {
+                case AnimationPlaybackType::RESET:
+                    animation->runTime = 0;
+                    currentAnimation.erase();
+                    break;
+                case AnimationPlaybackType::FREEZE:
+                    animation->runTime = animation->duration;
+                    paused = true;
+                    break;
+                case AnimationPlaybackType::LOOP:
+                    // Nothing to do here
+                    break;
+            }
+        }
+    }
 
   private:
-	std::string textureKey;
-	std::map<std::string, Animation> animations;
-	std::string currentAnimation;
-	AnimationPlaybackType playbackType;
-	bool paused = false;
+    std::string textureKey;
+    std::map<std::string, Animation*> animations;
+    std::string currentAnimation;
+    AnimationPlaybackType playbackType;
+    bool paused = false;
 };
 
 #endif
