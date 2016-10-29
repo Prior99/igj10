@@ -45,7 +45,7 @@ int MainState::init() {
     m_systems.add<MapSystem>(m_game);
     m_systems.add<InsanitySystem>(m_game);
     m_systems.add<AnimationSystem>();
-    m_systems.add<StomperSystem>();
+    m_systems.add<StomperSystem>(m_game);
     m_systems.add<SteppingSystem>(m_game);
     m_systems.configure();
 
@@ -55,7 +55,7 @@ int MainState::init() {
     playerAnimations.setAnimation("run", AnimationPlaybackType::LOOP);
     entityx::Entity player = entities.create();
     player.assign<Position>(glm::vec2(000.f, 000.f));
-    player.assign<Drawable>("player-small", 16, 24, playerAnimations);
+    player.assign<Drawable>("player", 16, 24, playerAnimations);
     glm::i8vec3 testcolor = {255, 64, 16};
     player.assign<Light>("gradient", 500, testcolor);
     player.assign<Velocity>();
@@ -77,7 +77,7 @@ int MainState::init() {
     stomper.assign<Position>(glm::vec2(200.f, 100.f));
     stomper.assign<MultipartDrawable>(36, top, middle, bottom);
     stomper.assign<Box>(glm::vec2(36.f, 47.f), false, false, true, false);
-    stomper.assign<Stomper>(0, 300, true);
+    stomper.assign<Stomper>(0, 100, 1000, true);
     stomper.component<MultipartDrawable>()->setHeight(80);
     return 0;
 }

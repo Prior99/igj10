@@ -10,6 +10,11 @@
 
 #include "entityx/entityx.h"
 #include <glm/vec2.hpp>
+#ifdef __EMSCRIPTEN__
+#include <SDL/SDL_mixer.h>
+#else
+#include <SDL_mixer.h>
+#endif
 
 #include<iostream>
 
@@ -44,6 +49,8 @@ class DeathSystem : public entityx::System<DeathSystem>, public entityx::Receive
                     splatter.assign<Foreground>();
                     done = true;
                     player.remove<Drawable>();
+                    Mix_Volume(5, 40);
+                    Mix_PlayChannel(5, game->res_manager().sound("splatter"), 0);
                 }
                 last += dt;
                 if (last > 0.5f) {

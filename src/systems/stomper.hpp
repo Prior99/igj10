@@ -11,12 +11,17 @@
 
 #include "entityx/entityx.h"
 #include <glm/vec2.hpp>
+#ifdef __EMSCRIPTEN__
+#include <SDL/SDL_mixer.h>
+#else
+#include <SDL_mixer.h>
+#endif
 
 #include<iostream>
 
 class StomperSystem : public entityx::System<StomperSystem> {
   public:
-    StomperSystem() {
+    StomperSystem(Game *game): game(game) {
 
     }
 
@@ -25,12 +30,29 @@ class StomperSystem : public entityx::System<StomperSystem> {
         entityx::ComponentHandle<Position> positionStomper, positionColliding;
         entityx::ComponentHandle<Box> boxStomper, boxColliding;
         entityx::ComponentHandle<MultipartDrawable> drawableStomper;
+        int channel = 6;
         for(entityx::Entity stomperEntity: es.entities_with_components(positionStomper, boxStomper, stomper, drawableStomper)) {
+            channel+=2;
             (void)stomperEntity;
             stomper->update(dt);
-            if(stomper->getExtended() <= 0){
-                stomper->toggleDirection();
-                stomper->setExtended(0);
+            if(stomper->getExtended() <= 0) {
+                double timeout = stomper->getTimeout();
+                if (timeout < 0.01) {
+                    Mix_Volume(channel, 40);
+                    Mix_PlayChannel(channel, game->res_manager().sound("stomper-warning"), 0);
+                }
+                if (glm::abs(timeout - 2.0) < 0.01) {
+                    Mix_Volume(channel, 40);
+                    Mix_PlayChannel(channel, game->res_manager().sound("stomper-lock"), 0);
+                }
+                if (glm::abs(timeout - 2.5) < 0.01) {
+                    stomper->toggleDirection();
+                    stomper->setExtended(0);
+                    Mix_Volume(channel + 1, 40);
+                    Mix_PlayChannel(channel + 1, game->res_manager().sound("stomper-down"), 0);
+                } else {
+                    stomper->incTimeout(dt);
+                }
             }
 
             //reverse direction when stopping on building
@@ -44,9 +66,14 @@ class StomperSystem : public entityx::System<StomperSystem> {
                     int boxRight = positionColliding->getPosition().x + boxColliding->getSize().x;
                     int boxTop = positionColliding->getPosition().y;
 
-                    if(boxTop < stomperBottom && boxLeft < stomperRight && boxRight > stomperLeft) {
-                        stomper->subExtended(abs(stomperBottom - boxTop) + stomper->getSpeed() * dt);
+                    if(boxTop < stomperBottom && boxLeft < stomperRight && boxRight > stomperLeft && stomper->isExtending()) {
+                        stomper->subExtended(abs(stomperBottom - boxTop) + stomper->getSpeedUp() * dt);
                         stomper->toggleDirection();
+                        Mix_Volume(channel, 40);
+                        Mix_PlayChannel(channel, game->res_manager().sound("stomper-smash"), 0);
+                        Mix_Volume(channel + 1, 40);
+                        Mix_PlayChannel(channel + 1, game->res_manager().sound("stomper-up"), 0);
+                        stomper->resetTimeout();
                     }
                 }
             }
@@ -57,6 +84,7 @@ class StomperSystem : public entityx::System<StomperSystem> {
     }
 
   private:
+    Game *game;
     bool created;
 };
 #endif
