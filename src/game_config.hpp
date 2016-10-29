@@ -10,6 +10,8 @@
 //screen width and height
 static const int WIDTH = 800;
 static const int HEIGHT = 600;
+static const int GAME_WIDTH = 200;
+static const int GAME_HEIGHT = 150;
 
 static const bool DEBUG = false;
 
@@ -20,6 +22,6 @@ static const float JUMP_SPEED = 400;
 static const glm::vec2 MAX_VELOCITY = glm::vec2(300.0f, 1000.0f);
 static const glm::vec2 VELOCITY_THRESHOLD = glm::vec2(0.01f, 0.01f);
 static const float MAX_JUMP = 1.5f;
-static const int GAME_SCALE = 6;
+static const float PARALLAXITY = 4.0;
 
 #endif

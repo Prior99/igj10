@@ -42,9 +42,9 @@ int MainState::init() {
 	box2.assign<Drawable>("house", 400, 200);
 
     entityx::Entity sun = entities.create();
-    sun.assign<Position>(glm::vec2(m_game->world_size().w / 2, -100));
+    sun.assign<Position>(glm::vec2(GAME_WIDTH / 2, -100));
     glm::i8vec3 sunColor = {255, 255, 255};
-    sun.assign<Light>("gradient", (m_game->world_size().h + 200) * 2 / 200, sunColor);
+    sun.assign<Light>("gradient", (GAME_HEIGHT + 200) * 2 / 200, sunColor);
 
     entityx::Entity player = entities.create();
     player.assign<Position>(glm::vec2(000.f, 000.f));

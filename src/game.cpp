@@ -119,7 +119,3 @@ void Game::popstate() {
 const std::string &Game::statename() const {
     return m_states.top().first;
 }
-
-const SDL_Rect &Game::world_size() const {
-    return m_world_size;
-}
