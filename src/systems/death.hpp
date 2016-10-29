@@ -2,6 +2,7 @@
 #define SYSTEM_DEATH_HPP
 
 #include "components/drawable.hpp"
+#include "components/foreground.hpp"
 #include "game.hpp"
 #include "game_config.hpp"
 #include "events.hpp"
@@ -38,6 +39,7 @@ class DeathSystem : public entityx::System<DeathSystem>, public entityx::Receive
                 splatterAnimation.addAnimation("splatter", 0, 7, 1.0, glm::vec2(64, 24));
                 splatterAnimation.setAnimation("splatter", AnimationPlaybackType::FREEZE);
                 splatter.assign<Drawable>("splatter", 64, 24, splatterAnimation);
+                splatter.assign<Foreground>();
                 player.remove<Drawable>();
                 done = true;
             }
