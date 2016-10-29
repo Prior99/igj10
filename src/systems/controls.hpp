@@ -24,9 +24,14 @@
 
 #include<iostream>
 
-class ControlSystem : public entityx::System<ControlSystem> {
+class ControlSystem : public entityx::System<ControlSystem>, public entityx::Receiver<ControlSystem> {
     public:
-        ControlSystem(Game *game): game(game), stoppedSpace(false) {}
+        ControlSystem(Game *game): game(game), stoppedSpace(false), died(false) {}
+
+        void receive(const GameOver &event) {
+            (void)event;
+            died = true;
+        }
 
         void update(entityx::EntityManager &es, entityx::EventManager &events, double dt) {
             entityx::ComponentHandle<Player> player;
@@ -34,6 +39,10 @@ class ControlSystem : public entityx::System<ControlSystem> {
             entityx::ComponentHandle<Position> position;
             entityx::ComponentHandle<Collidable> collidable;
             entityx::ComponentHandle<Drawable> drawable;
+
+            if (died) {
+                return;
+            }
 
             for (entityx::Entity entity : es.entities_with_components(player, velocity, position, collidable, drawable)) {
                 (void) entity;
@@ -88,6 +97,7 @@ class ControlSystem : public entityx::System<ControlSystem> {
     private:
         Game *game;
         bool stoppedSpace;
+        bool died;
 };
 
 #endif

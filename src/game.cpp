@@ -66,6 +66,7 @@ int Game::init() {
     m_res_manager.load_texture("stomper-top", "res/stomper.png", m_render);
     m_res_manager.load_texture("stomper-middle", "res/stomper-worm.png", m_render);
     m_res_manager.load_texture("stomper-bottom", "res/stomper-head.png", m_render);
+    m_res_manager.load_texture("splatter", "res/Splatter.png", m_render);
     m_res_manager.load_font("font20", "res/DejaVuSans.ttf", 20);
     m_res_manager.load_sound("step-01", "res/sounds/Step1.wav");
     m_res_manager.load_sound("step-02", "res/sounds/Step2.wav");

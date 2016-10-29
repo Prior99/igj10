@@ -45,7 +45,7 @@ int MainState::init() {
     m_systems.add<SteppingSystem>(m_game);
     m_systems.configure();
 
-	m_systems.update<MapSystem>(0.0f);	
+    m_systems.update<MapSystem>(0.0f);	
 
     auto playerAnimations = AnimationCollection("player");
     playerAnimations.addAnimation("run", 0, 4, 0.3, glm::vec2(16, 24));
@@ -53,14 +53,14 @@ int MainState::init() {
     playerAnimations.setAnimation("run", AnimationPlaybackType::LOOP);
     entityx::Entity player = entities.create();
     player.assign<Position>(glm::vec2(000.f, 000.f));
-	player.assign<Drawable>("player-small", 16, 24, playerAnimations);
+    player.assign<Drawable>("player-small", 16, 24, playerAnimations);
     glm::i8vec3 testcolor = {255, 64, 16};
     player.assign<Light>("gradient", 500, testcolor);
-	player.assign<Velocity>();
-	player.assign<Stepping>();
-	player.assign<Gravity>();
-	player.assign<Collidable>(24.0f);
-	player.assign<Player>();
+    player.assign<Velocity>();
+    player.assign<Stepping>();
+    player.assign<Gravity>();
+    player.assign<Collidable>(24.0f);
+    player.assign<Player>();
     m_game->setPlayer(player);
 
     entityx::Entity lol = entities.create();

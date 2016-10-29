@@ -46,6 +46,9 @@ class CollisionSystem : public entityx::System<CollisionSystem> {
                         );
 
                     if (isInBox || isTouchingBox) {
+                        if (box->isDangerous()) {
+                            events.emit<GameOver>();
+                        }
                         glm::vec2 outPos;
 
                         auto up = colCoord.y - boxCoord.y;

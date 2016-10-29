@@ -1,35 +1,51 @@
 #ifndef SYSTEM_DEATH_HPP
 #define SYSTEM_DEATH_HPP
 
+#include "components/drawable.hpp"
 #include "game.hpp"
 #include "game_config.hpp"
-
-#include "components/position.hpp"
-#include "components/player.hpp"
+#include "events.hpp"
 
 #include "entityx/entityx.h"
 #include <glm/vec2.hpp>
 
 #include<iostream>
 
-class DeathSystem : public entityx::System<DeathSystem> {
-  public:
-	DeathSystem(Game *game): game(game) {
+class DeathSystem : public entityx::System<DeathSystem>, public entityx::Receiver<DeathSystem> {
+    public:
+        DeathSystem(Game *game): game(game), died(false), done(false) {
 
-	}
+        }
 
-	void update(entityx::EntityManager &es, entityx::EventManager &events, double dt) {
-		entityx::ComponentHandle<Position> position;
-		entityx::ComponentHandle<Player> player;
-		for(entityx::Entity entity: es.entities_with_components(position, player)) {
-			(void)entity;
-			if(position->getPosition().y >= HEIGHT) {
-				game->shutdown();
-			}
-		}
-	}
+        void configure(entityx::EventManager &event_manager) override {
+            event_manager.subscribe<GameOver>(*this);
+        }
 
-  private:
-	Game *game;
+        void receive(const GameOver &event) {
+            (void)event;
+            died = true;
+        }
+
+        void update(entityx::EntityManager &es, entityx::EventManager &events, double dt) {
+            (void) es;
+            (void) events;
+            (void) dt;
+            if (died && !done) {
+                entityx::Entity splatter = es.create();
+                auto player = game->getPlayer();
+                auto pos = player.component<Position>()->getPosition();
+                (void) pos;
+                (void) splatter;
+                splatter.assign<Position>(pos + glm::vec2(0, 20));
+                splatter.assign<Drawable>("splatter", 24, 4);
+                player.remove<Drawable>();
+                done = true;
+            }
+        }
+
+    private:
+        Game *game;
+        bool died;
+        bool done;
 };
 #endif
