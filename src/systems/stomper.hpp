@@ -41,11 +41,11 @@ class StomperSystem : public entityx::System<StomperSystem> {
                     Mix_Volume(channel, 40);
                     Mix_PlayChannel(channel, game->res_manager().sound("stomper-warning"), 0);
                 }
-                if (glm::abs(timeout - 2.0) < 0.01) {
+                if (glm::abs(timeout - 1.2) < 0.01) {
                     Mix_Volume(channel, 40);
                     Mix_PlayChannel(channel, game->res_manager().sound("stomper-lock"), 0);
                 }
-                if (glm::abs(timeout - 2.5) < 0.01) {
+                if (glm::abs(timeout - 1.6) < 0.01) {
                     stomper->toggleDirection();
                     stomper->setExtended(0);
                     Mix_Volume(channel + 1, 40);
