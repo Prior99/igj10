@@ -3,10 +3,16 @@
 
 #include "entityx/entityx.h"
 
+#include "animation.hpp"
+
 #include <SDL2/SDL.h>
 
 struct Drawable : entityx::Component<Drawable> {
-    Drawable(std::string key, float width, float height): textureKey(key), height(height), width(width) {
+    Drawable(std::string key, float width, float height, AnimationCollection animation = { "" }):
+        textureKey(key),
+        height(height),
+        width(width),
+        animation(animation) {
     }
 
     float getHeight() {
@@ -29,9 +35,18 @@ struct Drawable : entityx::Component<Drawable> {
         return textureKey;
     }
 
+    bool hasAnimation() {
+        return !animation.getTextureKey().empty();
+    }
+
+    auto getAnimation() {
+        return animation;
+    }
+
   private:
     std::string textureKey;
     float height;
     float width;
+    AnimationCollection animation;
 };
 #endif
