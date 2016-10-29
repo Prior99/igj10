@@ -11,6 +11,7 @@
 #include "components/stomper.hpp"
 #include "components/gravity.hpp"
 #include "components/multipartDrawable.hpp"
+#include "components/foreground.hpp"
 #include "systems/collision.hpp"
 #include "systems/controls.hpp"
 #include "systems/movement.hpp"
@@ -48,7 +49,7 @@ int MainState::init() {
     m_systems.add<SteppingSystem>(m_game);
     m_systems.configure();
 
-    m_systems.update<MapSystem>(0.0f);	
+    m_systems.update<MapSystem>(0.0f);
 
     auto playerAnimations = AnimationCollection("player");
     playerAnimations.addAnimation("run", 0, 4, 0.3, glm::vec2(16, 24));
@@ -64,6 +65,7 @@ int MainState::init() {
     player.assign<Gravity>();
     player.assign<Collidable>(24.0f);
     player.assign<Player>();
+    player.assign<Foreground>();
     m_game->setPlayer(player);
 
     entityx::Entity lol = entities.create();
