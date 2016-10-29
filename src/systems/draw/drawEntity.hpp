@@ -17,10 +17,10 @@ class EntityDrawSystem {
     EntityDrawSystem(Game *game) : m_game(game) {
         int w, h;
         SDL_RenderGetLogicalSize(game->renderer(), &w, &h);
-        m_camera = SDL_Rect{0, 0, w/GAME_SCALE, h/GAME_SCALE};
+        m_camera = SDL_Rect{0, 0, w, h};
         entityTexture =
             SDL_CreateTexture(game->renderer(), SDL_PIXELTYPE_UNKNOWN, SDL_TEXTUREACCESS_TARGET,
-                                game->world_size().w, game->world_size().h);
+                                game->world_size().w/GAME_SCALE, game->world_size().h/GAME_SCALE);
     }
 
     ~EntityDrawSystem() {
@@ -44,10 +44,9 @@ class EntityDrawSystem {
             (void)entity;
             auto pos = position->getPosition() - offset;
             SDL_Rect dest{pos.x, pos.y, drawable->getWidth(), drawable->getHeight()};
+            SDL_Rect src{0, 0, drawable->getWidth(), drawable->getHeight()};
 
-            SDL_RenderCopyEx(m_game->renderer(),
-                             m_game->res_manager().texture(drawable->texture_key()), NULL, &dest, 0,
-                             NULL, SDL_FLIP_NONE);
+            SDL_RenderCopy(m_game->renderer(), m_game->res_manager().texture(drawable->texture_key()), &src, &dest);
         }
 
         // Render to final window

@@ -20,6 +20,6 @@ static const float JUMP_SPEED = 400;
 static const glm::vec2 MAX_VELOCITY = glm::vec2(300.0f, 1000.0f);
 static const glm::vec2 VELOCITY_THRESHOLD = glm::vec2(0.01f, 0.01f);
 static const float MAX_JUMP = 1.5f;
-static const int GAME_SCALE = 2;
+static const int GAME_SCALE = 6;
 
 #endif

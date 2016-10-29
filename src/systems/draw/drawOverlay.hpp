@@ -17,7 +17,7 @@ class OverlayDrawSystem {
     OverlayDrawSystem(Game *game) : m_game(game) {
         int w, h;
         SDL_RenderGetLogicalSize(game->renderer(), &w, &h);
-        m_camera = SDL_Rect{0, 0, w/GAME_SCALE, h/GAME_SCALE};
+        m_camera = SDL_Rect{0, 0, w, h};
         overlayTexture =
             SDL_CreateTexture(game->renderer(), SDL_PIXELTYPE_UNKNOWN, SDL_TEXTUREACCESS_TARGET,
                                 game->world_size().w, game->world_size().h);

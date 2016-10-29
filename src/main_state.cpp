@@ -33,8 +33,8 @@ int MainState::init() {
 
     entityx::Entity box1 = entities.create();
     box1.assign<Position>(glm::vec2(0.0f, 200.f));
-    box1.assign<Box>(glm::vec2(200.0f, 400.0f));
-	box1.assign<Drawable>("house", 200, 400);
+    box1.assign<Box>(glm::vec2(128.f, 128.f));
+	box1.assign<Drawable>("house", 128, 128);
 
     entityx::Entity box2 = entities.create();
     box2.assign<Position>(glm::vec2(400.0f, 400.f));
@@ -48,12 +48,12 @@ int MainState::init() {
 
     entityx::Entity player = entities.create();
     player.assign<Position>(glm::vec2(000.f, 000.f));
-	player.assign<Drawable>("playerimg", 20, 20);
+	player.assign<Drawable>("player-small", 16, 24);
     glm::i8vec3 testcolor = {255, 128, 32};
     player.assign<Light>("gradient", 10, testcolor);
 	player.assign<Velocity>();
 	player.assign<Gravity>();
-	player.assign<Collidable>(50.0f);
+	player.assign<Collidable>(24.0f);
 	player.assign<Player>();
     m_game->setPlayer(player);
 

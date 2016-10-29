@@ -27,7 +27,7 @@ class DrawSystem : public entityx::System<DrawSystem> {
     void drawBackground() {
         auto bgscale = glm::vec2(800, 600);
         auto playerPos = m_game->getPlayer().component<Position>()->getPosition();
-        auto offset = playerPos - glm::vec2(WIDTH, HEIGHT) / (2 * GAME_SCALE * 16) + glm::vec2(0, bgscale.y / 2);
+        auto offset = playerPos - glm::vec2(WIDTH, HEIGHT) / (2 * GAME_SCALE * 16) + glm::vec2(0, bgscale.y * GAME_SCALE / 2);
         SDL_SetRenderTarget(m_game->renderer(), nullptr);
         SDL_Rect src{0, 0, (int)bgscale.x, (int)bgscale.y};
         for (int x = -10; x < 10; x++) {
