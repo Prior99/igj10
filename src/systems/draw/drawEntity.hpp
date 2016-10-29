@@ -6,6 +6,7 @@
 #include "strapon/resource_manager/resource_manager.hpp"
 
 #include "entityx/entityx.h"
+#include "glm/common.hpp"
 #include <glm/vec2.hpp>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
@@ -27,6 +28,8 @@ class EntityDrawSystem {
                 entityx::TimeDelta dt) {
         auto playerPos = game->getPlayer().component<Position>()->getPosition();
         auto offset = playerPos - glm::vec2(GAME_WIDTH / 4.0f, GAME_HEIGHT) / 2.0f;
+        offset.y = glm::min(offset.y, 212.0f);
+
         // Change to render into rendertexture for now
         SDL_SetRenderTarget(game->renderer(), entityTexture);
         SDL_SetRenderDrawColor(game->renderer(), 0, 0, 0, 0);
