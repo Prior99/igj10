@@ -32,6 +32,14 @@ struct Velocity : entityx::Component<Velocity> {
             }
         }
 
+        if (abs(this->velocity.x) < VELOCITY_THRESHOLD.x) {
+            this->velocity.x = 0;
+        }
+
+        if (abs(this->velocity.y) < VELOCITY_THRESHOLD.y) {
+            this->velocity.y = 0;
+        }
+
         auto loss = VELOCITY_LOSS;
         this->velocity = this->velocity * loss;
     }
