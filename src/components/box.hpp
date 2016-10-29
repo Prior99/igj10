@@ -7,6 +7,11 @@
 #include "game_config.hpp"
 #include <iostream>
 
+static const int DANGEROUS_LEFT = 4;
+static const int DANGEROUS_RIGHT = 2;
+static const int DANGEROUS_TOP = 1;
+static const int DANGEROUS_BOTTOM = 3;
+
 struct Box : entityx::Component<Box> {
     Box(glm::vec2 size): size(size), dangerousUp(false), dangerousRight(false), dangerousDown(false), dangerousLeft(false) {
     }
@@ -29,16 +34,16 @@ struct Box : entityx::Component<Box> {
 
     bool isDangerous(int direction) {
         switch(direction){
-            case 1 :
+            case DANGEROUS_TOP :
                 return this->dangerousUp;
                 break;
-            case 2 :
+            case DANGEROUS_RIGHT :
                 return this->dangerousRight;
                 break;
-            case 3 :
+            case DANGEROUS_BOTTOM :
                 return this->dangerousDown;
                 break;
-            case 4 :
+            case DANGEROUS_LEFT :
                 return this->dangerousLeft;
                 break;
             default :
