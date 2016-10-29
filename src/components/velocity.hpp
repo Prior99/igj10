@@ -25,10 +25,10 @@ struct Velocity : entityx::Component<Velocity> {
     void update(double dt) {
         if (abs(this->velocity.x) > MAX_VELOCITY.x) {
             if(this->velocity.x < 0){
-                this->velocity = -MAX_VELOCITY;
+                this->velocity.x = -MAX_VELOCITY.x;
             }
             else{
-                this->velocity = MAX_VELOCITY;
+                this->velocity.x = MAX_VELOCITY.x;
             }
         }
 
