@@ -50,7 +50,6 @@ class ControlSystem : public entityx::System<ControlSystem>, public entityx::Rec
 
                 const Uint8 *state = SDL_GetKeyboardState(NULL);
                 bool walking = false;
-                std::cout << count << std::endl;
                 if (state[SDL_SCANCODE_RETURN]) {
                     if (count > 0.5) {
                       this->game->toggleFreeze();
