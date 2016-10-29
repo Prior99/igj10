@@ -46,7 +46,16 @@ class EntityDrawSystem {
             SDL_Rect dest{pos.x, pos.y, drawable->getWidth(), drawable->getHeight()};
             SDL_Rect src{0, 0, drawable->getWidth(), drawable->getHeight()};
 
-            SDL_RenderCopy(m_game->renderer(), m_game->res_manager().texture(drawable->texture_key()), &src, &dest);
+            SDL_Texture* texture = m_game->res_manager().texture(drawable->texture_key());
+            SDL_Rect *clip = &src;
+            if(drawable->hasAnimation()){
+                auto animation = drawable->getAnimation();
+                texture = m_game->res_manager().texture(animation.getTextureKey());
+                clip = animation.getAnimationFrame(clip);
+                // std::cout << clip->x << " " << clip->y << ", " << clip->w << " " << clip->h << "\n";
+            }
+
+            SDL_RenderCopy(m_game->renderer(), texture, clip, &dest);
         }
 
         // Render to final window
