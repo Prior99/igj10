@@ -10,8 +10,8 @@
 //screen width and height
 static const int WIDTH = 800;
 static const int HEIGHT = 600;
-static const int GAME_WIDTH = 200;
-static const int GAME_HEIGHT = 150;
+static const int GAME_WIDTH = 300;
+static const int GAME_HEIGHT = 225;
 
 static const bool DEBUG = false;
 
