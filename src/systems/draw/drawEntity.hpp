@@ -26,7 +26,7 @@ class EntityDrawSystem {
     void update(entityx::EntityManager &es, entityx::EventManager &events,
                 entityx::TimeDelta dt) {
         auto playerPos = game->getPlayer().component<Position>()->getPosition();
-        auto offset = playerPos - glm::vec2(GAME_WIDTH, GAME_HEIGHT) / 2.0f;
+        auto offset = playerPos - glm::vec2(GAME_WIDTH / 4.0f, GAME_HEIGHT) / 2.0f;
         // Change to render into rendertexture for now
         SDL_SetRenderTarget(game->renderer(), entityTexture);
         SDL_SetRenderDrawColor(game->renderer(), 0, 0, 0, 0);

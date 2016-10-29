@@ -15,6 +15,7 @@
 
 #include "entityx/entityx.h"
 
+#include <stdlib.h>
 #include <SDL2/SDL.h>
 
 MainState::MainState(Game *game) : m_game(game) {
@@ -31,15 +32,13 @@ int MainState::init() {
     m_systems.add<CollisionSystem>();
     m_systems.configure();
 
-    entityx::Entity box1 = entities.create();
-    box1.assign<Position>(glm::vec2(0.0f, 200.f));
-    box1.assign<Box>(glm::vec2(128.f, 128.f));
-	box1.assign<Drawable>("house", 128, 128);
-
-    entityx::Entity box2 = entities.create();
-    box2.assign<Position>(glm::vec2(400.0f, 400.f));
-    box2.assign<Box>(glm::vec2(400.0f, 200.0f));
-	box2.assign<Drawable>("house", 400, 200);
+    srand (15);
+    for (int i = 0; i < 10; i++) {
+        entityx::Entity box1 = entities.create();
+        box1.assign<Position>(glm::vec2(i * 250.f, 200.f + rand() % 100 - 50));
+        box1.assign<Box>(glm::vec2(128.f, 128.f));
+        box1.assign<Drawable>("house", 128, 128);
+    }
 
     entityx::Entity sun = entities.create();
     sun.assign<Position>(glm::vec2(GAME_WIDTH / 2, -100));
