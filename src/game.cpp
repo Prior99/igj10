@@ -59,7 +59,9 @@ int Game::init() {
     m_res_manager.load_texture("playerimg", "res/0.png", m_render);
     m_res_manager.load_texture("player-small", "res/player-small.png", m_render);
     m_res_manager.load_texture("player", "res/player.png", m_render);
-    m_res_manager.load_texture("house", "res/house-1.png", m_render);
+    m_res_manager.load_texture("house-01-bottom", "res/house-1/bottom.png", m_render);
+    m_res_manager.load_texture("house-01-middle", "res/house-1/middle.png", m_render);
+    m_res_manager.load_texture("house-01-roof", "res/house-1/roof.png", m_render);
     m_res_manager.load_texture("sidewalk", "res/sidewalk.png", m_render);
     m_res_manager.load_texture("street", "res/street.png", m_render);
     m_res_manager.load_texture("background", "res/background.png", m_render);

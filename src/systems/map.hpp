@@ -20,25 +20,38 @@ class MapSystem : public entityx::System<MapSystem> {
 
         void update(entityx::EntityManager &es, entityx::EventManager &events, double dt) {
             if(!created) {
-                srand (15);
+                srand (time(0));
                 //calculate values
                 int housewidth = 128;
-                float housemargin = 250.f;
                 int sidewalkwidth = 64;
                 int streetwidth = 64;
-                int maplength = 10;
+                int maplength = 20;
 
                 // create houses
+                int x = 0;
+                int height = rand() % 5;
                 for (int i = 0; i < maplength * floor(housewidth/housewidth); i++) {
-                    float height = 200.f + rand() % 100 - 50;
-                    entityx::Entity box1 = es.create();
-                    box1.assign<Position>(glm::vec2(i * housemargin, height));
-                    box1.assign<Box>(glm::vec2(128.f, 128.f));
-                    box1.assign<Drawable>("house", housewidth, 128);
+                    bool up = rand() % 2 == 1;
+                    height = up ? height + 1 : height - 1;
+                    height = glm::min(glm::max(height, 1), 6);
+                    auto margin = housewidth + 60 + rand() % 120;
+                    entityx::Entity bottom = es.create();
+                    bottom.assign<Position>(glm::vec2(x, 400 - 32));
+                    bottom.assign<Drawable>("house-01-bottom", 128, 32);
+                    for (int j = 0; j < height; j++) {
+                        entityx::Entity middle = es.create();
+                        middle.assign<Position>(glm::vec2(x, 400 - 32 - (j + 1) * 63));
+                        middle.assign<Drawable>("house-01-middle", 128, 63);
+                    }
+                    entityx::Entity roof = es.create();
+                    roof.assign<Position>(glm::vec2(x, 400 - 32 - height * 63 - 16));
+                    roof.assign<Drawable>("house-01-roof", 128, 32);
+                    roof.assign<Box>(glm::vec2(128.0f, 32.0f));
                     std::cout << i << std::endl;
+                    x += margin;
                 }
                 // create sidewalk
-                for (int i = 0; i < maplength * (floor(housewidth/sidewalkwidth)+floor(housemargin/sidewalkwidth)); i++) {
+                for (int i = 0; i < maplength * (floor(housewidth/sidewalkwidth)+floor(250.f/sidewalkwidth)); i++) {
                     entityx::Entity sidewalk = es.create();
                     sidewalk.assign<Position>(glm::vec2(0.f + i * sidewalkwidth, 400));
                     sidewalk.assign<Drawable>("sidewalk", sidewalkwidth, 48);
