@@ -47,7 +47,7 @@ class MapSystem : public entityx::System<MapSystem> {
                     street.assign<Drawable>("street", streetwidth, 48);
                     entityx::Entity invisibleFloor = es.create();
                     invisibleFloor.assign<Box>(glm::vec2(64.f, 48.f), true);
-                    invisibleFloor.assign<Position>(glm::vec2(0.f + i * streetwidth, 416));
+                    invisibleFloor.assign<Position>(glm::vec2(0.f + i * streetwidth, 410));
 
                     std::cout << i << std::endl;
                 }

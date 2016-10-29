@@ -31,7 +31,7 @@ class EntityDrawSystem {
                 entityx::TimeDelta dt) {
         auto playerPos = game->getPlayer().component<Position>()->getPosition();
         auto offset = playerPos - glm::vec2(GAME_WIDTH / 4.0f, GAME_HEIGHT) / 2.0f;
-        offset.y = glm::min(offset.y, 212.0f);
+        offset.y = glm::min(offset.y, 210.0f);
 
         // Change to render into rendertexture for now
         SDL_SetRenderTarget(game->renderer(), entityTexture);

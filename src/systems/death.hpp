@@ -37,7 +37,10 @@ class DeathSystem : public entityx::System<DeathSystem>, public entityx::Receive
                 (void) pos;
                 (void) splatter;
                 splatter.assign<Position>(pos + glm::vec2(0, 20));
-                splatter.assign<Drawable>("splatter", 24, 4);
+                auto splatterAnimation = AnimationCollection("splatter");
+                splatterAnimation.addAnimation("splatter", 0, 7, 1.0, glm::vec2(64, 24));
+                splatterAnimation.setAnimation("splatter", AnimationPlaybackType::FREEZE);
+                splatter.assign<Drawable>("splatter", 64, 24, splatterAnimation);
                 player.remove<Drawable>();
                 done = true;
             }
