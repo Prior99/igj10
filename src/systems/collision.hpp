@@ -6,6 +6,7 @@
 #include "components/collidable.hpp"
 #include "events.hpp"
 #include "game.hpp"
+#include "utils.hpp"
 
 #include "entityx/entityx.h"
 
@@ -23,6 +24,7 @@ class CollisionSystem : public entityx::System<CollisionSystem> {
             entityx::ComponentHandle<Collidable> collidable;
             entityx::ComponentHandle<Box> box;
             for (entityx::Entity colliding : es.entities_with_components(collidingPos, collidable)) {
+                bool isTouchingAnything = false;
                 for (entityx::Entity obstacle : es.entities_with_components(boxPos, box)) {
                     (void) colliding;
                     (void) obstacle;
@@ -30,17 +32,18 @@ class CollisionSystem : public entityx::System<CollisionSystem> {
                     auto r = collidable->getRadius();
                     auto boxCoord = boxPos->getPosition();
                     auto boxSize = box->getSize();
-                    
-                    bool isInBox = (colCoord.x >= boxCoord.x && colCoord.x <= boxCoord.x + boxSize.x) &&
-                        (colCoord.y >= boxCoord.y && colCoord.y <= boxCoord.y + boxSize.y);
-                    bool isTouchingBox = 
+
+                    bool isInBox = (compareDoubles(colCoord.x, boxCoord.x) >= 0 && compareDoubles(colCoord.x, boxCoord.x + boxSize.x) <=0) &&
+                        (compareDoubles(colCoord.y, boxCoord.y) >= 0 && compareDoubles(colCoord.y, boxCoord.y + boxSize.y) <= 0);
+                    bool isTouchingBox =
                         (
-                            (colCoord.x + r >= boxCoord.x && colCoord.x <= boxCoord.x + boxSize.x) ||
-                            (colCoord.x - r <= boxCoord.x + boxSize.x && colCoord.x >= boxCoord.x)
+                            (compareDoubles(colCoord.x + r, boxCoord.x) >= 0 && compareDoubles(colCoord.x, boxCoord.x + boxSize.x) <= 0) ||
+                            (compareDoubles(colCoord.x - r, boxCoord.x + boxSize.x) <= 0 && compareDoubles(colCoord.x, boxCoord.x) >= 0)
                         ) && (
-                            (colCoord.y + r >= boxCoord.y && colCoord.y <= boxCoord.y + boxSize.y) ||
-                            (colCoord.y - r <= boxCoord.y + boxSize.y && colCoord.y >= boxCoord.y)
+                            (compareDoubles(colCoord.y + r, boxCoord.y) >= 0 && compareDoubles(colCoord.y, boxCoord.y + boxSize.y) <= 0) ||
+                            (compareDoubles(colCoord.y - r, boxCoord.y + boxSize.y) <= 0 && compareDoubles(colCoord.y, boxCoord.y) >= 0)
                         );
+
                     if (isInBox || isTouchingBox) {
                         glm::vec2 outPos;
 
@@ -65,8 +68,9 @@ class CollisionSystem : public entityx::System<CollisionSystem> {
                         }
                         collidingPos->setPosition(outPos);
                     }
-                    collidable->setIsTouching(isTouchingBox || isInBox);
+                    isTouchingAnything = isTouchingAnything || isTouchingBox || isInBox;
                 }
+                collidable->setIsTouching(isTouchingAnything);
             }
         }
 };
