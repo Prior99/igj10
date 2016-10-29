@@ -62,6 +62,13 @@ int Game::init() {
     m_res_manager.load_texture("house", "res/house-1.png", m_render);
     m_res_manager.load_texture("background", "res/background.png", m_render);
     m_res_manager.load_font("font20", "res/DejaVuSans.ttf", 20);
+    m_res_manager.load_sound("step-01", "res/sounds/Step1.wav");
+    m_res_manager.load_sound("step-02", "res/sounds/Step2.wav");
+    m_res_manager.load_sound("step-03", "res/sounds/Step3.wav");
+    m_res_manager.load_sound("step-04", "res/sounds/Step4.wav");
+    m_res_manager.load_sound("step-05", "res/sounds/Step5.wav");
+    m_res_manager.load_sound("step-06", "res/sounds/Step6.wav");
+    m_res_manager.load_sound("step-07", "res/sounds/Step7.wav");
 
     SDL_RenderSetLogicalSize(m_render, WIDTH, HEIGHT);
 
