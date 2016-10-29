@@ -152,6 +152,10 @@ void Game::addInsanity(float f) {
     this->insanity += f;
 }
 
+void Game::mute() {
+    Mix_PauseMusic();
+}
+
 void Game::shutdown() {
     m_running = false;
 #ifdef __EMSCRIPTEN__

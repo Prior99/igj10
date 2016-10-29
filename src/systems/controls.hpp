@@ -60,6 +60,9 @@ class ControlSystem : public entityx::System<ControlSystem>, public entityx::Rec
                     velocity->drag(glm::vec2(-.3f, 0.0f) * SPEED);
                     walking = true;
                 }
+                if (state[SDL_SCANCODE_M]) {
+                    this->game->mute();
+                }
                 if (state[SDL_SCANCODE_D] || state[SDL_SCANCODE_RIGHT]) {
                     velocity->drag(glm::vec2(1.0f, 0.0f) * SPEED);
                     walking = true;

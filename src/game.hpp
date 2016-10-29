@@ -25,6 +25,7 @@ class Game {
     void addInsanity(float f);
     void shutdown();
     void popstate();
+    void mute();
     void toggleFreeze();
     bool isFrozen();
 
