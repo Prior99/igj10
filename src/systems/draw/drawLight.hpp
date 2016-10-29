@@ -9,7 +9,7 @@
 #include <glm/vec2.hpp>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-
+#include "game_config.hpp"
 #include <iostream>
 
 class LightDrawSystem {
@@ -17,7 +17,7 @@ class LightDrawSystem {
     LightDrawSystem(Game *game) : m_game(game) {
         int w, h;
         SDL_RenderGetLogicalSize(game->renderer(), &w, &h);
-        m_camera = SDL_Rect{0, 0, w, h};
+        m_camera = SDL_Rect{0, 0, w/GAME_SCALE, h/GAME_SCALE};
 
         lightTexture =
             SDL_CreateTexture(game->renderer(), SDL_PIXELTYPE_UNKNOWN, SDL_TEXTUREACCESS_TARGET,
@@ -30,6 +30,8 @@ class LightDrawSystem {
 
     void update(entityx::EntityManager &es, entityx::EventManager &events,
                 entityx::TimeDelta dt) {
+        auto playerPos = m_game->getPlayer().component<Position>()->getPosition();
+        auto offset = playerPos - glm::vec2(WIDTH, HEIGHT) / (2.0f * GAME_SCALE);
 
         // RENDER LIGHT
 
@@ -63,11 +65,8 @@ class LightDrawSystem {
             auto height = h * light->scale();
 
             // Converted position
-            SDL_Rect dest;
-            dest.x = coord[0] - width / 2;
-            dest.y = coord[1] - height / 2;
-            dest.w = width;
-            dest.h = height;
+            auto pos = glm::vec2(coord[0] - width / 2, coord[1] - height / 2) - offset;
+            SDL_Rect dest{pos.x, pos.y, width, height};
 
             SDL_SetTextureBlendMode(tex, SDL_BLENDMODE_ADD);
             SDL_SetTextureColorMod(tex, light->color().r, light->color().g, light->color().b);

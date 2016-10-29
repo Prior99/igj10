@@ -9,7 +9,7 @@
 #include <glm/vec2.hpp>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-
+#include "game_config.hpp"
 #include <iostream>
 
 class EntityDrawSystem {
@@ -17,7 +17,7 @@ class EntityDrawSystem {
     EntityDrawSystem(Game *game) : m_game(game) {
         int w, h;
         SDL_RenderGetLogicalSize(game->renderer(), &w, &h);
-        m_camera = SDL_Rect{0, 0, w, h};
+        m_camera = SDL_Rect{0, 0, w/GAME_SCALE, h/GAME_SCALE};
         entityTexture =
             SDL_CreateTexture(game->renderer(), SDL_PIXELTYPE_UNKNOWN, SDL_TEXTUREACCESS_TARGET,
                                 game->world_size().w, game->world_size().h);
@@ -29,10 +29,11 @@ class EntityDrawSystem {
 
     void update(entityx::EntityManager &es, entityx::EventManager &events,
                 entityx::TimeDelta dt) {
-
+        auto playerPos = m_game->getPlayer().component<Position>()->getPosition();
+        auto offset = playerPos - glm::vec2(WIDTH, HEIGHT) / (2.0f * GAME_SCALE);
         // Change to render into rendertexture for now
         SDL_SetRenderTarget(m_game->renderer(), entityTexture);
-        SDL_SetRenderDrawColor(m_game->renderer(), 0, 100, 200, 255);
+        SDL_SetRenderDrawColor(m_game->renderer(), 0, 0, 0, 0);
         SDL_RenderClear(m_game->renderer());
 
         entityx::ComponentHandle<Drawable> drawable;
@@ -41,12 +42,8 @@ class EntityDrawSystem {
         for (entityx::Entity entity : es.entities_with_components(drawable, position)) {
 
             (void)entity;
-
-            SDL_Rect dest;
-            dest.x = position->getPosition()[0];
-            dest.y = position->getPosition()[1];
-            dest.w = drawable->getWidth();
-            dest.h = drawable->getHeight();
+            auto pos = position->getPosition() - offset;
+            SDL_Rect dest{pos.x, pos.y, drawable->getWidth(), drawable->getHeight()};
 
             SDL_RenderCopyEx(m_game->renderer(),
                              m_game->res_manager().texture(drawable->texture_key()), NULL, &dest, 0,
@@ -54,6 +51,7 @@ class EntityDrawSystem {
         }
 
         // Render to final window
+        SDL_SetTextureBlendMode(entityTexture, SDL_BLENDMODE_BLEND);
         SDL_SetRenderTarget(m_game->renderer(), nullptr);
         SDL_RenderCopy(m_game->renderer(), entityTexture, &m_camera, nullptr);
     }

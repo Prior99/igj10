@@ -9,7 +9,7 @@
 #include <glm/vec2.hpp>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-
+#include "game_config.hpp"
 #include <iostream>
 
 class OverlayDrawSystem {
@@ -17,7 +17,7 @@ class OverlayDrawSystem {
     OverlayDrawSystem(Game *game) : m_game(game) {
         int w, h;
         SDL_RenderGetLogicalSize(game->renderer(), &w, &h);
-        m_camera = SDL_Rect{0, 0, w, h};
+        m_camera = SDL_Rect{0, 0, w/GAME_SCALE, h/GAME_SCALE};
         overlayTexture =
             SDL_CreateTexture(game->renderer(), SDL_PIXELTYPE_UNKNOWN, SDL_TEXTUREACCESS_TARGET,
                                 game->world_size().w, game->world_size().h);
@@ -44,11 +44,7 @@ class OverlayDrawSystem {
 	        int w, h;
 	        SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
 
-	        SDL_Rect dest;
-	        dest.x = position->getPosition().x;
-	        dest.y = position->getPosition().y;
-	        dest.w = w;
-	        dest.h = h;
+	        SDL_Rect dest{position->getPosition().x, position->getPosition().y, w, h};
 
 	        SDL_RenderCopy(m_game->renderer(), texture, NULL, &dest);
 	        SDL_FreeSurface(surf);

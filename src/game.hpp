@@ -30,8 +30,13 @@ class Game {
     ResourceManager &res_manager();
     SDL_Window *window();
     const SDL_Rect &world_size() const;
+    entityx::Entity getPlayer();
+    void setPlayer(entityx::Entity &player) {
+        this->player = player;
+    }
 
   private:
+    entityx::Entity player;
     bool m_running = true;
     int m_last_frame_time = 0;
     SDL_Rect m_world_size = {0, 0, 1600, 1200};

@@ -55,6 +55,7 @@ int MainState::init() {
 	player.assign<Gravity>();
 	player.assign<Collidable>(50.0f);
 	player.assign<Player>();
+    m_game->setPlayer(player);
 
     entityx::Entity lol = entities.create();
     lol.assign<Position>(glm::vec2(0.f, 0.f));

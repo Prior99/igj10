@@ -20,6 +20,7 @@ Game::~Game() {
 }
 
 int Game::init() {
+    this->player = m_ex.entities.create();
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
         std::cerr << "SDL_Init Error: " << SDL_GetError() << std::endl;
         return 1;
@@ -55,7 +56,8 @@ int Game::init() {
 
     m_res_manager.load_texture("gradient", "res/gradient.png", m_render);
     m_res_manager.load_texture("playerimg", "res/0.png", m_render);
-    m_res_manager.load_texture("house", "res/house.png", m_render);
+    m_res_manager.load_texture("house", "res/house-1.png", m_render);
+    m_res_manager.load_texture("background", "res/background.png", m_render);
     m_res_manager.load_font("font20", "res/DejaVuSans.ttf", 20);
 
     SDL_RenderSetLogicalSize(m_render, WIDTH, HEIGHT);
@@ -67,6 +69,11 @@ int Game::init() {
     m_states.top().second->init();
 
     return 0;
+}
+
+
+entityx::Entity Game::getPlayer() {
+    return this->player;
 }
 
 void Game::mainloop() {
