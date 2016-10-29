@@ -23,11 +23,15 @@ struct Velocity : entityx::Component<Velocity> {
     }
 
     void update(double dt) {
-        if ( this->velocity.x > MAX_VELOCITY.x) {
-          this->velocity = glm::min(this->velocity, MAX_VELOCITY); }
-        else if ( abs(this->velocity.x) > MAX_VELOCITY.x) {
-          this->velocity = glm::max(this->velocity, MAX_VELOCITY * -1);
+        if (abs(this->velocity.x) > MAX_VELOCITY.x) {
+            if(this->velocity.x < 0){
+                this->velocity = -MAX_VELOCITY;
+            }
+            else{
+                this->velocity = MAX_VELOCITY;
+            }
         }
+
         auto loss = VELOCITY_LOSS;
         this->velocity = this->velocity * loss;
     }
