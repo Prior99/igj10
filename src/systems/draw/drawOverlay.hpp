@@ -36,7 +36,7 @@ class OverlayDrawSystem {
             entityx::ComponentHandle<Text> text;
             for (entityx::Entity entity : es.entities_with_components(position, text)) {
                 auto color = text->getColor();
-                auto surf = TTF_RenderText_Blended(game->res_manager().font("font20"), text->getText().c_str(), color);
+                auto surf = TTF_RenderText_Blended(game->res_manager().font("font-big"), text->getText().c_str(), color);
                 auto texture = SDL_CreateTextureFromSurface(game->renderer(), surf);
                 int w, h;
                 SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);

@@ -2,6 +2,7 @@
 #define GAME_CONFIG_HPP
 
 #include "glm/vec2.hpp"
+#include <string>
 
 /*
  *  Global config values for easy tweaking and changing
@@ -27,4 +28,19 @@ static const int STOMPER_SPEED_MIN = 600;
 static const int STOMPER_SPEED_MAX = 700;
 static const float MAX_JUMP = 0.25f;
 static const float PARALLAXITY = 4.0;
+static const float TEXT_DURATION = 2.0f;
+static const int DEATH_MESSAGE_COUNT = 11;
+static const std::string DEATH_MESSAGES[DEATH_MESSAGE_COUNT] = {
+    "Noob",
+    "Lol",
+    "Wow.",
+    "Fail",
+    "Rofl",
+    "NEW LOWSCORE!",
+    "Cyka Blyat",
+    "Bad.",
+    "Just... Wow.",
+    "Seriously?",
+    "Dude..."
+};
 #endif
