@@ -4,6 +4,7 @@
 #include "game.hpp"
 #include "game_config.hpp"
 #include "components/velocity.hpp"
+#include "components/stomper.hpp"
 #include "entityx/entityx.h"
 #include "glm/common.hpp"
 #include <iostream>
@@ -20,7 +21,12 @@ class InsanitySystem : public entityx::System<InsanitySystem> {
         }
 
         void update(entityx::EntityManager &es, entityx::EventManager &events, double dt) {
+            entityx::ComponentHandle<Stomper> stomper;
             if(this->game->isFrozen()){
+                for (entityx::Entity stomp : es.entities_with_components(stomper)) {
+                    (void) stomp;
+                    stomper->setRunning(false);
+                }
                 factor += dt / 10;
                 this->time += dt;
                 game->addInsanity(dt * INSANITY_SPEED * factor);
@@ -32,6 +38,10 @@ class InsanitySystem : public entityx::System<InsanitySystem> {
                 }
             } else {
                 factor = 1.0f;
+                for (entityx::Entity stomp : es.entities_with_components(stomper)) {
+                    (void) stomp;
+                    stomper->setRunning(true);
+                }
             }
         }
     private:
