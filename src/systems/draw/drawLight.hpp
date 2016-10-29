@@ -14,14 +14,9 @@
 
 class LightDrawSystem {
   public:
-    LightDrawSystem(Game *game) : m_game(game) {
-        int w, h;
-        SDL_RenderGetLogicalSize(game->renderer(), &w, &h);
-        m_camera = SDL_Rect{0, 0, w, h};
-
-        lightTexture =
-            SDL_CreateTexture(game->renderer(), SDL_PIXELTYPE_UNKNOWN, SDL_TEXTUREACCESS_TARGET,
-                                game->world_size().w/GAME_SCALE, game->world_size().h/GAME_SCALE);
+    LightDrawSystem(Game *game) : game(game) {
+        lightTexture = SDL_CreateTexture(
+            game->renderer(), SDL_PIXELTYPE_UNKNOWN, SDL_TEXTUREACCESS_TARGET, GAME_WIDTH, GAME_HEIGHT);
     }
 
     ~LightDrawSystem() {
@@ -30,15 +25,15 @@ class LightDrawSystem {
 
     void update(entityx::EntityManager &es, entityx::EventManager &events,
                 entityx::TimeDelta dt) {
-        auto playerPos = m_game->getPlayer().component<Position>()->getPosition();
-        auto offset = playerPos - glm::vec2(WIDTH, HEIGHT) / (2.0f * GAME_SCALE);
+        auto playerPos = game->getPlayer().component<Position>()->getPosition();
+        auto offset = playerPos - glm::vec2(GAME_WIDTH / 4.0f, GAME_HEIGHT) / 2.0f;
 
         // RENDER LIGHT
 
         // Change to render into light rendertexture for now
-        SDL_SetRenderTarget(m_game->renderer(), lightTexture);
-        SDL_SetRenderDrawColor(m_game->renderer(), 20, 20, 20, 255);
-        SDL_RenderClear(m_game->renderer());
+        SDL_SetRenderTarget(game->renderer(), lightTexture);
+        SDL_SetRenderDrawColor(game->renderer(), 20, 20, 20, 255);
+        SDL_RenderClear(game->renderer());
 
         entityx::ComponentHandle<Drawable> drawable;
         entityx::ComponentHandle<Position> position;
@@ -49,7 +44,7 @@ class LightDrawSystem {
             (void)entity;
 
             auto coord = position->getPosition();
-            auto tex = m_game->res_manager().texture(light->texture_key());
+            auto tex = game->res_manager().texture(light->texture_key());
             auto drawable = entity.component<Drawable>();
 
             int wPlayer, hPlayer;
@@ -70,18 +65,15 @@ class LightDrawSystem {
 
             SDL_SetTextureBlendMode(tex, SDL_BLENDMODE_ADD);
             SDL_SetTextureColorMod(tex, light->color().r, light->color().g, light->color().b);
-            SDL_RenderCopy(m_game->renderer(), tex, nullptr, &dest);
+            SDL_RenderCopy(game->renderer(), tex, nullptr, &dest);
         }
+    }
 
-        SDL_SetTextureBlendMode(lightTexture, SDL_BLENDMODE_MOD);
-
-        // Render to final window
-        SDL_SetRenderTarget(m_game->renderer(), nullptr);
-        SDL_RenderCopy(m_game->renderer(), lightTexture, &m_camera, nullptr);
+    SDL_Texture *getTexture() {
+        return this->lightTexture;
     }
 
   private:
-    Game *m_game;
-    SDL_Rect m_camera;
+    Game *game;
     SDL_Texture *lightTexture;
 };

@@ -13,51 +13,46 @@
 #include <iostream>
 
 class OverlayDrawSystem {
-  public:
-    OverlayDrawSystem(Game *game) : m_game(game) {
-        int w, h;
-        SDL_RenderGetLogicalSize(game->renderer(), &w, &h);
-        m_camera = SDL_Rect{0, 0, w, h};
-        overlayTexture =
-            SDL_CreateTexture(game->renderer(), SDL_PIXELTYPE_UNKNOWN, SDL_TEXTUREACCESS_TARGET,
-                                game->world_size().w, game->world_size().h);
-    }
+    public:
+        OverlayDrawSystem(Game *game) : game(game) {
+            overlayTexture = SDL_CreateTexture(
+                game->renderer(), SDL_PIXELTYPE_UNKNOWN, SDL_TEXTUREACCESS_TARGET, GAME_WIDTH, GAME_HEIGHT);
 
-    ~OverlayDrawSystem() {
-        SDL_DestroyTexture(overlayTexture);
-    }
+        }
 
-    void update(entityx::EntityManager &es, entityx::EventManager &events,
+        ~OverlayDrawSystem() {
+            SDL_DestroyTexture(overlayTexture);
+        }
+
+        void update(entityx::EntityManager &es, entityx::EventManager &events,
                 entityx::TimeDelta dt) {
 
-        // Change to render into rendertexture for now
-        SDL_SetRenderTarget(m_game->renderer(), overlayTexture);
-        SDL_SetRenderDrawColor(m_game->renderer(), 255, 255, 255, 0);
-        SDL_RenderClear(m_game->renderer());
+            // Change to render into rendertexture for now
+            SDL_SetRenderTarget(game->renderer(), overlayTexture);
+            SDL_SetRenderDrawColor(game->renderer(), 255, 255, 255, 0);
+            SDL_RenderClear(game->renderer());
 
-		entityx::ComponentHandle<Position> position;
-        entityx::ComponentHandle<Text> text;
-        for (entityx::Entity entity : es.entities_with_components(position, text)) {
-	        auto color = text->getColor();
-	        auto surf = TTF_RenderText_Blended(m_game->res_manager().font("font20"), text->getText().c_str(), color);
-	        auto texture = SDL_CreateTextureFromSurface(m_game->renderer(), surf);
-	        int w, h;
-	        SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
+            entityx::ComponentHandle<Position> position;
+            entityx::ComponentHandle<Text> text;
+            for (entityx::Entity entity : es.entities_with_components(position, text)) {
+                auto color = text->getColor();
+                auto surf = TTF_RenderText_Blended(game->res_manager().font("font20"), text->getText().c_str(), color);
+                auto texture = SDL_CreateTextureFromSurface(game->renderer(), surf);
+                int w, h;
+                SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
 
-	        SDL_Rect dest{position->getPosition().x, position->getPosition().y, w, h};
+                SDL_Rect dest{position->getPosition().x, position->getPosition().y, w, h};
 
-	        SDL_RenderCopy(m_game->renderer(), texture, NULL, &dest);
-	        SDL_FreeSurface(surf);
-	    }
+                SDL_RenderCopy(game->renderer(), texture, NULL, &dest);
+                SDL_FreeSurface(surf);
+            }
+        }
 
-		SDL_SetTextureBlendMode(overlayTexture, SDL_BLENDMODE_ADD);
-        // Render to final window
-        SDL_SetRenderTarget(m_game->renderer(), nullptr);
-        SDL_RenderCopy(m_game->renderer(), overlayTexture, &m_camera, nullptr);
-    }
+        SDL_Texture *getTexture() {
+            return this->overlayTexture;
+        }
 
-  private:
-    Game *m_game;
-    SDL_Rect m_camera;
-    SDL_Texture *overlayTexture;
+    private:
+        Game *game;
+        SDL_Texture *overlayTexture;
 };

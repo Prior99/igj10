@@ -5,67 +5,106 @@
 
 #include <SDL2/SDL.h>
 
-struct Animation {
-	int offset;
-	int frames;
-	double duration;
-	glm::vec2 size;
+#include <iostream>
 
-	double runTime = 0;
+enum struct AnimationPlaybackType {
+    LOOP,
+    RESET,
+    FREEZE
 };
 
+struct Animation {
+    int offset;
+    int frames;
+    double duration;
+    glm::vec2 size;
+    double runTime;
+
+    Animation():
+        offset(0),
+        frames(0),
+        duration(0),
+        size({0, 0}),
+        runTime(0) {
+        }
+
+    Animation(int offset, int frames, double duration, glm::vec2 size):
+        offset(offset),
+        frames(frames),
+        duration(duration),
+        size(size),
+        runTime(0.0) {
+        }
+};
 
 struct AnimationCollection {
-	AnimationCollection(std::string textureKey): textureKey(textureKey) {
+    AnimationCollection(std::string textureKey): textureKey(textureKey) {
 
-	}
+    }
 
-	addAnimation(std::string animationKey, int offset, int frames, double duration, glm::vec2 size) {
-		Animation animation = {offset, frames, duration, size};
-		animations[animationKey] = animation;
-	}
+    void addAnimation(std::string animationKey, int offset, int frames, double duration, glm::vec2 size) {
+        animations[animationKey] = new Animation(offset, frames, duration, size);
+    }
 
-	setAnimation(std::string animationKey, bool repeat) {
-		if (currentAnimation.empty()) {
-			animations[currentAnimation].runTime = 0;
-		}
-		loop = repeat;
-		currentAnimation = animationKey;
-	}
+    void setAnimation(std::string animationKey, AnimationPlaybackType playbackType) {
+        if (!currentAnimation.empty()) {
+            animations[currentAnimation]->runTime = 0;
+        }
+        this->playbackType = playbackType;
+        currentAnimation = animationKey;
+    }
 
-	std::string getTextureKey() {
-		return textureKey;
-	}
+    void pause(bool pause) {
+        paused = pause;
+    }
 
-	SDL_Rect* getAnimationFrame() {
-		if (animations.count(currentAnimation)) {
-			auto animation = animations[currentAnimation];
-			SDL_Rect rect;
-			int currentFrame = animation.runTime * animation.frames / animation.duration;
-			rect.x = currentFrame * animation.size.x;
-			rect.y = animation.offset;
-			rect.w = animation.size.x;
-			rect.h = animation.size.y;
-			return &rect;
-		} else {
-			return NULL;
-		}
-	}
+    std::string getTextureKey() {
+        return textureKey;
+    }
 
-	update(double dt) {
-		auto animation = animations[currentAnimation];
-		animation.runTime += dt;
-		if (!loop && animation.runTime >= animation.duration) {
-			animation.runTime = 0;
-			currentAnimation.erase();
-		}
-	}
+    SDL_Rect* getAnimationFrame(SDL_Rect* rect) {
+        if (animations.count(currentAnimation)) {
+            auto animation = animations[currentAnimation];
+
+            int currentFrame = animation->runTime * animation->frames / animation->duration;
+            rect->x = currentFrame * animation->size.x;
+            rect->y = animation->offset;
+            rect->w = animation->size.x;
+            rect->h = animation->size.y;
+            return rect;
+        } else {
+            return NULL;
+        }
+    }
+
+    void update(double dt) {
+        auto animation = animations[currentAnimation];
+        if(!paused) {
+            animation->runTime += dt;
+        }
+        if (animation->runTime > animation->duration) {
+            switch(playbackType) {
+                case AnimationPlaybackType::RESET:
+                    animation->runTime = 0;
+                    currentAnimation.erase();
+                    break;
+                case AnimationPlaybackType::FREEZE:
+                    animation->runTime = animation->duration;
+                    paused = true;
+                    break;
+                case AnimationPlaybackType::LOOP:
+                    // Nothing to do here
+                    break;
+            }
+        }
+    }
 
   private:
-	std::string textureKey;
-	std::map<std::string, Animation> animations;
-	std::string currentAnimation;
-	bool loop;
+    std::string textureKey;
+    std::map<std::string, Animation*> animations;
+    std::string currentAnimation;
+    AnimationPlaybackType playbackType;
+    bool paused = false;
 };
 
 #endif
