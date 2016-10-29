@@ -6,6 +6,9 @@
 
 #include "components/position.hpp"
 #include "components/player.hpp"
+#include "components/stomper.hpp"
+#include "components/box.hpp"
+#include "components/multipartDrawable.hpp"
 
 #include "entityx/entityx.h"
 #include <glm/vec2.hpp>
@@ -43,6 +46,18 @@ class MapSystem : public entityx::System<MapSystem> {
                 // All of them were streetChunkWid pixel wide, so increase accordingly
                 sidewalkGeneratedX += streetChunkWidth;
             }
+        }
+
+        void createStomper(entityx::EntityManager &es, int x, int y) {
+            PartialDrawable top = {"stomper-top", 39};
+            PartialDrawable middle = {"stomper-middle", 8};
+            PartialDrawable bottom = {"stomper-bottom", 8};
+            entityx::Entity stomper = es.create();
+            stomper.assign<Position>(glm::vec2(x, y));
+            stomper.assign<MultipartDrawable>(36, top, middle, bottom);
+            stomper.assign<Box>(glm::vec2(36.f, 47.f), false, false, true, false);
+            stomper.assign<Stomper>(0, 100, 1000, true);
+            stomper.component<MultipartDrawable>()->setHeight(80);
         }
 
         void createHouse(entityx::EntityManager &es, int height, int x) {
@@ -94,6 +109,9 @@ class MapSystem : public entityx::System<MapSystem> {
                     heightDifferenceModifier = rand() % tobergteDifficultyFunction(mapGeneratedX, 100);
                 }
                 createHouse(es, height, mapGeneratedX);
+                if (rand() % 5 == 0) {
+                    createStomper(es, mapGeneratedX + 16, GAME_BOTTOM - height * 63 - 16 - 36 - 220);
+                }
                 mapGeneratedX += houseWidth + minGap + rand() % variableGapSize + heightDifferenceModifier;
             }
         }

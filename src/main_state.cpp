@@ -10,7 +10,6 @@
 #include "components/box.hpp"
 #include "components/stomper.hpp"
 #include "components/gravity.hpp"
-#include "components/multipartDrawable.hpp"
 #include "components/foreground.hpp"
 #include "systems/collision.hpp"
 #include "systems/controls.hpp"
@@ -70,15 +69,6 @@ int MainState::init() {
     lol.assign<Position>(glm::vec2(0.f, 0.f));
     lol.assign<Text>("LOL", SDL_Color {200, 100, 100, 150});
 
-    PartialDrawable top = {"stomper-top", 39};
-    PartialDrawable middle = {"stomper-middle", 8};
-    PartialDrawable bottom = {"stomper-bottom", 8};
-    entityx::Entity stomper = entities.create();
-    stomper.assign<Position>(glm::vec2(200.f, 100.f));
-    stomper.assign<MultipartDrawable>(36, top, middle, bottom);
-    stomper.assign<Box>(glm::vec2(36.f, 47.f), false, false, true, false);
-    stomper.assign<Stomper>(0, 100, 1000, true);
-    stomper.component<MultipartDrawable>()->setHeight(80);
     return 0;
 }
 
