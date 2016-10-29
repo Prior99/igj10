@@ -105,6 +105,18 @@ bool Game::is_running() {
     return m_running;
 }
 
+int Game::getInsanity() {
+    return insanity;
+}
+
+void Game::setInsanity(int i) {
+    this->insanity = i;
+}
+
+void Game::addInsanity(int i) {
+    this->insanity += i;
+}
+
 void Game::shutdown() {
     m_running = false;
 #ifdef __EMSCRIPTEN__

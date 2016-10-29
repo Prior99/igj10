@@ -12,6 +12,7 @@
 #include "systems/movement.hpp"
 #include "systems/gravity.hpp"
 #include "systems/draw.hpp"
+#include "systems/insanity.hpp"
 
 #include "entityx/entityx.h"
 
@@ -29,6 +30,7 @@ int MainState::init() {
     m_systems.add<MovementSystem>();
     m_systems.add<GravitySystem>();
     m_systems.add<CollisionSystem>();
+    m_systems.add<InsanitySystem>(m_game);
     m_systems.configure();
 
     entityx::Entity box1 = entities.create();
@@ -82,4 +84,5 @@ void MainState::update(double dt) {
     m_systems.update<ControlSystem>(dt);
     m_systems.update<GravitySystem>(dt);
     m_systems.update<CollisionSystem>(dt);
+    m_systems.update<InsanitySystem>(dt);
 }

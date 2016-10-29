@@ -20,6 +20,9 @@ class Game {
     int init();
     void mainloop();
     bool is_running();
+    int getInsanity();
+    void setInsanity(int i);
+    void addInsanity(int i);
     void shutdown();
     void popstate();
 
@@ -37,6 +40,7 @@ class Game {
 
   private:
     entityx::Entity player;
+    int insanity = 1;
     bool m_running = true;
     int m_last_frame_time = 0;
     SDL_Rect m_world_size = {0, 0, 1600, 1200};
