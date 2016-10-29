@@ -46,9 +46,6 @@ class CollisionSystem : public entityx::System<CollisionSystem> {
                         );
 
                     if (isInBox || isTouchingBox) {
-                        if (box->isDangerous()) {
-                            events.emit<GameOver>();
-                        }
                         glm::vec2 outPos;
 
                         auto up = colCoord.y - boxCoord.y;
@@ -61,15 +58,27 @@ class CollisionSystem : public entityx::System<CollisionSystem> {
                             outPos.x = colCoord.x;
                             outPos.y = boxCoord.y - r;
                             isTouchingBottom = true;
+                            if (box->isDangerous(1)) {
+                                events.emit<GameOver>();
+                            }
                         } else if (min == down) {
                             outPos.x = colCoord.x;
                             outPos.y = boxCoord.y + boxSize.y + r;
+                            if (box->isDangerous(2)) {
+                                events.emit<GameOver>();
+                            }
                         } else if (min == left) {
                             outPos.x = boxCoord.x - r;
                             outPos.y = colCoord.y;
+                            if (box->isDangerous(4)) {
+                                events.emit<GameOver>();
+                            }
                         } else if (min == right) {
                             outPos.x = boxCoord.x + boxSize.x + r;
                             outPos.y = colCoord.y;
+                            if (box->isDangerous(2)) {
+                                events.emit<GameOver>();
+                            }
                         }
                         collidingPos->setPosition(outPos);
                     }

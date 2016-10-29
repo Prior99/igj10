@@ -78,7 +78,7 @@ int MainState::init() {
     entityx::Entity stomper = entities.create();
     stomper.assign<Position>(glm::vec2(200.f, 100.f));
     stomper.assign<MultipartDrawable>(36, top, middle, bottom);
-    stomper.assign<Box>(glm::vec2(36.f, 47.f));
+    stomper.assign<Box>(glm::vec2(36.f, 47.f), false, false, true, false);
     stomper.assign<Stomper>(0, 300, true);
     stomper.component<MultipartDrawable>()->setHeight(80);
     return 0;
