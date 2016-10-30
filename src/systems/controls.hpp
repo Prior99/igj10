@@ -45,15 +45,12 @@ class ControlSystem : public entityx::System<ControlSystem>, public entityx::Rec
             entityx::ComponentHandle<Drawable> drawable;
 
             const Uint8 *state = SDL_GetKeyboardState(NULL);
-            std::cout << this->game->getSanity() << std::endl;
             if (state[SDL_SCANCODE_R]) {
-              std::cout << "reset" << std::endl;
               rand();
               this->game->toggleFreeze();
               this->game->reset();
             }
             if (state[SDL_SCANCODE_T]) {
-              std::cout << "reset" << std::endl;
               this->game->toggleFreeze();
               this->game->reset();
             }
