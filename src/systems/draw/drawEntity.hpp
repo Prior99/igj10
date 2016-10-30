@@ -190,12 +190,22 @@ class EntityDrawSystem {
 
         for (entityx::Entity entity : es.entities_with_components(position)) {
             if(!entity.component<Foreground>()) {
-                renderEntity(entity, offset, dt);
+                auto privOffset = glm::vec2(0, 0);
+                auto draw = entity.component<Drawable>();
+                if (draw) {
+                    privOffset = draw->getOffset();
+                }
+                renderEntity(entity, offset + privOffset, dt);
             }
         }
 
         for(entityx::Entity entity: es.entities_with_components(position, foreground)) {
-            renderEntity(entity, offset, dt);
+            auto privOffset = glm::vec2(0, 0);
+            auto draw = entity.component<Drawable>();
+            if (draw) {
+                privOffset = draw->getOffset();
+            }
+            renderEntity(entity, offset + privOffset, dt);
         }
     }
 

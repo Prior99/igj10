@@ -8,7 +8,7 @@
 #include <SDL2/SDL.h>
 
 struct Drawable : entityx::Component<Drawable> {
-    Drawable(std::string key, float width, float height, AnimationCollection animation = { "" }):
+    Drawable(std::string key, float width, float height, AnimationCollection animation = { "" }, glm::vec2 offset = glm::vec2(0, 0)):
         textureKey(key),
         height(height),
         width(width),
@@ -31,6 +31,14 @@ struct Drawable : entityx::Component<Drawable> {
         this->width = width;
     }
 
+    glm::vec2 getOffset() {
+        return this->offset;
+    }
+
+    void setOffset(glm::vec2 offset) {
+        this->offset = offset;
+    }
+
     std::string texture_key() {
         return textureKey;
     }
@@ -48,5 +56,6 @@ struct Drawable : entityx::Component<Drawable> {
     float height;
     float width;
     AnimationCollection animation;
+    glm::vec2 offset;
 };
 #endif

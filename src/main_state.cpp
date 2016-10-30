@@ -55,14 +55,15 @@ int MainState::init() {
     playerAnimations.addAnimation("jump", 24, 3, 0.5, glm::vec2(16, 24));
     playerAnimations.setAnimation("run", AnimationPlaybackType::LOOP);
     entityx::Entity player = entities.create();
-    player.assign<Position>(glm::vec2(000.f, 000.f));
+    player.assign<Position>(glm::vec2(20.f, 0.f));
     player.assign<Drawable>("player", 16, 24, playerAnimations);
+    player.component<Drawable>()->setOffset(glm::vec2(0, 16));
     glm::i8vec3 testcolor = {255, 64, 16};
     player.assign<Light>("gradient", 500, testcolor);
     player.assign<Velocity>();
     player.assign<Stepping>();
     player.assign<Gravity>();
-    player.assign<Collidable>(24.0f);
+    player.assign<Collidable>(8.0f);
     player.assign<Player>();
     player.assign<Foreground>();
     m_game->setPlayer(player);
