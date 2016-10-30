@@ -168,6 +168,12 @@ entityx::Entity Game::getPlayer() {
     return this->player;
 }
 
+void Game::setUnFreeze() {
+    if (this->isFrozen()) {
+      this->toggleFreeze();
+    }
+}
+
 void Game::mainloop() {
     int current_time = SDL_GetTicks();
     double dt = (current_time - m_last_frame_time) / 1000.0;

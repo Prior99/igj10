@@ -47,11 +47,11 @@ class ControlSystem : public entityx::System<ControlSystem>, public entityx::Rec
             const Uint8 *state = SDL_GetKeyboardState(NULL);
             if (state[SDL_SCANCODE_R]) {
               rand();
-              this->game->toggleFreeze();
+              this->game->setUnFreeze();
               this->game->reset();
             }
             if (state[SDL_SCANCODE_T]) {
-              this->game->toggleFreeze();
+              this->game->setUnFreeze();
               this->game->reset();
             }
             if (died) {
@@ -64,7 +64,7 @@ class ControlSystem : public entityx::System<ControlSystem>, public entityx::Rec
                 (void) entity;
 
                 bool walking = false;
-                if (state[SDL_SCANCODE_RETURN]) {
+                if (state[SDL_SCANCODE_RETURN] || state[SDL_SCANCODE_Q]) {
                     if (freezecount > 0.5) {
                       this->game->toggleFreeze();
                       freezecount = 0;
