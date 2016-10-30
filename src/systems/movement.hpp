@@ -15,11 +15,10 @@
 class MovementSystem : public entityx::System<MovementSystem> {
     public:
         void update(entityx::EntityManager &es, entityx::EventManager &events, double dt) {
-            entityx::ComponentHandle<Player> player;
             entityx::ComponentHandle<Position> position;
             entityx::ComponentHandle<Velocity> velocity;
 
-            for (entityx::Entity entity : es.entities_with_components(player, position, velocity)) {
+            for (entityx::Entity entity : es.entities_with_components(position, velocity)) {
                 (void) entity;
                 auto delta = velocity->getVelocity() * (float)dt;
                 auto newPosition = position->getPosition() + delta;

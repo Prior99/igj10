@@ -27,7 +27,7 @@ class LightDrawSystem {
                 entityx::TimeDelta dt) {
         auto playerPos = game->getPlayer().component<Position>()->getPosition();
         auto offset = playerPos - glm::vec2(GAME_WIDTH / 4.0f, GAME_HEIGHT) / 2.0f;
-        offset.y = glm::min(offset.y, 210.0f);
+        offset.y = glm::min(offset.y, 50.0f);
 
         // RENDER LIGHT
 
@@ -43,6 +43,11 @@ class LightDrawSystem {
         for (entityx::Entity entity : es.entities_with_components(position, light)) {
 
             (void)entity;
+            auto privOffset = glm::vec2(0, 0);
+            auto draw = entity.component<Drawable>();
+            if (draw) {
+                privOffset = draw->getOffset();
+            }
 
             auto coord = position->getPosition();
             auto tex = game->res_manager().texture(light->texture_key());
@@ -57,10 +62,11 @@ class LightDrawSystem {
                 SDL_QueryTexture(tex, nullptr, nullptr, &wPlayer, &hPlayer);
             }
 
-            auto wLight = light->scale() / game->getInsanity();
+            auto sanity = glm::min(game->getSanity(), MAX_SANITY) / MAX_SANITY;
+            auto wLight = glm::max(light->scale() * sanity, 0.0f);
 
             // Converted position
-            auto pos = glm::vec2(coord.x + wPlayer / 2 - wLight / 2, coord.y + hPlayer / 2 - wLight / 2) - offset;
+            auto pos = glm::vec2(coord.x + wPlayer / 2 - wLight / 2, coord.y + hPlayer / 2 - wLight / 2) - (offset + privOffset);
             SDL_Rect dest{pos.x, pos.y, wLight, wLight};
 
             SDL_SetTextureBlendMode(tex, SDL_BLENDMODE_ADD);

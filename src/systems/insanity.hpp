@@ -14,9 +14,9 @@
 #include <SDL_mixer.h>
 #endif
 
-class InsanitySystem : public entityx::System<InsanitySystem> {
+class SanitySystem : public entityx::System<SanitySystem> {
     public:
-        InsanitySystem(Game *game) : game(game), time(0.0), factor(1.0f) {
+        SanitySystem(Game *game) : game(game), time(0.0) {
 
         }
 
@@ -27,17 +27,15 @@ class InsanitySystem : public entityx::System<InsanitySystem> {
                     (void) stomp;
                     stomper->setRunning(false);
                 }
-                factor += dt / 10;
                 this->time += dt;
-                game->addInsanity(dt * INSANITY_SPEED * factor);
-                if (this->time > glm::max(glm::min(20.0f / game->getInsanity(), 4.0f), 1.0f)) {
-                    game->addInsanity(-0.5);
+                game->addSanity(-dt);
+                if (this->time > glm::max(glm::min(20.0f / game->getSanity(), 4.0f), 1.0f)) {
+                    game->addSanity(0.5);
                     this->time = 0.0f;
                     Mix_Volume(3, 100);
                     Mix_PlayChannel(3, game->res_manager().sound("heartbeat"), 0);
                 }
             } else {
-                factor = 1.0f;
                 for (entityx::Entity stomp : es.entities_with_components(stomper)) {
                     (void) stomp;
                     stomper->setRunning(true);
@@ -47,6 +45,5 @@ class InsanitySystem : public entityx::System<InsanitySystem> {
     private:
       Game *game;
       double time;
-      float factor;
 };
 #endif

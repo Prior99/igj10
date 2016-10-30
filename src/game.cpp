@@ -2,6 +2,7 @@
 
 #include "main_state.hpp"
 #include "game_config.hpp"
+#include "glm/common.hpp"
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
@@ -20,6 +21,7 @@ Game::~Game() {
 }
 
 int Game::init() {
+    this->sanity = 5.f;
     this->freeze = false;
     this->muted = false;
     this->player = m_ex.entities.create();
@@ -76,6 +78,7 @@ int Game::init() {
     m_res_manager.load_texture("splatter", "res/Splatter.png", m_render);
     m_res_manager.load_texture("splash", "res/Splash.png", m_render);
     m_res_manager.load_texture("splatter-house", "res/SplatterHouse.png", m_render);
+    m_res_manager.load_texture("orb", "res/orb.png", m_render);
     // Fonts
     m_res_manager.load_font("font-big", "res/Munro.ttf", 20);
     m_res_manager.load_font("font-small", "res/Munro.ttf", 10);
@@ -96,6 +99,10 @@ int Game::init() {
     // Saw
     m_res_manager.load_sound("saw", "res/sounds/Saw.wav");
     m_res_manager.load_sound("saw-cutting", "res/sounds/SawCutting.wav");
+    // Orbs
+    m_res_manager.load_sound("orb-01", "res/sounds/Orb1.wav");
+    m_res_manager.load_sound("orb-02", "res/sounds/Orb2.wav");
+    m_res_manager.load_sound("orb-03", "res/sounds/Orb3.wav");
     // Other
     m_res_manager.load_sound("splatter", "res/sounds/SplatterNew.wav");
     m_res_manager.load_sound("landing", "res/sounds/CrappyLanding.wav");
@@ -120,7 +127,6 @@ int Game::init() {
 void Game::toggleFreeze() {
     this->freeze = !this->freeze;
     if (!this->freeze) {
-        this->setInsanity(1.0f);
         if(!this->muted){
             Mix_Pause(66);
             Mix_FadeInChannel(80,m_res_manager.sound("chill-song"), -1, 200);
@@ -175,16 +181,16 @@ bool Game::is_running() {
     return m_running;
 }
 
-float Game::getInsanity() {
-    return insanity;
+float Game::getSanity() {
+    return sanity;
 }
 
-void Game::setInsanity(float f) {
-    this->insanity = f;
+void Game::setSanity(float f) {
+    this->sanity = f;
 }
 
-void Game::addInsanity(float f) {
-    this->insanity += f;
+void Game::addSanity(float f) {
+    this->sanity = glm::max(this->sanity + f, 1.5f);
 }
 
 void Game::toggleMute() {

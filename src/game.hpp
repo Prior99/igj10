@@ -20,9 +20,9 @@ class Game {
     int init();
     void mainloop();
     bool is_running();
-    float getInsanity();
-    void setInsanity(float f);
-    void addInsanity(float f);
+    float getSanity();
+    void setSanity(float f);
+    void addSanity(float f);
     void shutdown();
     void popstate();
     void toggleMute();
@@ -43,7 +43,7 @@ class Game {
 
   private:
     entityx::Entity player;
-    float insanity = 1.0f;
+    float sanity = 1.0f;
     bool m_running = true;
     int m_last_frame_time = 0;
 

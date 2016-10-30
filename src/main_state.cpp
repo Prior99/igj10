@@ -23,6 +23,7 @@
 #include "systems/stepping.hpp"
 #include "systems/stomper.hpp"
 #include "systems/saw.hpp"
+#include "systems/orb.hpp"
 
 #include "entityx/entityx.h"
 
@@ -43,11 +44,12 @@ int MainState::init() {
     m_systems.add<CollisionSystem>(m_game);
     m_systems.add<DeathSystem>(m_game);
     m_systems.add<MapSystem>(m_game);
-    m_systems.add<InsanitySystem>(m_game);
+    m_systems.add<SanitySystem>(m_game);
     m_systems.add<AnimationSystem>();
     m_systems.add<StomperSystem>(m_game);
     m_systems.add<SteppingSystem>(m_game);
     m_systems.add<SawSystem>(m_game);
+    m_systems.add<OrbSystem>(m_game);
     m_systems.configure();
 
     auto playerAnimations = AnimationCollection("player");
@@ -89,16 +91,5 @@ void MainState::update(double dt) {
         }
     }
 
-    m_systems.update<MapSystem>(dt);
-    m_systems.update<DeathSystem>(dt);
-    m_systems.update<AnimationSystem>(dt);
-    m_systems.update<DrawSystem>(dt);
-    m_systems.update<MovementSystem>(dt);
-    m_systems.update<ControlSystem>(dt);
-    m_systems.update<GravitySystem>(dt);
-    m_systems.update<CollisionSystem>(dt);
-    m_systems.update<InsanitySystem>(dt);
-    m_systems.update<SteppingSystem>(dt);
-    m_systems.update<StomperSystem>(dt);
-    m_systems.update<SawSystem>(dt);
+    m_systems.update_all(dt);
 }
