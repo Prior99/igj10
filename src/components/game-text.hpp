@@ -5,7 +5,11 @@
 #include <SDL2/SDL.h>
 
 struct GameText : entityx::Component<GameText> {
-    GameText(std::string text): text(text), time(0.0) {
+    GameText(std::string text, SDL_Color color = SDL_Color{255, 255, 255, 255}, bool fast = false):
+            text(text),
+            time(0.0),
+            color(color),
+            fast(fast) {
 
     }
 
@@ -20,8 +24,19 @@ struct GameText : entityx::Component<GameText> {
     double getTime() {
         return this->time;
     }
+
+    SDL_Color getColor() {
+        return this->color;
+    }
+
+
+    bool isFast() {
+        return fast;
+    }
   private:
     std::string text;
     double time;
+    SDL_Color color;
+    bool fast;
 };
 #endif

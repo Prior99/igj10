@@ -68,14 +68,10 @@ int MainState::init() {
     player.assign<Foreground>();
     m_game->setPlayer(player);
 
-    entityx::Entity lol = entities.create();
-    lol.assign<Position>(glm::vec2(10.f, 10.f));
-    lol.assign<Text>("LOL", SDL_Color {200, 100, 100, 150});
-
     entityx::Entity highscore = entities.create();
-    highscore.assign<Position>(glm::vec2(GAME_WIDTH * 0.66, 10.f));
+    highscore.assign<Position>(glm::vec2(10.f, 10.f));
     highscore.assign<Highscore>();
-    highscore.assign<Text>("LOL", SDL_Color {200, 100, 100, 150});
+    highscore.assign<Text>("Score: 0", SDL_Color {255, 200, 0, 0});
 
     return 0;
 }

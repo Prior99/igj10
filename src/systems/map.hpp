@@ -7,6 +7,7 @@
 #include "components/position.hpp"
 #include "components/saw.hpp"
 #include "components/player.hpp"
+#include "components/game-text.hpp"
 #include "components/highscore.hpp"
 #include "components/text.hpp"
 #include "components/stomper.hpp"
@@ -29,7 +30,7 @@ int tobergteDifficultyFunction(int x, int max) {
 
 class MapSystem : public entityx::System<MapSystem> {
     public:
-        MapSystem(Game *game): game(game), mapGeneratedX(0), sidewalkGeneratedX(0), height(0) {
+        MapSystem(Game *game): game(game), mapGeneratedX(0), sidewalkGeneratedX(0), height(0), lastScore(0) {
             srand (time(0));
         }
 
@@ -172,12 +173,21 @@ class MapSystem : public entityx::System<MapSystem> {
         }
 
         void drawDifficulty(entityx::EntityManager &es, glm::vec2 pos) {
-          entityx::ComponentHandle<Highscore> highscore;
-          entityx::ComponentHandle<Text> text;
-          for (entityx::Entity entity : es.entities_with_components(highscore,text)) {
-            (void) entity;
-            text->setText("Score: " + std::to_string(mapGeneratedX/100));
-          }
+            entityx::ComponentHandle<Highscore> highscore;
+            entityx::ComponentHandle<Text> text;
+            int score = glm::max((mapGeneratedX / 30) - 45, 0) * 10;
+            if (score != lastScore) {
+                auto player = game->getPlayer();
+                auto pos = player.component<Position>()->getPosition();
+                lastScore = score;
+                auto text = es.create();
+                text.assign<GameText>(std::to_string(score), SDL_Color{255, 200, 0, 255}, true);
+                text.assign<Position>(pos + glm::vec2(rand() % 40 - 20, 10));
+            }
+            for (entityx::Entity entity : es.entities_with_components(highscore,text)) {
+                (void) entity;
+                text->setText("Score: " + std::to_string(score));
+            }
         }
 
         void cleanup(entityx::EntityManager &es, glm::vec2 pos) {
@@ -207,5 +217,6 @@ class MapSystem : public entityx::System<MapSystem> {
         int mapGeneratedX;
         int sidewalkGeneratedX;
         int height;
+        int lastScore;
 };
 #endif

@@ -122,23 +122,26 @@ class EntityDrawSystem {
     void renderText(entityx::Entity entity, glm::vec2 offset, double dt) {
         entityx::ComponentHandle<Position> position = entity.component<Position>();
         entityx::ComponentHandle<GameText> text = entity.component<GameText>();
-
-        auto pos = position->getPosition() - offset;
+        bool fast = text->isFast();
+        auto player = game->getPlayer();
+        auto pp = player.component<Position>()->getPosition();
+        auto pos =  (fast ? pp - glm::vec2(24, -10) : position->getPosition()) - offset;
         float progress = text->getTime() / TEXT_DURATION;
-        auto color = SDL_Color{255, 255, 255};
-        auto surf = TTF_RenderText_Blended(game->res_manager().font("font-small"), text->getText().c_str(), color);
-        SDL_LockSurface(surf);
-        SDL_PixelFormat* fmt = surf->format;
-        unsigned bpp = fmt->BytesPerPixel;
-        for (int y = 0; y < surf->h; y++)
-            for (int x = 0; x < surf->w; x++) {
-                Uint32* pixel_ptr = (Uint32 *)((Uint8 *)surf->pixels + y * surf->pitch + x * bpp);
-                Uint8 r, g, b, a;
-                SDL_GetRGBA( *pixel_ptr, fmt, &r, &g, &b, &a );
-                *pixel_ptr = SDL_MapRGBA( fmt, r, g, b, (int)(a * (0.5f + 0.5f * (1.0 - progress))));
-            }
+        auto surf = TTF_RenderText_Blended(game->res_manager().font("font-small"), text->getText().c_str(), text->getColor());
+        if (!fast) {
+            SDL_LockSurface(surf);
+            SDL_PixelFormat* fmt = surf->format;
+            unsigned bpp = fmt->BytesPerPixel;
+            for (int y = 0; y < surf->h; y++)
+                for (int x = 0; x < surf->w; x++) {
+                    Uint32* pixel_ptr = (Uint32 *)((Uint8 *)surf->pixels + y * surf->pitch + x * bpp);
+                    Uint8 r, g, b, a;
+                    SDL_GetRGBA( *pixel_ptr, fmt, &r, &g, &b, &a );
+                    *pixel_ptr = SDL_MapRGBA( fmt, r, g, b, (int)(a * (0.5f + 0.5f * (1.0 - progress))));
+                }
 
-        SDL_UnlockSurface(surf);
+            SDL_UnlockSurface(surf);
+        }
         auto texture = SDL_CreateTextureFromSurface(game->renderer(), surf);
         int w, h;
         SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
