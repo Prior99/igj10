@@ -35,7 +35,7 @@ int tobergteDifficultyFunction(int x, int max) {
 
 class MapSystem : public entityx::System<MapSystem> {
     public:
-        MapSystem(Game *game): game(game), mapGeneratedX(0), sidewalkGeneratedX(0), height(0), lastScore(0) {
+        MapSystem(Game *game): game(game), mapGeneratedX(0), sidewalkGeneratedX(-100), height(0), lastScore(0) {
             srand (time(0));
         }
 
