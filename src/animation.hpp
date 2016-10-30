@@ -84,14 +84,10 @@ struct AnimationCollection {
     void update(double dt) {
         if(initialized() && !currentAnimation.empty()){
             auto& animation = animations[currentAnimation];
-            std::cout << "initialized " << textureKey << "\n";
             if(!paused) {
-                std::cout << "paused\n";
                 animation->runTime += dt;
             }
-            std::cout << "paused ende\n";
             if (animation->runTime >= animation->duration) {
-                std::cout << "vor switch\n";
                 switch(playbackType) {
                     case AnimationPlaybackType::RESET:
                         animation->runTime = 0;
@@ -105,7 +101,6 @@ struct AnimationCollection {
                         animation->runTime = 0;
                         break;
                 }
-                std::cout << "nach switch\n";
             }
         }
     }
