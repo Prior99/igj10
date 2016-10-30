@@ -44,6 +44,8 @@ class DeathSystem : public entityx::System<DeathSystem>, public entityx::Receive
             auto pos = player.component<Position>()->getPosition();
             if (died) {
                 if (!done) {
+                    std::string message;
+
                     auto height = player.component<Drawable>()->getHeight();
                     entityx::Entity splatter = es.create();
                     entityx::ComponentHandle<Drawable> drawableParkingMeters;
@@ -55,6 +57,7 @@ class DeathSystem : public entityx::System<DeathSystem>, public entityx::Receive
                         parkingMeterAnimations.pause(false);
                     }
                     if (reason == DeathReason::INSANE) {
+                        message = "You died of insanity";
                         player.component<Drawable>()->getAnimation().setAnimation("dissolve", AnimationPlaybackType::FREEZE);
                         player.component<Drawable>()->getAnimation().pause(false);
                         Mix_Volume(5, 80);
@@ -63,6 +66,8 @@ class DeathSystem : public entityx::System<DeathSystem>, public entityx::Receive
                         //player.component<Velocity>()->setVelocity(glm::vec2(0, 0));
                     }
                     else if (reason == DeathReason::SAW) {
+                        message = "You were sawed";
+
                         auto splashAnimation = AnimationCollection("splash");
                         splashAnimation.addAnimation("splash", 0, 8, 1.0, glm::vec2(128, 128));
                         splashAnimation.setAnimation("splash", AnimationPlaybackType::FREEZE);
@@ -75,6 +80,8 @@ class DeathSystem : public entityx::System<DeathSystem>, public entityx::Receive
                         Mix_PlayChannel(5, game->res_manager().sound("splatter"), 0);
                     }
                     else if (pos.y >= GAME_BOTTOM - height) {
+                        message = "You hit the street with an unhealthy velocity";
+
                         auto splatterAnimation = AnimationCollection("splatter");
                         splatterAnimation.addAnimation("splatter", 0, 7, 1.0, glm::vec2(64, 24));
                         splatterAnimation.setAnimation("splatter", AnimationPlaybackType::FREEZE);
@@ -85,6 +92,8 @@ class DeathSystem : public entityx::System<DeathSystem>, public entityx::Receive
                         Mix_PlayChannel(5, game->res_manager().sound("splatter"), 0);
                     }
                     else {
+                        message = "You died";
+
                         auto splatterAnimation = AnimationCollection("splatter-house");
                         splatterAnimation.addAnimation("splatter-house", 0, 7, 1.0, glm::vec2(64, 128));
                         splatterAnimation.setAnimation("splatter-house", AnimationPlaybackType::FREEZE);
@@ -95,6 +104,19 @@ class DeathSystem : public entityx::System<DeathSystem>, public entityx::Receive
                         Mix_PlayChannel(5, game->res_manager().sound("splatter"), 0);
                     }
                     splatter.assign<Foreground>();
+
+                    SDL_Color textColor{0, 0, 0, 255};
+                    if(game->isFrozen()) {
+                        textColor = {255, 255, 255, 255};
+                    }
+                    entityx::Entity deathMessage = es.create();
+                    deathMessage.assign<Text>(message, textColor);
+                    deathMessage.assign<Position>(glm::vec2(100, GAME_HEIGHT - 8 - 2 * 50));
+
+                    entityx::Entity retryMessage = es.create();
+                    retryMessage.assign<Text>("Press R for retry", textColor);
+                    retryMessage.assign<Position>(glm::vec2(100, GAME_HEIGHT - 8 - 50));
+
                     done = true;
                 }
                 last += dt;
