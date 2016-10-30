@@ -113,7 +113,7 @@ int Game::init() {
     m_res_manager.load_sound("heartbeat", "res/sounds/HeartBeatSoftLoop.mp3");
     m_res_manager.load_sound("chill-song", "res/sounds/ChillSongBeta.mp3");
     m_res_manager.load_sound("scary-song", "res/sounds/ScaryShit.mp3");
-    Mix_VolumeMusic(30);
+    Mix_VolumeMusic(20);
     // Mix_PlayMusic(m_res_manager.music("chill-song"), -1);
     Mix_PlayChannel(80,m_res_manager.sound("chill-song"), -1);
 
@@ -133,13 +133,21 @@ void Game::toggleFreeze() {
     if (!this->freeze) {
         if(!this->muted){
             Mix_Pause(66);
-            Mix_FadeInChannel(80,m_res_manager.sound("chill-song"), -1, 200);
+            #ifdef __EMSCRIPTEN__
+            Mix_PlayChannel(80, m_res_manager.sound("chill-song"), -1);
+            #else
+            Mix_FadeInChannel(80, m_res_manager.sound("chill-song"), -1, 200);
+            #endif
         }
     }
     else {
         if(!this->muted){
             Mix_Pause(80);
-            Mix_FadeInChannel(66,m_res_manager.sound("scary-song"), -1, 200);
+            #ifdef __EMSCRIPTEN__
+            Mix_PlayChannel(66, m_res_manager.sound("scary-song"), -1);
+            #else
+            Mix_FadeInChannel(66, m_res_manager.sound("scary-song"), -1, 200);
+            #endif
         }
     }
 }
