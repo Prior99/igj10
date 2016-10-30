@@ -76,6 +76,33 @@ int MainState::init() {
     highscore.assign<Highscore>();
     highscore.assign<Text>("Score: 0", SDL_Color {255, 200, 0, 0});
 
+    glm::vec2 clockSize(64, 64);
+
+    AnimationCollection clockSwitch("clock-face");
+    clockSwitch.addAnimation("day", 0, 1, 0, clockSize);
+    clockSwitch.addAnimation("night", clockSize.y, 1, 0, clockSize);
+    clockSwitch.setAnimation("day", AnimationPlaybackType::FREEZE);
+    Drawable clockFace("clock-face", clockSize.x, clockSize.y, clockSwitch);
+
+    AnimationCollection clockHandMSSwitch("clock-hand-ms");
+    clockHandMSSwitch.addAnimation("day", 0, 1, 0, clockSize);
+    clockHandMSSwitch.addAnimation("night", clockSize.y, 1, 0, clockSize);
+    clockHandMSSwitch.setAnimation("day", AnimationPlaybackType::FREEZE);
+    Drawable clockHandMS("clock-hand-ms", clockSize.x, clockSize.y, clockHandMSSwitch);
+
+    AnimationCollection clockHandSSwitch("clock-hand-s");
+    clockHandSSwitch.addAnimation("day", 0, 1, 0, clockSize);
+    clockHandSSwitch.addAnimation("night", clockSize.y, 1, 0, clockSize);
+    clockHandSSwitch.setAnimation("day", AnimationPlaybackType::FREEZE);
+    Drawable clockHandS("clock-hand-s", clockSize.x, clockSize.y, clockHandSSwitch);
+
+    std::vector<Drawable> clockLayers({clockFace, clockHandMS, clockHandS});
+    entityx::Entity clock = entities.create();
+    clock.assign<Position>(glm::vec2(GAME_WIDTH - 8 - clockSize.x, 8));
+    clock.assign<StackedDrawable>(clockLayers);
+    clock.assign<Overlay>();
+    m_game->setInsanityCounter(clock);
+
     return 0;
 }
 

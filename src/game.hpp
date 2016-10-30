@@ -42,8 +42,16 @@ class Game {
         this->player = player;
     }
 
+    entityx::Entity getInsanityCounter() {
+        return this->insanityCounter;
+    }
+    void setInsanityCounter(entityx::Entity &insanityCounter) {
+        this->insanityCounter = insanityCounter;
+    }
+
   private:
     entityx::Entity player;
+    entityx::Entity insanityCounter;
     float sanity = 5.0f;
     bool m_running = true;
     int m_last_frame_time = 0;
