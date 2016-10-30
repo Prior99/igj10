@@ -4,17 +4,21 @@ The goal of the game is to reach as far right as possible, avoiding to fall to d
 Collect the orbs to get yourself a littlebit of extra time which you can use to freeze the clock and solve otherwise unsolvable parts of the map.
 
 **Collect the orbs and jump onto the next roof:**
+
 ![](screenshots/screenshot-01.png)
 
 
 **Avoid being stomped to death by flying stompers:**
+
 ![](screenshots/screenshot-02.png)
 
 
 **Lol, you died:**
+
 ![](screenshots/screenshot-03.png)
 
 **Use your superpower but risk your life and your sanity:**
+
 ![](screenshots/screenshot-04.png)
 
 
@@ -60,3 +64,15 @@ There is a Makefile included for your convenience.
 # Attribution
 
 Sven-Hendrik Haase of which the [boilerplate](https://github.com/svenstaro/innojam9) was used.
+
+Alex Dmitriev for C++ Troubleshooting in an hour of need.
+
+# Contributors
+
+This game was created in 49 hours by:
+
+ - Frederick Gnodtke (Code and Graphics)
+ - Maurice Grages (Sounds and Graphics)
+ - Andra Rübsteck (Code)
+ - Merlin Rübsteck (Code)
+ - Julian Tobergte (Code)
