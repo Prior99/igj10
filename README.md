@@ -1,4 +1,4 @@
-# Innojam 10 (Parkuhr PaNick)
+# Innojam 10 (Parkour PaNick)
 
 The goal of the game is to reach as far right as possible, avoiding to fall to death, being smashed to death, shreddered to death or die of insanity.
 Collect the orbs to get yourself a littlebit of extra time which you can use to freeze the clock and solve otherwise unsolvable parts of the map.
