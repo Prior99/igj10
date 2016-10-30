@@ -6,6 +6,18 @@
 struct PartialDrawable {
     std::string texture;
     int height;
+    AnimationCollection animation;
+
+    PartialDrawable(std::string texture, int height): texture(texture), height(height), animation("") {
+
+    }
+
+    PartialDrawable(std::string texture, int height, AnimationCollection animation):
+        texture(texture),
+        height(height),
+        animation(animation) {
+
+    }
 };
 
 struct MultipartDrawable : entityx::Component<MultipartDrawable> {

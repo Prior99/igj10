@@ -39,14 +39,13 @@ class SawSystem : public entityx::System<SawSystem> {
                     Mix_Volume(channel, volume);
                     if (frozenLast || !saw->doneInit) {
                         saw->doneInit = true;
-                        std::cout << "Change in Freezestate" << std::endl;
                         drawable->getAnimation().pause(false);
                         Mix_PlayChannel(channel, game->res_manager().sound("saw"), -1);
                     }
                     if (!killed) {
                         for(entityx::Entity playerEntity: es.entities_with_components(posPlayer, player)) {
-                            (void) sawEntity; 
-                            (void) playerEntity; 
+                            (void) sawEntity;
+                            (void) playerEntity;
                             if (glm::length(posPlayer->getPosition() - posSaw->getPosition()) < 18 + 12) {
                                 events.emit<GameOver>(true);
                                 Mix_Volume(channel + 1, 30);
@@ -60,10 +59,9 @@ class SawSystem : public entityx::System<SawSystem> {
             } else {
                 int channel = 40;
                 for(entityx::Entity sawEntity: es.entities_with_components(posSaw, saw, drawable)) {
-                    (void) sawEntity; 
+                    (void) sawEntity;
                     channel+=2;
                     if (!frozenLast) {
-                        std::cout << "Change in Freezestate. Halting." << std::endl;
                         drawable->getAnimation().pause(true);
                         Mix_HaltChannel(channel);
                         Mix_HaltChannel(channel + 1);
@@ -80,4 +78,3 @@ class SawSystem : public entityx::System<SawSystem> {
       bool killed;
 };
 #endif
-

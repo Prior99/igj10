@@ -100,6 +100,7 @@ int Game::init() {
     m_res_manager.load_sound("landing", "res/sounds/CrappyLanding.wav");
     m_res_manager.load_sound("heartbeat", "res/sounds/HeartBeatSoftLoop.wav");
     m_res_manager.load_music("chill-song", "res/sounds/ChillSongBeta.wav");
+    m_res_manager.load_music("scary-song", "res/sounds/ScaryShit.wav");
     Mix_VolumeMusic(30);
     Mix_PlayMusic(m_res_manager.music("chill-song"), -1);
 
