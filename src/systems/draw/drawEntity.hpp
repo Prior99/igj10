@@ -178,7 +178,7 @@ class EntityDrawSystem {
             playerPos = glm::vec2(playerPos.x + playerWidth / 2, playerPos.y + playerHeight / 2);
         }
         auto offset = playerPos - glm::vec2(GAME_WIDTH / 4.0f, GAME_HEIGHT) / 2.0f;
-        offset.y = glm::min(offset.y, 210.0f);
+        offset.y = glm::min(offset.y, 50.0f);
 
         // Change to render into rendertexture for now
         SDL_SetRenderTarget(game->renderer(), entityTexture);

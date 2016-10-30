@@ -33,7 +33,7 @@ class DrawSystem : public entityx::System<DrawSystem> {
         auto offset = (playerPos + bgSize / 2) / PARALLAXITY;
         SDL_Rect src{0, 0, (int)bgSize.x, (int)bgSize.y};
         for (int x = -10; x < 10; x++) {
-                auto pos = glm::vec2(x * bgSize.x, -200) - offset;
+                auto pos = glm::vec2(x * bgSize.x, -0) - offset;
                 SDL_Rect dest{(int)pos.x, (int)pos.y, (int)bgSize.x, (int)bgSize.y};
                 SDL_RenderCopy(game->renderer(), game->res_manager().texture("background"), &src, &dest);
         }

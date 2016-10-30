@@ -64,7 +64,7 @@ int Game::init() {
     m_res_manager.load_texture("house-01-bottom", "res/house-1/bottom.png", m_render);
     m_res_manager.load_texture("house-01-middle", "res/house-1/middle.png", m_render);
     m_res_manager.load_texture("house-01-roof", "res/house-1/roof.png", m_render);
-    m_res_manager.load_texture("house-01", "res/hall.png", m_render);
+    m_res_manager.load_texture("house-02", "res/hall.png", m_render);
     // Other
     m_res_manager.load_texture("gradient", "res/gradient.png", m_render);
     m_res_manager.load_texture("player", "res/player.png", m_render);

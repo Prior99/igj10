@@ -96,14 +96,41 @@ class MapSystem : public entityx::System<MapSystem> {
             roof.assign<Position>(glm::vec2(x, GAME_BOTTOM - bottomHeight - totalMiddleHeight - roofHeight));
             roof.assign<Drawable>("house-01-roof", houseWidth, roofHeight);
             roof.assign<Box>(glm::vec2((float)houseWidth, (float)roofHeight));
+            if (rand() % 5 == 0 && mapGeneratedX > 800) {
+                createStomper(es, mapGeneratedX + 16, GAME_BOTTOM - height * 63 - 16 - 36 - 220);
+            }
+            if (rand() % 5 == 0 && mapGeneratedX > 800) {
+                createSaw(es, mapGeneratedX - 50, GAME_BOTTOM - height * 63 - 16 - 36 - 40);
+            }
 
-            //int totalHeight = bottomHeight + height * middleHeight + roofHeight;
-            //glm::i32vec2 reps = glm::i32vec2(1, height);
+        }
 
-            //entityx::Entity house = es.create();
-            //house.assign<Position>(glm::vec2(x, GAME_BOTTOM - totalHeight));
-            //house.assign<Box>(glm::vec2(128, totalHeight));
-            //house.assign<UniMultipartDrawable>("house-01", glm::vec2(128, 128), 0, 0, roofHeight, bottomHeight, reps);
+        void createHall(entityx::EntityManager &es, int height, int width, int x) {
+            static const int roofHeight = 32;
+            static const int bottomHeight = 32;
+            static const int middleHeight = 64;
+            static const int leftWidth = 32;
+            static const int rightWidth = 32;
+            static const int middleWidth = 64;
+            int totalHeight = bottomHeight + height * middleHeight + roofHeight;
+            int totalWidth = leftWidth + width * middleWidth + rightWidth;
+            glm::i32vec2 reps = glm::i32vec2(width, height);
+            auto rnd = rand() % 3;
+            if (rnd == 0 && mapGeneratedX > 800) {
+                auto stomperHeight = (rand() % 100) + 120;
+                auto stomperGap = 32 +(rand() % 32);
+                for (int i = 0; i < totalWidth; i+= stomperGap) {
+                    createStomper(es, x + i, GAME_BOTTOM - totalHeight - stomperHeight);
+                }
+            } else if (rnd == 1 && mapGeneratedX > 800) {
+                for (int i = 0; i <= width; i++) {
+                    createSaw(es, x + i * 64, GAME_BOTTOM - totalHeight - 40);
+                }
+            }
+            entityx::Entity house = es.create();
+            house.assign<Position>(glm::vec2(x, GAME_BOTTOM - totalHeight));
+            house.assign<Box>(glm::vec2(totalWidth, totalHeight));
+            house.assign<UniMultipartDrawable>("house-02", glm::vec2(128, 128), leftWidth, rightWidth, roofHeight, bottomHeight, reps);
         }
 
         void generateBuildings(entityx::EntityManager &es, glm::vec2 pos) {
@@ -132,12 +159,13 @@ class MapSystem : public entityx::System<MapSystem> {
                     height -= 2;
                     heightDifferenceModifier = rand() % tobergteDifficultyFunction(mapGeneratedX, 100);
                 }
-                createHouse(es, height, mapGeneratedX);
-                if (rand() % 5 == 0 && mapGeneratedX > 800) {
-                    createStomper(es, mapGeneratedX + 16, GAME_BOTTOM - height * 63 - 16 - 36 - 220);
-                }
-                if (rand() % 5 == 0 && mapGeneratedX > 800) {
-                    createSaw(es, mapGeneratedX - 50, GAME_BOTTOM - height * 63 - 16 - 36 - 40);
+                if (rand() % 5 == 0) {
+                    auto width = rand() % 3 + 2;
+                    mapGeneratedX -= 32;
+                    createHall(es, height, width, mapGeneratedX);
+                    mapGeneratedX += width * 64;
+                } else {
+                    createHouse(es, height, mapGeneratedX);
                 }
                 mapGeneratedX += houseWidth + minGap + rand() % variableGapSize + heightDifferenceModifier;
             }
