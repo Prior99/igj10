@@ -15,6 +15,8 @@
 #include "components/multipartDrawable.hpp"
 #include "components/uniMultiDrawable.hpp"
 
+#include "animation.hpp"
+
 #include "entityx/entityx.h"
 #include <glm/vec2.hpp>
 
@@ -55,12 +57,17 @@ class MapSystem : public entityx::System<MapSystem> {
         }
 
         void createStomper(entityx::EntityManager &es, int x, int y) {
-            PartialDrawable top = {"stomper-top", 39};
+            AnimationCollection topAnimation{"stomper-top"};
+            topAnimation.addAnimation("default", 0, 14, 1.4, glm::vec2(64, 100));
+            topAnimation.setAnimation("default", AnimationPlaybackType::LOOP);
+
+            PartialDrawable top = {"stomper-top", 100, topAnimation};
             PartialDrawable middle = {"stomper-middle", 8};
             PartialDrawable bottom = {"stomper-bottom", 8};
+
             entityx::Entity stomper = es.create();
             stomper.assign<Position>(glm::vec2(x, y));
-            stomper.assign<MultipartDrawable>(36, top, middle, bottom);
+            stomper.assign<MultipartDrawable>(64, top, middle, bottom);
             stomper.assign<Box>(glm::vec2(36.f, 47.f), false, false, true, false);
             stomper.assign<Stomper>(0, 100, 1000, true, (rand() % 40) / 10.0);
             stomper.component<MultipartDrawable>()->setHeight(80);
