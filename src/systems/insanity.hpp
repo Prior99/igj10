@@ -6,6 +6,10 @@
 #include "game_config.hpp"
 #include "components/velocity.hpp"
 #include "components/stomper.hpp"
+#include "components/stackedDrawable.hpp"
+
+#include "animation.hpp"
+
 #include "entityx/entityx.h"
 #include "glm/common.hpp"
 #include <iostream>
@@ -53,6 +57,14 @@ class SanitySystem : public entityx::System<SanitySystem> {
             int millis = (sanity - (int) sanity) * 1000;
             layers[2].setRotation(glm::max(0.0, 360.0/60.0 * sec));
             layers[1].setRotation(glm::max(0.0, 360.0/1000.0 * millis));
+
+            for(Drawable& layer: layers) {
+                if(game->isFrozen()) {
+                    layer.getAnimation().setAnimation("night", AnimationPlaybackType::FREEZE);
+                } else {
+                    layer.getAnimation().setAnimation("day", AnimationPlaybackType::FREEZE);
+                }
+            }
         }
     private:
       Game *game;
