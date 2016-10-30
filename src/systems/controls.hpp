@@ -44,8 +44,21 @@ class ControlSystem : public entityx::System<ControlSystem>, public entityx::Rec
             entityx::ComponentHandle<Collidable> collidable;
             entityx::ComponentHandle<Drawable> drawable;
 
+            const Uint8 *state = SDL_GetKeyboardState(NULL);
+            std::cout << this->game->getSanity() << std::endl;
+            if (state[SDL_SCANCODE_R]) {
+              std::cout << "reset" << std::endl;
+              rand();
+              this->game->toggleFreeze();
+              this->game->reset();
+            }
+            if (state[SDL_SCANCODE_T]) {
+              std::cout << "reset" << std::endl;
+              this->game->toggleFreeze();
+              this->game->reset();
+            }
             if (died) {
-                return;
+              return;
             }
 
             freezecount += dt;
@@ -53,7 +66,6 @@ class ControlSystem : public entityx::System<ControlSystem>, public entityx::Rec
             for (entityx::Entity entity : es.entities_with_components(player, velocity, position, collidable, drawable)) {
                 (void) entity;
 
-                const Uint8 *state = SDL_GetKeyboardState(NULL);
                 bool walking = false;
                 if (state[SDL_SCANCODE_RETURN]) {
                     if (freezecount > 0.5) {
