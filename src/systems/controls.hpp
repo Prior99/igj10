@@ -46,16 +46,16 @@ class ControlSystem : public entityx::System<ControlSystem>, public entityx::Rec
 
             const Uint8 *state = SDL_GetKeyboardState(NULL);
             if (state[SDL_SCANCODE_R]) {
-              rand();
-              this->game->setUnFreeze();
-              this->game->reset();
+                rand();
+                this->game->setUnFreeze();
+                this->game->reset();
             }
             if (state[SDL_SCANCODE_T]) {
-              this->game->setUnFreeze();
-              this->game->reset();
+                this->game->setUnFreeze();
+                this->game->reset();
             }
             if (died) {
-              return;
+                return;
             }
 
             freezecount += dt;
@@ -66,18 +66,26 @@ class ControlSystem : public entityx::System<ControlSystem>, public entityx::Rec
                 bool walking = false;
                 if (state[SDL_SCANCODE_RETURN] || state[SDL_SCANCODE_Q]) {
                     if (freezecount > 0.5) {
-                      this->game->toggleFreeze();
-                      freezecount = 0;
+                        this->game->toggleFreeze();
+                        freezecount = 0;
                     }
                 }
                 if ((state[SDL_SCANCODE_A] || state[SDL_SCANCODE_LEFT]) && !player->isJumping()) {
                     velocity->drag(glm::vec2(-.3f, 0.0f) * SPEED);
                     walking = true;
                 }
+                if (state[SDL_SCANCODE_E]) {
+                    if (!player->isJumping()) {
+                        auto pos = entity.component<Position>()->getPosition();
+                        auto turd = es.create();
+                        turd.assign<Drawable>("turd", 6, 6);
+                        turd.assign<Position>(pos - glm::vec2(0, 6));
+                    }
+                }
                 if (state[SDL_SCANCODE_M]) {
                     if (mutecount > 0.2) {
-                      this->game->toggleMute();
-                      mutecount = 0;
+                        this->game->toggleMute();
+                        mutecount = 0;
                     }
                 }
                 if (state[SDL_SCANCODE_D] || state[SDL_SCANCODE_RIGHT] || HARDCORE) {
