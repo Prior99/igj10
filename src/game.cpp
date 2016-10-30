@@ -129,13 +129,21 @@ void Game::toggleFreeze() {
     if (!this->freeze) {
         if(!this->muted){
             Mix_Pause(66);
-            Mix_FadeInChannel(80,m_res_manager.sound("chill-song"), -1, 200);
+            #ifdef __EMSCRIPTEN__
+            Mix_PlayChannel(80, m_res_manager.sound("chill-song"), -1);
+            #else
+            Mix_FadeInChannel(80, m_res_manager.sound("chill-song"), -1, 200);
+            #endif
         }
     }
     else {
         if(!this->muted){
             Mix_Pause(80);
-            Mix_FadeInChannel(66,m_res_manager.sound("scary-song"), -1, 200);
+            #ifdef __EMSCRIPTEN__
+            Mix_PlayChannel(66, m_res_manager.sound("scary-song"), -1);
+            #else
+            Mix_FadeInChannel(66, m_res_manager.sound("scary-song"), -1, 200);
+            #endif
         }
     }
 }

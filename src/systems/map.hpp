@@ -243,7 +243,6 @@ class MapSystem : public entityx::System<MapSystem> {
 
     private:
         Game *game;
-        int x;
         int mapGeneratedX;
         int sidewalkGeneratedX;
         int height;

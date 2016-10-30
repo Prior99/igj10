@@ -93,6 +93,5 @@ class StomperSystem : public entityx::System<StomperSystem> {
 
   private:
     Game *game;
-    bool created;
 };
 #endif

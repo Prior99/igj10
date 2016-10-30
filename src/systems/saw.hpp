@@ -72,8 +72,6 @@ class SawSystem : public entityx::System<SawSystem> {
         }
     private:
       Game *game;
-      double time;
-      float factor;
       bool frozenLast;
       bool killed;
 };

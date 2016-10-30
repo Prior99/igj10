@@ -36,7 +36,7 @@ class DeathSystem : public entityx::System<DeathSystem>, public entityx::Receive
             reason = event.reason;
         }
 
-        void update(entityx::EntityManager &es, entityx::EventManager &events, double dt) {
+        void update(entityx::EntityManager &es, entityx::EventManager &events, double dt) override {
             (void) events;
             (void) dt;
             auto player = game->getPlayer();
