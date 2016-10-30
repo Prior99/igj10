@@ -13,6 +13,7 @@
 #include "components/stomper.hpp"
 #include "components/box.hpp"
 #include "components/orb.hpp"
+#include "components/overlay.hpp"
 #include "components/parkingMeter.hpp"
 #include "components/velocity.hpp"
 #include "components/light.hpp"
@@ -245,7 +246,7 @@ class MapSystem : public entityx::System<MapSystem> {
             entityx::ComponentHandle<Position> position;
             for (entityx::Entity entity : es.entities_with_components(position)) {
                 if (position->getPosition().x < pos.x - PREGENERATE) {
-                  if (!entity.component<Text>()) {
+                  if (!entity.component<Text>() && !entity.component<Overlay>()) {
                     entity.destroy();
                   }
                 }
