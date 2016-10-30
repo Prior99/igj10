@@ -117,10 +117,12 @@ int Game::init() {
 
 void Game::toggleFreeze() {
     this->freeze = !this->freeze;
-    Mix_PauseMusic();
     if (!this->freeze) {
         this->setInsanity(1.0f);
-        Mix_ResumeMusic();
+        Mix_FadeInMusic(m_res_manager.music("chill-song"), -1, 200);
+    }
+    else {
+        Mix_FadeInMusic(m_res_manager.music("scary-song"), -1, 200);
     }
 }
 
