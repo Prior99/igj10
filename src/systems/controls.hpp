@@ -26,7 +26,7 @@
 
 class ControlSystem : public entityx::System<ControlSystem>, public entityx::Receiver<ControlSystem> {
     public:
-        ControlSystem(Game *game): game(game), stoppedSpace(false), died(false), count(0) {}
+        ControlSystem(Game *game): game(game), stoppedSpace(false), died(false), freezecount(0), mutecount(0) {}
 
         void receive(const GameOver &event) {
             (void)event;
@@ -44,16 +44,17 @@ class ControlSystem : public entityx::System<ControlSystem>, public entityx::Rec
                 return;
             }
 
-            count += dt;
+            freezecount += dt;
+            mutecount += dt;
             for (entityx::Entity entity : es.entities_with_components(player, velocity, position, collidable, drawable)) {
                 (void) entity;
 
                 const Uint8 *state = SDL_GetKeyboardState(NULL);
                 bool walking = false;
                 if (state[SDL_SCANCODE_RETURN]) {
-                    if (count > 0.5) {
+                    if (freezecount > 0.5) {
                       this->game->toggleFreeze();
-                      count = 0;
+                      freezecount = 0;
                     }
                 }
                 if ((state[SDL_SCANCODE_A] || state[SDL_SCANCODE_LEFT]) && !player->isJumping()) {
@@ -61,7 +62,11 @@ class ControlSystem : public entityx::System<ControlSystem>, public entityx::Rec
                     walking = true;
                 }
                 if (state[SDL_SCANCODE_M]) {
-                    this->game->toggleMute();
+                    if (mutecount > 0.5) {
+                      this->game->toggleMute();
+                      std::cout << "mute" << std::endl;
+                      mutecount = 0;
+                    }
                 }
                 if (state[SDL_SCANCODE_D] || state[SDL_SCANCODE_RIGHT] || HARDCORE) {
                     velocity->drag(glm::vec2(1.0f, 0.0f) * SPEED);
@@ -104,7 +109,8 @@ class ControlSystem : public entityx::System<ControlSystem>, public entityx::Rec
         Game *game;
         bool stoppedSpace;
         bool died;
-        double count;
+        double freezecount;
+        double mutecount;
 };
 
 #endif

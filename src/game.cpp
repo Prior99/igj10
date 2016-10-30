@@ -189,6 +189,14 @@ void Game::toggleMute() {
     if(this->muted){
         Mix_HaltMusic();
     }
+    else {
+      if (this->isFrozen()) {
+        Mix_FadeInMusic(m_res_manager.music("scary-song"), -1, 200);
+      }
+      else {
+        Mix_FadeInMusic(m_res_manager.music("chill-song"), -1, 200);
+      }
+    }
 }
 
 void Game::shutdown() {
