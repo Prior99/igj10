@@ -1,4 +1,22 @@
-# Innojam 10
+# Innojam 10 (Parkuhr PaNick)
+
+The goal of the game is to reach as far right as possible, avoiding to fall to death, being smashed to death, shreddered to death or die of insanity.
+Collect the orbs to get yourself a littlebit of extra time which you can use to freeze the clock and solve otherwise unsolvable parts of the map.
+
+**Collect the orbs and jump onto the next roof:**
+![](screenshots/screenshot-01.png)
+
+
+**Avoid being stomped to death by flying stompers:**
+![](screenshots/screenshot-02.png)
+
+
+**Lol, you died:**
+![](screenshots/screenshot-03.png)
+
+**Use your superpower but risk your life and your sanity:**
+![](screenshots/screenshot-04.png)
+
 
 ## Development Setup
 
@@ -33,7 +51,7 @@ Please note the ```--recursive``` which will also initialize the neccessary git 
 
 ### 4. Build the sources
 
-There is a Makefile included for your convenience. 
+There is a Makefile included for your convenience.
 
  - Build the sources: ```make```
  - Run the game: ```make run```
