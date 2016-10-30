@@ -140,7 +140,7 @@ class MapSystem : public entityx::System<MapSystem> {
             static const int BUILDING_LOWER = 3;
             static const int BUILDING_LOWER_TWICE = 4;
             static const int minGap = 10;
-            static const int variableGapSize = 80;
+            static const int variableGapSize = 40;
             while (mapGeneratedX < pos.x + PREGENERATE) {
                 int heightChange = rand() % 5; // 0 = higher, 1 = same height, 2 = lower, 3 = twice lower
                 int heightDifferenceModifier;
@@ -153,11 +153,11 @@ class MapSystem : public entityx::System<MapSystem> {
                 }
                 if (heightChange == BUILDING_LOWER && height > 1) {
                     height --;
-                    heightDifferenceModifier = rand() % tobergteDifficultyFunction(mapGeneratedX, 50);
+                    heightDifferenceModifier = rand() % tobergteDifficultyFunction(mapGeneratedX, 70);
                 }
                 if (heightChange == BUILDING_LOWER_TWICE && height > 2) {
                     height -= 2;
-                    heightDifferenceModifier = rand() % tobergteDifficultyFunction(mapGeneratedX, 100);
+                    heightDifferenceModifier = rand() % tobergteDifficultyFunction(mapGeneratedX, 120);
                 }
                 if (rand() % 5 == 0) {
                     auto width = rand() % 3 + 2;
