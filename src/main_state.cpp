@@ -69,25 +69,11 @@ int MainState::init() {
     lol.assign<Position>(glm::vec2(10.f, 10.f));
     lol.assign<Text>("LOL", SDL_Color {200, 100, 100, 150});
 
-<<<<<<< HEAD
     entityx::Entity highscore = entities.create();
     highscore.assign<Position>(glm::vec2(GAME_WIDTH * 0.66, 10.f));
     highscore.assign<Highscore>();
     highscore.assign<Text>("LOL", SDL_Color {200, 100, 100, 150});
 
-
-
-    PartialDrawable top = {"stomper-top", 39};
-    PartialDrawable middle = {"stomper-middle", 8};
-    PartialDrawable bottom = {"stomper-bottom", 8};
-    entityx::Entity stomper = entities.create();
-    stomper.assign<Position>(glm::vec2(200.f, 100.f));
-    stomper.assign<MultipartDrawable>(36, top, middle, bottom);
-    stomper.assign<Box>(glm::vec2(36.f, 47.f), false, false, true, false);
-    stomper.assign<Stomper>(0, 100, 1000, true);
-    stomper.component<MultipartDrawable>()->setHeight(80);
-=======
->>>>>>> c074497abd8cb9bf9f606b868f5875297981229c
     return 0;
 }
 
