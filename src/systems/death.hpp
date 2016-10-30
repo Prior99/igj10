@@ -6,6 +6,7 @@
 #include "components/game-text.hpp"
 #include "components/gravity.hpp"
 #include "components/velocity.hpp"
+#include "components/parkingMeter.hpp"
 #include "game.hpp"
 #include "game_config.hpp"
 #include "events.hpp"
@@ -44,6 +45,13 @@ class DeathSystem : public entityx::System<DeathSystem>, public entityx::Receive
             if (died) {
                 if (!done) {
                     entityx::Entity splatter = es.create();
+                    entityx::ComponentHandle<Drawable> drawableParkingMeters;
+                    entityx::ComponentHandle<ParkingMeter> parkingMeters;
+                    for(entityx::Entity parkingMeterEntity: es.entities_with_components(drawableParkingMeters, parkingMeters)) {
+                        (void) parkingMeterEntity;
+                        auto& parkingMeterAnimations = drawableParkingMeters->getAnimation();
+                        parkingMeterAnimations.setAnimation("dance", AnimationPlaybackType::LOOP);
+                    }
                     if (reason == DeathReason::INSANE) {
                         player.component<Drawable>()->getAnimation().setAnimation("dissolve", AnimationPlaybackType::FREEZE);
                         player.component<Drawable>()->getAnimation().pause(false);

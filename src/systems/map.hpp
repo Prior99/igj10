@@ -13,6 +13,7 @@
 #include "components/stomper.hpp"
 #include "components/box.hpp"
 #include "components/orb.hpp"
+#include "components/parkingMeter.hpp"
 #include "components/velocity.hpp"
 #include "components/light.hpp"
 #include "components/multipartDrawable.hpp"
@@ -46,6 +47,22 @@ class MapSystem : public entityx::System<MapSystem> {
                 entityx::Entity sidewalk = es.create();
                 sidewalk.assign<Position>(glm::vec2((float)sidewalkGeneratedX, GAME_BOTTOM));
                 sidewalk.assign<Drawable>("sidewalk", streetChunkWidth, 48);
+                //Generate non glowing lanterns of doom
+                if(((int)(sidewalkGeneratedX / streetChunkWidth) % 2)){
+                    entityx::Entity lantern = es.create();
+                    lantern.assign<Position>(glm::vec2((float)sidewalkGeneratedX, GAME_BOTTOM - 64));
+                    lantern.assign<Drawable>("lantern", 8, 64);
+                    lantern.assign<Foreground>();
+                }
+                else {
+                    auto parkingMeterAnimations = AnimationCollection("parking-meter");
+                    parkingMeterAnimations.addAnimation("dance", 0, 5, 0.3, glm::vec2(8, 16));
+                    entityx::Entity parkingMeter = es.create();
+                    parkingMeter.assign<Position>(glm::vec2((float)sidewalkGeneratedX, GAME_BOTTOM - 16));
+                    parkingMeter.assign<Drawable>("parking-meter", 8, 16, parkingMeterAnimations);
+                    parkingMeter.assign<Foreground>();
+                    parkingMeter.assign<ParkingMeter>();
+                }
                 // Generate street texture
                 entityx::Entity street = es.create();
                 street.assign<Position>(glm::vec2((float)sidewalkGeneratedX, GAME_BOTTOM + 4));
@@ -114,7 +131,7 @@ class MapSystem : public entityx::System<MapSystem> {
                 middle.assign<Drawable>("house-01-middle", houseWidth, middleHeight);
             }
             const int totalMiddleHeight = middleHeight * height;
-            const int totalHeight = totalMiddleHeight + bottomHeight + roofHeight; 
+            const int totalHeight = totalMiddleHeight + bottomHeight + roofHeight;
             // Generate roof part of house
             entityx::Entity roof = es.create();
             roof.assign<Position>(glm::vec2(x, GAME_BOTTOM - totalHeight));
