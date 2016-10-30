@@ -24,6 +24,7 @@ class Game {
     void setSanity(float f);
     void addSanity(float f);
     void shutdown();
+    void reset();
     void popstate();
     void toggleMute();
     bool isMuted();
