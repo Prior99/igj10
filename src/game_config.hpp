@@ -25,9 +25,11 @@ static const float JUMP_SPEED = 250;
 static const glm::vec2 MAX_VELOCITY = glm::vec2(300.0f, 1000.0f);
 static const glm::vec2 VELOCITY_THRESHOLD = glm::vec2(0.01f, 0.01f);
 //time it takes to increase the insanity again (in seconds)
-static const float INSANITY_SPEED = 0.2;
+static const float SANITY_SPEED = 0.2;
+static const float ORB_SANITY = 0.02;
 static const int STOMPER_SPEED_MIN = 600;
 static const int STOMPER_SPEED_MAX = 700;
+static const float MAX_SANITY = 15.0f;
 static const float MAX_JUMP = 0.25f;
 static const float PARALLAXITY = 4.0;
 static const float TEXT_DURATION = 2.0f;

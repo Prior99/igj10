@@ -12,6 +12,9 @@
 #include "components/text.hpp"
 #include "components/stomper.hpp"
 #include "components/box.hpp"
+#include "components/orb.hpp"
+#include "components/velocity.hpp"
+#include "components/light.hpp"
 #include "components/multipartDrawable.hpp"
 #include "components/uniMultiDrawable.hpp"
 
@@ -84,6 +87,18 @@ class MapSystem : public entityx::System<MapSystem> {
             saw.assign<Saw>();
         }
 
+        void createOrb(entityx::EntityManager &es, int x, int y) {
+            entityx::Entity orb = es.create();
+            orb.assign<Position>(glm::vec2(x, y));
+            auto orbAnimation = AnimationCollection("orb");
+            orbAnimation.addAnimation("idle", 0, 15, 0.6, glm::vec2(8, 8));
+            orbAnimation.addAnimation("crumble", 8, 15, 0.2, glm::vec2(8, 8));
+            orbAnimation.setAnimation("idle", AnimationPlaybackType::LOOP);
+            orb.assign<Drawable>("orb", 8, 8, orbAnimation);
+            orb.assign<Velocity>();
+            orb.assign<Orb>();
+        }
+
         void createHouse(entityx::EntityManager &es, int height, int x) {
             static const int roofHeight = 16;
             static const int bottomHeight = 32;
@@ -99,9 +114,10 @@ class MapSystem : public entityx::System<MapSystem> {
                 middle.assign<Drawable>("house-01-middle", houseWidth, middleHeight);
             }
             const int totalMiddleHeight = middleHeight * height;
+            const int totalHeight = totalMiddleHeight + bottomHeight + roofHeight; 
             // Generate roof part of house
             entityx::Entity roof = es.create();
-            roof.assign<Position>(glm::vec2(x, GAME_BOTTOM - bottomHeight - totalMiddleHeight - roofHeight));
+            roof.assign<Position>(glm::vec2(x, GAME_BOTTOM - totalHeight));
             roof.assign<Drawable>("house-01-roof", houseWidth, roofHeight);
             roof.assign<Box>(glm::vec2((float)houseWidth, (float)roofHeight));
             if (rand() % 5 == 0 && mapGeneratedX > 800) {
@@ -110,7 +126,14 @@ class MapSystem : public entityx::System<MapSystem> {
             if (rand() % 5 == 0 && mapGeneratedX > 800) {
                 createSaw(es, mapGeneratedX - 50, GAME_BOTTOM - height * 63 - 16 - 36 - 40);
             }
-
+            auto off = rand() % (houseWidth / 10);
+            for (int i = 0; i < houseWidth / 10; i ++) {
+                auto x = 4 + i * 10;
+                auto y = glm::sin(((float)(i + off)/ (float)(houseWidth / 10)) * (glm::pi<float>() * 2)) * 10 + 40;
+                if (rand() % 4 > 0) {
+                    createOrb(es, x + mapGeneratedX, GAME_BOTTOM - totalHeight - y - 8);
+                }
+            }
         }
 
         void createHall(entityx::EntityManager &es, int height, int width, int x) {
