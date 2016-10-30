@@ -37,7 +37,7 @@ class ControlSystem : public entityx::System<ControlSystem>, public entityx::Rec
             died = true;
         }
 
-        void update(entityx::EntityManager &es, entityx::EventManager &events, double dt) {
+        void update(entityx::EntityManager &es, entityx::EventManager &events, double dt) override {
             entityx::ComponentHandle<Player> player;
             entityx::ComponentHandle<Velocity> velocity;
             entityx::ComponentHandle<Position> position;
