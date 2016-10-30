@@ -12,6 +12,9 @@ struct Text : entityx::Component<Text> {
     auto getText() {
         return text;
     }
+    auto setText(std::string text) {
+        this->text = text;
+    }
 
     auto getColor() {
         return color;

@@ -7,15 +7,19 @@
 #include "components/position.hpp"
 #include "components/saw.hpp"
 #include "components/player.hpp"
+#include "components/highscore.hpp"
+#include "components/text.hpp"
 #include "components/stomper.hpp"
 #include "components/box.hpp"
 #include "components/multipartDrawable.hpp"
+#include "components/uniMultiDrawable.hpp"
 
 #include "entityx/entityx.h"
 #include <glm/vec2.hpp>
 
 #include <iostream>
 #include <math.h>
+#include <string>
 
 static const int houseWidth = 128;
 
@@ -77,21 +81,29 @@ class MapSystem : public entityx::System<MapSystem> {
             static const int bottomHeight = 32;
             static const int middleHeight = 63;
             // Generate bottom part of house
-            entityx::Entity bottom = es.create();
-            bottom.assign<Position>(glm::vec2(x, GAME_BOTTOM - bottomHeight));
-            bottom.assign<Drawable>("house-01-bottom", houseWidth, bottomHeight);
-            // Generate middle parts of house, dependend on height
-            for (int j = 0; j < height; j++) {
-                entityx::Entity middle = es.create();
-                middle.assign<Position>(glm::vec2(x, GAME_BOTTOM - bottomHeight - (j + 1) * middleHeight));
-                middle.assign<Drawable>("house-01-middle", houseWidth, middleHeight);
-            }
-            const int totalMiddleHeight = middleHeight * height;
-            // Generate roof part of house
-            entityx::Entity roof = es.create();
-            roof.assign<Position>(glm::vec2(x, GAME_BOTTOM - bottomHeight - totalMiddleHeight - roofHeight));
-            roof.assign<Drawable>("house-01-roof", houseWidth, roofHeight);
-            roof.assign<Box>(glm::vec2((float)houseWidth, (float)roofHeight));
+            // entityx::Entity bottom = es.create();
+            // bottom.assign<Position>(glm::vec2(x, GAME_BOTTOM - bottomHeight));
+            // bottom.assign<Drawable>("house-01-bottom", houseWidth, bottomHeight);
+            // // Generate middle parts of house, dependend on height
+            // for (int j = 0; j < height; j++) {
+            //     entityx::Entity middle = es.create();
+            //     middle.assign<Position>(glm::vec2(x, GAME_BOTTOM - bottomHeight - (j + 1) * middleHeight));
+            //     middle.assign<Drawable>("house-01-middle", houseWidth, middleHeight);
+            // }
+            // const int totalMiddleHeight = middleHeight * height;
+            // // Generate roof part of house
+            // entityx::Entity roof = es.create();
+            // roof.assign<Position>(glm::vec2(x, GAME_BOTTOM - bottomHeight - totalMiddleHeight - roofHeight));
+            // roof.assign<Drawable>("house-01-roof", houseWidth, roofHeight);
+            // roof.assign<Box>(glm::vec2((float)houseWidth, (float)roofHeight));
+
+            int totalHeight = bottomHeight + height * middleHeight + roofHeight;
+            glm::i32vec2 reps = glm::i32vec2(1, height);
+
+            entityx::Entity house = es.create();
+            house.assign<Position>(glm::vec2(x, GAME_BOTTOM - totalHeight));
+            house.assign<Box>(glm::vec2(128, totalHeight));
+            house.assign<UniMultipartDrawable>("house-01", glm::vec2(128, 128), 0, 0, roofHeight, bottomHeight, reps);
         }
 
         void generateBuildings(entityx::EntityManager &es, glm::vec2 pos) {
@@ -131,11 +143,22 @@ class MapSystem : public entityx::System<MapSystem> {
             }
         }
 
+        void drawDifficulty(entityx::EntityManager &es, glm::vec2 pos) {
+          entityx::ComponentHandle<Highscore> highscore;
+          entityx::ComponentHandle<Text> text;
+          for (entityx::Entity entity : es.entities_with_components(highscore,text)) {
+            (void) entity;
+            text->setText("Score: " + std::to_string(mapGeneratedX/100));
+          }
+        }
+
         void cleanup(entityx::EntityManager &es, glm::vec2 pos) {
             entityx::ComponentHandle<Position> position;
             for (entityx::Entity entity : es.entities_with_components(position)) {
                 if (position->getPosition().x < pos.x - PREGENERATE) {
+                  if (!entity.component<Text>()) {
                     entity.destroy();
+                  }
                 }
             }
         }
@@ -146,6 +169,7 @@ class MapSystem : public entityx::System<MapSystem> {
             pos = player.component<Position>()->getPosition();
             generateStreet(es, pos);
             generateBuildings(es, pos);
+            drawDifficulty(es, pos);
             cleanup(es, pos);
         }
 
