@@ -36,13 +36,14 @@ class DeathSystem : public entityx::System<DeathSystem>, public entityx::Receive
             reason = event.reason;
         }
 
-        void update(entityx::EntityManager &es, entityx::EventManager &events, double dt) {
+        void update(entityx::EntityManager &es, entityx::EventManager &events, double dt) override {
             (void) events;
             (void) dt;
             auto player = game->getPlayer();
             auto pos = player.component<Position>()->getPosition();
             if (died) {
                 if (!done) {
+                    auto height = player.component<Drawable>()->getHeight();
                     entityx::Entity splatter = es.create();
                     if (reason == DeathReason::INSANE) {
                         player.component<Drawable>()->getAnimation().setAnimation("dissolve", AnimationPlaybackType::FREEZE);
@@ -62,7 +63,7 @@ class DeathSystem : public entityx::System<DeathSystem>, public entityx::Receive
                         Mix_Volume(5, 40);
                         Mix_PlayChannel(5, game->res_manager().sound("splatter"), 0);
                     }
-                    else if (reason == DeathReason::FALL) {
+                    else if (pos.y >= GAME_BOTTOM - height) {
                         auto splatterAnimation = AnimationCollection("splatter");
                         splatterAnimation.addAnimation("splatter", 0, 7, 1.0, glm::vec2(64, 24));
                         splatterAnimation.setAnimation("splatter", AnimationPlaybackType::FREEZE);
@@ -77,7 +78,7 @@ class DeathSystem : public entityx::System<DeathSystem>, public entityx::Receive
                         splatterAnimation.addAnimation("splatter-house", 0, 7, 1.0, glm::vec2(64, 128));
                         splatterAnimation.setAnimation("splatter-house", AnimationPlaybackType::FREEZE);
                         splatter.assign<Drawable>("splatter-house", 64, 128, splatterAnimation);
-                        splatter.assign<Position>(pos + glm::vec2(0, -5));
+                        splatter.assign<Position>(pos + glm::vec2(0, 1));
                         player.remove<Drawable>();
                         Mix_Volume(5, 40);
                         Mix_PlayChannel(5, game->res_manager().sound("splatter"), 0);

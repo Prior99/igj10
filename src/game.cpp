@@ -83,33 +83,33 @@ int Game::init() {
     m_res_manager.load_font("font-big", "res/Munro.ttf", 20);
     m_res_manager.load_font("font-small", "res/Munro.ttf", 10);
     // Steps
-    m_res_manager.load_sound("step-01", "res/sounds/Step1.wav");
-    m_res_manager.load_sound("step-02", "res/sounds/Step2.wav");
-    m_res_manager.load_sound("step-03", "res/sounds/Step3.wav");
-    m_res_manager.load_sound("step-04", "res/sounds/Step4.wav");
-    m_res_manager.load_sound("step-05", "res/sounds/Step5.wav");
-    m_res_manager.load_sound("step-06", "res/sounds/Step6.wav");
-    m_res_manager.load_sound("step-07", "res/sounds/Step7.wav");
+    m_res_manager.load_sound("step-01", "res/sounds/Step1.mp3");
+    m_res_manager.load_sound("step-02", "res/sounds/Step2.mp3");
+    m_res_manager.load_sound("step-03", "res/sounds/Step3.mp3");
+    m_res_manager.load_sound("step-04", "res/sounds/Step4.mp3");
+    m_res_manager.load_sound("step-05", "res/sounds/Step5.mp3");
+    m_res_manager.load_sound("step-06", "res/sounds/Step6.mp3");
+    m_res_manager.load_sound("step-07", "res/sounds/Step7.mp3");
     // Stomper
-    m_res_manager.load_sound("stomper-down", "res/sounds/StomperDownNew.wav");
-    m_res_manager.load_sound("stomper-lock", "res/sounds/StomperLockNew.wav");
-    m_res_manager.load_sound("stomper-smash", "res/sounds/StomperSmashNew.wav");
-    m_res_manager.load_sound("stomper-up", "res/sounds/StomperUpNew.wav");
-    m_res_manager.load_sound("stomper-warning", "res/sounds/StomperWarningNew.wav");
+    m_res_manager.load_sound("stomper-down", "res/sounds/StomperDownNew.mp3");
+    m_res_manager.load_sound("stomper-lock", "res/sounds/StomperLockNew.mp3");
+    m_res_manager.load_sound("stomper-smash", "res/sounds/StomperSmashNew.mp3");
+    m_res_manager.load_sound("stomper-up", "res/sounds/StomperUpNew.mp3");
+    m_res_manager.load_sound("stomper-warning", "res/sounds/StomperWarningNew.mp3");
     // Saw
-    m_res_manager.load_sound("saw", "res/sounds/Saw.wav");
-    m_res_manager.load_sound("saw-cutting", "res/sounds/SawCutting.wav");
+    m_res_manager.load_sound("saw", "res/sounds/Saw.mp3");
+    m_res_manager.load_sound("saw-cutting", "res/sounds/SawCutting.mp3");
     // Orbs
-    m_res_manager.load_sound("orb-01", "res/sounds/Orb1.wav");
-    m_res_manager.load_sound("orb-02", "res/sounds/Orb2.wav");
-    m_res_manager.load_sound("orb-03", "res/sounds/Orb3.wav");
+    m_res_manager.load_sound("orb-01", "res/sounds/Orb1.mp3");
+    m_res_manager.load_sound("orb-02", "res/sounds/Orb2.mp3");
+    m_res_manager.load_sound("orb-03", "res/sounds/Orb3.mp3");
     // Other
-    m_res_manager.load_sound("splatter", "res/sounds/SplatterNew.wav");
-    m_res_manager.load_sound("landing", "res/sounds/CrappyLanding.wav");
-    m_res_manager.load_sound("heartbeat", "res/sounds/HeartBeatSoftLoop.wav");
-    m_res_manager.load_sound("chill-song", "res/sounds/ChillSongBeta.wav");
-    m_res_manager.load_sound("scary-song", "res/sounds/ScaryShit.wav");
-    Mix_VolumeMusic(30);
+    m_res_manager.load_sound("splatter", "res/sounds/SplatterNew.mp3");
+    m_res_manager.load_sound("landing", "res/sounds/CrappyLanding.mp3");
+    m_res_manager.load_sound("heartbeat", "res/sounds/HeartBeatSoftLoop.mp3");
+    m_res_manager.load_sound("chill-song", "res/sounds/ChillSongBeta.mp3");
+    m_res_manager.load_sound("scary-song", "res/sounds/ScaryShit.mp3");
+    Mix_VolumeMusic(20);
     // Mix_PlayMusic(m_res_manager.music("chill-song"), -1);
     Mix_PlayChannel(80,m_res_manager.sound("chill-song"), -1);
 
@@ -136,13 +136,21 @@ void Game::toggleFreeze() {
     if (!this->freeze) {
         if(!this->muted){
             Mix_Pause(66);
-            Mix_FadeInChannel(80,m_res_manager.sound("chill-song"), -1, 200);
+            #ifdef __EMSCRIPTEN__
+            Mix_PlayChannel(80, m_res_manager.sound("chill-song"), -1);
+            #else
+            Mix_FadeInChannel(80, m_res_manager.sound("chill-song"), -1, 200);
+            #endif
         }
     }
     else {
         if(!this->muted){
             Mix_Pause(80);
-            Mix_FadeInChannel(66,m_res_manager.sound("scary-song"), -1, 200);
+            #ifdef __EMSCRIPTEN__
+            Mix_PlayChannel(66, m_res_manager.sound("scary-song"), -1);
+            #else
+            Mix_FadeInChannel(66, m_res_manager.sound("scary-song"), -1, 200);
+            #endif
         }
     }
 }

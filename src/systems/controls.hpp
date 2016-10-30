@@ -28,6 +28,10 @@ class ControlSystem : public entityx::System<ControlSystem>, public entityx::Rec
     public:
         ControlSystem(Game *game): game(game), stoppedSpace(false), died(false), freezecount(0), mutecount(0) {}
 
+        void configure(entityx::EventManager &event_manager) override {
+            event_manager.subscribe<GameOver>(*this);
+        }
+
         void receive(const GameOver &event) {
             (void)event;
             died = true;

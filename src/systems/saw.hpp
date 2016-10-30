@@ -46,7 +46,7 @@ class SawSystem : public entityx::System<SawSystem> {
                         for(entityx::Entity playerEntity: es.entities_with_components(posPlayer, player)) {
                             (void) sawEntity;
                             (void) playerEntity;
-                            if (glm::length(posPlayer->getPosition() - posSaw->getPosition()) < 18 + 12 - 3) {
+                            if (glm::length(posPlayer->getPosition() - posSaw->getPosition()) < 18 + 12 - 2) {
                                 events.emit<GameOver>(DeathReason::SAW);
                                 Mix_Volume(channel + 1, 30);
                                 Mix_PlayChannel(channel + 1, game->res_manager().sound("saw-cutting"), 0);
@@ -72,8 +72,6 @@ class SawSystem : public entityx::System<SawSystem> {
         }
     private:
       Game *game;
-      double time;
-      float factor;
       bool frozenLast;
       bool killed;
 };
