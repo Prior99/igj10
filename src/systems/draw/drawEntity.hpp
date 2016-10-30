@@ -40,13 +40,21 @@ class EntityDrawSystem {
         SDL_Rect src{0, 0, multipartDrawable->getWidth(), 0};
 
         PartialDrawable top = multipartDrawable->getTop();
-        src.h = top.height;
+        if(top.animation.initialized()) {
+            top.animation.getAnimationFrame(&src);
+        } else {
+            src = {0, 0, multipartDrawable->getWidth(), top.height};
+        }
         dest.h = top.height;
         SDL_RenderCopy(game->renderer(), game->res_manager().texture(top.texture), &src, &dest);
 
         dest.y += top.height;
         PartialDrawable middle = multipartDrawable->getMiddle();
-        src.h = middle.height;
+        if(middle.animation.initialized()) {
+            middle.animation.getAnimationFrame(&src);
+        } else {
+            src = {0, 0, multipartDrawable->getWidth(), middle.height};
+        }
         dest.h = middle.height;
         for(int i = 0; i < (int) multipartDrawable->getRepeat(); i++) {
             SDL_RenderCopy(game->renderer(), game->res_manager().texture(middle.texture), &src, &dest);
@@ -60,7 +68,11 @@ class EntityDrawSystem {
             dest.y += src.h;
         }
         PartialDrawable bottom = multipartDrawable->getBottom();
-        src.h = bottom.height;
+        if(bottom.animation.initialized()) {
+            bottom.animation.getAnimationFrame(&src);
+        } else {
+            src = {0, 0, multipartDrawable->getWidth(), bottom.height};
+        }
         dest.h = bottom.height;
         SDL_RenderCopy(game->renderer(), game->res_manager().texture(bottom.texture), &src, &dest);
     }

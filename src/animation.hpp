@@ -26,7 +26,7 @@ struct Animation {
         duration(0),
         size({0, 0}),
         runTime(0) {
-        }
+    }
 
     Animation(int offset, int frames, double duration, glm::vec2 size):
         offset(offset),
@@ -101,6 +101,10 @@ struct AnimationCollection {
 
     std::string getCurrentAnimation() {
         return this->currentAnimation;
+    }
+
+    bool initialized() {
+        return !textureKey.empty();
     }
 
   private:
