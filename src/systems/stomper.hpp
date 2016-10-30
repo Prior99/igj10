@@ -57,6 +57,11 @@ class StomperSystem : public entityx::System<StomperSystem> {
                     stomper->incTimeout(dt);
                 }
             }
+            if (stomper->isExtending()) {
+                boxStomper->setDangerous(false, false, true, false);
+            } else {
+                boxStomper->setDangerous(false, false, false, false);
+            }
 
             //reverse direction when stopping on building
             for(entityx::Entity collidingEntity: es.entities_with_components(positionColliding, boxColliding)) {

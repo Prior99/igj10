@@ -25,6 +25,14 @@ struct Box : entityx::Component<Box> {
     glm::vec2 getSize() {
         return this->size;
     }
+
+    void setDangerous(bool dUp, bool dRight, bool dDown, bool dLeft) {
+        dangerousUp = dUp;
+        dangerousDown = dDown;
+        dangerousRight = dRight;
+        dangerousLeft = dLeft;
+    }
+
     void setSize(glm::vec2 v) {
         this->size = v;
     }
