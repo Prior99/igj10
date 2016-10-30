@@ -21,6 +21,7 @@ Game::~Game() {
 
 int Game::init() {
     this->freeze = false;
+    this->muted = false;
     this->player = m_ex.entities.create();
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
         std::cerr << "SDL_Init Error: " << SDL_GetError() << std::endl;
@@ -119,10 +120,14 @@ void Game::toggleFreeze() {
     this->freeze = !this->freeze;
     if (!this->freeze) {
         this->setInsanity(1.0f);
-        Mix_FadeInMusic(m_res_manager.music("chill-song"), -1, 200);
+        if(!this->muted){
+            Mix_FadeInMusic(m_res_manager.music("chill-song"), -1, 200);
+        }
     }
     else {
-        Mix_FadeInMusic(m_res_manager.music("scary-song"), -1, 200);
+        if(!this->muted){
+            Mix_FadeInMusic(m_res_manager.music("scary-song"), -1, 200);
+        }
     }
 }
 
@@ -141,6 +146,10 @@ void Game::mainloop() {
 
 bool Game::isFrozen() {
     return this->freeze;
+}
+
+bool Game::isMuted() {
+    return this->muted;
 }
 
 SDL_Renderer *Game::renderer() {
@@ -175,8 +184,11 @@ void Game::addInsanity(float f) {
     this->insanity += f;
 }
 
-void Game::mute() {
-    Mix_PauseMusic();
+void Game::toggleMute() {
+    this->muted = !this->muted;
+    if(this->muted){
+        Mix_HaltMusic();
+    }
 }
 
 void Game::shutdown() {

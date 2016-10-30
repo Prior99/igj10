@@ -61,7 +61,7 @@ class ControlSystem : public entityx::System<ControlSystem>, public entityx::Rec
                     walking = true;
                 }
                 if (state[SDL_SCANCODE_M]) {
-                    this->game->mute();
+                    this->game->toggleMute();
                 }
                 if (state[SDL_SCANCODE_D] || state[SDL_SCANCODE_RIGHT] || HARDCORE) {
                     velocity->drag(glm::vec2(1.0f, 0.0f) * SPEED);

@@ -25,7 +25,8 @@ class Game {
     void addInsanity(float f);
     void shutdown();
     void popstate();
-    void mute();
+    void toggleMute();
+    bool isMuted();
     void toggleFreeze();
     bool isFrozen();
 
@@ -52,6 +53,7 @@ class Game {
     entityx::EntityX m_ex;
     ResourceManager m_res_manager;
     bool freeze;
+    bool muted;
 };
 
 #endif /* end of include guard: GAME_HPP */
