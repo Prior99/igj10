@@ -2,6 +2,9 @@
 
 #include "components/position.hpp"
 #include "components/text.hpp"
+#include "components/overlay.hpp"
+
+#include "systems/draw/drawEntity.hpp"
 
 #include "strapon/resource_manager/resource_manager.hpp"
 
@@ -34,6 +37,11 @@ class OverlayDrawSystem {
 
             entityx::ComponentHandle<Position> position;
             entityx::ComponentHandle<Text> text;
+            entityx::ComponentHandle<Overlay> overlay;
+            for(entityx::Entity entity: es.entities_with_components(position, overlay)) {
+                EntityDrawSystem::renderEntity(game, entity, glm::vec2(0, 0), dt);
+            }
+
             for (entityx::Entity entity : es.entities_with_components(position, text)) {
                 auto color = text->getColor();
                 auto surf = TTF_RenderText_Blended(game->res_manager().font("font-big"), text->getText().c_str(), color);
