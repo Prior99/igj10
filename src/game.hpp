@@ -44,7 +44,7 @@ class Game {
 
   private:
     entityx::Entity player;
-    float sanity = 1.0f;
+    float sanity = 5.0f;
     bool m_running = true;
     int m_last_frame_time = 0;
 
