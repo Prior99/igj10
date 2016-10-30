@@ -12,7 +12,7 @@ struct StackedDrawable : entityx::Component<StackedDrawable> {
 
 	}
 
-	std::vector<Drawable> getLayers() {
+	std::vector<Drawable> &getLayers() {
 		return layers;
 	}
 

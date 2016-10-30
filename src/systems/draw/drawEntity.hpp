@@ -176,7 +176,6 @@ class EntityDrawSystem {
         }
     }
 
-
     static renderStacked(Game* game, entityx::Entity entity, glm::vec2 offset) {
         entityx::ComponentHandle<Position> position = entity.component<Position>();
         entityx::ComponentHandle<StackedDrawable> drawable = entity.component<StackedDrawable>();

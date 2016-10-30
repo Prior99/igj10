@@ -101,6 +101,7 @@ int MainState::init() {
     clock.assign<Position>(glm::vec2(GAME_WIDTH - 8 - clockSize.x, 8));
     clock.assign<StackedDrawable>(clockLayers);
     clock.assign<Overlay>();
+    m_game->setInsanityCounter(clock);
 
     return 0;
 }

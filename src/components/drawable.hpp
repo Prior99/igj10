@@ -47,8 +47,8 @@ struct Drawable : entityx::Component<Drawable> {
         return rotation;
     }
 
-    void setRotation(double rotation) {
-        rotation = rotation;
+    void setRotation(double r) {
+        this->rotation = r;
     }
 
     bool hasAnimation() {
