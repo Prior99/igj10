@@ -22,6 +22,7 @@
 #include "systems/animation.hpp"
 #include "systems/stepping.hpp"
 #include "systems/stomper.hpp"
+#include "systems/saw.hpp"
 
 #include "entityx/entityx.h"
 
@@ -46,6 +47,7 @@ int MainState::init() {
     m_systems.add<AnimationSystem>();
     m_systems.add<StomperSystem>(m_game);
     m_systems.add<SteppingSystem>(m_game);
+    m_systems.add<SawSystem>(m_game);
     m_systems.configure();
 
     auto playerAnimations = AnimationCollection("player");
@@ -96,4 +98,5 @@ void MainState::update(double dt) {
     m_systems.update<InsanitySystem>(dt);
     m_systems.update<SteppingSystem>(dt);
     m_systems.update<StomperSystem>(dt);
+    m_systems.update<SawSystem>(dt);
 }

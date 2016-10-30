@@ -20,7 +20,7 @@
 
 class DeathSystem : public entityx::System<DeathSystem>, public entityx::Receiver<DeathSystem> {
     public:
-        DeathSystem(Game *game): game(game), died(false), done(false), last(0.0f) {
+        DeathSystem(Game *game): game(game), died(false), done(false), last(0.0f), fromSaw(false) {
 
         }
 
@@ -31,6 +31,7 @@ class DeathSystem : public entityx::System<DeathSystem>, public entityx::Receive
         void receive(const GameOver &event) {
             (void)event;
             died = true;
+            fromSaw = event.fromSaw;
         }
 
         void update(entityx::EntityManager &es, entityx::EventManager &events, double dt) {
@@ -42,18 +43,26 @@ class DeathSystem : public entityx::System<DeathSystem>, public entityx::Receive
                 if (!done) {
                     auto height = player.component<Drawable>()->getHeight();
                     entityx::Entity splatter = es.create();
-                    splatter.assign<Position>(pos + glm::vec2(0, 20));
-                    if(pos.y >= GAME_BOTTOM - height) {
+                    if (fromSaw) {
+                        auto splashAnimation = AnimationCollection("splash");
+                        splashAnimation.addAnimation("splash", 0, 8, 1.0, glm::vec2(128, 128));
+                        splashAnimation.setAnimation("splash", AnimationPlaybackType::FREEZE);
+                        splatter.assign<Drawable>("splash", 64, 24, splashAnimation);
+                        splatter.assign<Position>(pos + glm::vec2(0, 0));
+                    }
+                    else if (pos.y >= GAME_BOTTOM - height) {
                         auto splatterAnimation = AnimationCollection("splatter");
                         splatterAnimation.addAnimation("splatter", 0, 7, 1.0, glm::vec2(64, 24));
                         splatterAnimation.setAnimation("splatter", AnimationPlaybackType::FREEZE);
                         splatter.assign<Drawable>("splatter", 64, 24, splatterAnimation);
+                        splatter.assign<Position>(pos + glm::vec2(0, 20));
                     }
                     else {
                         auto splatterAnimation = AnimationCollection("splatter-house");
                         splatterAnimation.addAnimation("splatter-house", 0, 7, 1.0, glm::vec2(64, 128));
                         splatterAnimation.setAnimation("splatter-house", AnimationPlaybackType::FREEZE);
                         splatter.assign<Drawable>("splatter-house", 64, 128, splatterAnimation);
+                        splatter.assign<Position>(pos + glm::vec2(0, 15));
                     }
 
                     splatter.assign<Foreground>();
@@ -77,5 +86,6 @@ class DeathSystem : public entityx::System<DeathSystem>, public entityx::Receive
         bool died;
         bool done;
         float last;
+        bool fromSaw;
 };
 #endif

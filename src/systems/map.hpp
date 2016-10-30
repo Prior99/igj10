@@ -5,6 +5,7 @@
 #include "game_config.hpp"
 
 #include "components/position.hpp"
+#include "components/saw.hpp"
 #include "components/player.hpp"
 #include "components/stomper.hpp"
 #include "components/box.hpp"
@@ -60,6 +61,17 @@ class MapSystem : public entityx::System<MapSystem> {
             stomper.component<MultipartDrawable>()->setHeight(80);
         }
 
+        void createSaw(entityx::EntityManager &es, int x, int y) {
+            entityx::Entity saw = es.create();
+            saw.assign<Position>(glm::vec2(x, y));
+            auto sawAnimation = AnimationCollection("saw");
+            sawAnimation.addAnimation("turn", 0, 2, 0.1, glm::vec2(36, 36));
+            sawAnimation.addAnimation("turn-bloody", 36, 2, 0.1, glm::vec2(36, 36));
+            sawAnimation.setAnimation("turn", AnimationPlaybackType::LOOP);
+            saw.assign<Drawable>("saw", 36, 36, sawAnimation);
+            saw.assign<Saw>();
+        }
+
         void createHouse(entityx::EntityManager &es, int height, int x) {
             static const int roofHeight = 16;
             static const int bottomHeight = 32;
@@ -111,6 +123,9 @@ class MapSystem : public entityx::System<MapSystem> {
                 createHouse(es, height, mapGeneratedX);
                 if (rand() % 5 == 0) {
                     createStomper(es, mapGeneratedX + 16, GAME_BOTTOM - height * 63 - 16 - 36 - 220);
+                }
+                if (rand() % 5 == 0) {
+                    createSaw(es, mapGeneratedX - 50, GAME_BOTTOM - height * 63 - 16 - 36 - 40);
                 }
                 mapGeneratedX += houseWidth + minGap + rand() % variableGapSize + heightDifferenceModifier;
             }

@@ -4,7 +4,9 @@
 #include "entityx/entityx.h"
 
 struct GameOver {
-    GameOver() { }
+    GameOver(bool fromSaw): fromSaw(fromSaw) { }
+    GameOver(): fromSaw(false) { }
+    bool fromSaw;
 };
 
 #endif

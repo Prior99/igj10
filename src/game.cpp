@@ -69,8 +69,10 @@ int Game::init() {
     m_res_manager.load_texture("player", "res/player.png", m_render);
     m_res_manager.load_texture("sidewalk", "res/sidewalk.png", m_render);
     m_res_manager.load_texture("street", "res/street.png", m_render);
+    m_res_manager.load_texture("saw", "res/Saw.png", m_render);
     m_res_manager.load_texture("background", "res/background.png", m_render);
     m_res_manager.load_texture("splatter", "res/Splatter.png", m_render);
+    m_res_manager.load_texture("splash", "res/Splash.png", m_render);
     m_res_manager.load_texture("splatter-house", "res/SplatterHouse.png", m_render);
     // Fonts
     m_res_manager.load_font("font-big", "res/Munro.ttf", 20);
@@ -89,6 +91,9 @@ int Game::init() {
     m_res_manager.load_sound("stomper-smash", "res/sounds/StomperSmashNew.wav");
     m_res_manager.load_sound("stomper-up", "res/sounds/StomperUpNew.wav");
     m_res_manager.load_sound("stomper-warning", "res/sounds/StomperWarningNew.wav");
+    // Saw
+    m_res_manager.load_sound("saw", "res/sounds/Saw.wav");
+    m_res_manager.load_sound("saw-cutting", "res/sounds/SawCutting.wav");
     // Other
     m_res_manager.load_sound("splatter", "res/sounds/SplatterNew.wav");
     m_res_manager.load_sound("landing", "res/sounds/CrappyLanding.wav");
