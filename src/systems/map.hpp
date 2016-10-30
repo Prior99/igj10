@@ -55,13 +55,17 @@ class MapSystem : public entityx::System<MapSystem> {
                     lantern.assign<Foreground>();
                 }
                 else {
-                    auto parkingMeterAnimations = AnimationCollection("parking-meter");
-                    parkingMeterAnimations.addAnimation("dance", 0, 5, 0.3, glm::vec2(8, 16));
-                    entityx::Entity parkingMeter = es.create();
-                    parkingMeter.assign<Position>(glm::vec2((float)sidewalkGeneratedX, GAME_BOTTOM - 16));
-                    parkingMeter.assign<Drawable>("parking-meter", 8, 16, parkingMeterAnimations);
-                    parkingMeter.assign<Foreground>();
-                    parkingMeter.assign<ParkingMeter>();
+                    if (rand() % 6 == 0) {
+                        auto parkingMeterAnimations = AnimationCollection("parking-meter");
+                        parkingMeterAnimations.addAnimation("stand", 0, 1, 0.6, glm::vec2(8, 16));
+                        parkingMeterAnimations.addAnimation("dance", 0, 5, 0.6, glm::vec2(8, 16));
+                        parkingMeterAnimations.setAnimation("stand", AnimationPlaybackType::FREEZE);
+                        entityx::Entity parkingMeter = es.create();
+                        parkingMeter.assign<Position>(glm::vec2((float)sidewalkGeneratedX, GAME_BOTTOM - 16));
+                        parkingMeter.assign<Drawable>("parking-meter", 8, 16, parkingMeterAnimations);
+                        parkingMeter.assign<Foreground>();
+                        parkingMeter.assign<ParkingMeter>();
+                    }
                 }
                 // Generate street texture
                 entityx::Entity street = es.create();

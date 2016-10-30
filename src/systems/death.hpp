@@ -51,6 +51,7 @@ class DeathSystem : public entityx::System<DeathSystem>, public entityx::Receive
                         (void) parkingMeterEntity;
                         auto& parkingMeterAnimations = drawableParkingMeters->getAnimation();
                         parkingMeterAnimations.setAnimation("dance", AnimationPlaybackType::LOOP);
+                        parkingMeterAnimations.pause(false);
                     }
                     if (reason == DeathReason::INSANE) {
                         player.component<Drawable>()->getAnimation().setAnimation("dissolve", AnimationPlaybackType::FREEZE);
