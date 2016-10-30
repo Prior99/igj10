@@ -6,6 +6,7 @@
 #include "components/light.hpp"
 #include "components/foreground.hpp"
 #include "components/game-text.hpp"
+#include "components/uniMultiDrawable.hpp"
 
 #include "utils.hpp"
 
@@ -62,6 +63,42 @@ class EntityDrawSystem {
         src.h = bottom.height;
         dest.h = bottom.height;
         SDL_RenderCopy(game->renderer(), game->res_manager().texture(bottom.texture), &src, &dest);
+    }
+
+    void renderRow(glm::vec2 startPos, SDL_Texture* texture, int reps, SDL_Rect* leftClip, SDL_Rect* centerClip, SDL_Rect* rightClip) {
+        SDL_Rect leftDest{startPos.x, startPos.y, leftClip->w, leftClip->h};
+        SDL_RenderCopy(game->renderer(), texture, leftClip, &leftDest);
+
+        SDL_Rect centerDest{leftDest.x + leftDest.w, startPos.y, centerClip->w, centerClip->h};
+        for(int i = 0; i < reps; i++) {
+            SDL_RenderCopy(game->renderer(), texture, centerClip, &centerDest);
+            centerDest.x += centerClip->w;
+        }
+
+        SDL_Rect rightDest{centerDest.x, startPos.y, rightClip->w, rightClip->h};
+        SDL_RenderCopy(game->renderer(), texture, rightClip, &rightDest);
+    }
+
+    void renderUniMultiPart(entityx::Entity entity, glm::vec2 offset) {
+        entityx::ComponentHandle<Position> position = entity.component<Position>();
+        entityx::ComponentHandle<UniMultipartDrawable> drawable = entity.component<UniMultipartDrawable>();
+
+        auto texture = game->res_manager().texture(drawable->getTexture());
+        glm::vec2 reps = drawable->getRepititions();
+
+        auto pos = position->getPosition() - offset;
+
+        SDL_Rect leftClip, rightClip, centerClip;
+
+        renderRow(pos, texture, reps.x, drawable->getLeftTopClip(&leftClip), drawable->getCenterTopClip(&centerClip), drawable->getRightTopClip(&rightClip));
+
+        for(int row = 0; row < reps.y; row++) {
+            auto newPos = pos + glm::vec2(0, drawable->getTop() + row * drawable->getCenterY());
+            renderRow(newPos, texture, reps.x, drawable->getLeftCenterClip(&leftClip), drawable->getCenterClip(&centerClip), drawable->getRightCenterClip(&rightClip));
+        }
+
+        auto bottomPos = pos + glm::vec2(0, drawable->getTop() + reps.y * drawable->getCenterY());
+        renderRow(bottomPos, texture, reps.x, drawable->getLeftBottomClip(&leftClip), drawable->getCenterBottomClip(&centerClip), drawable->getRightBottomClip(&rightClip));
     }
 
     void renderSinglePart(entityx::Entity entity, glm::vec2 offset) {
@@ -124,6 +161,8 @@ class EntityDrawSystem {
             renderMultiPart(entity, offset);
         } else if (entity.component<Drawable>()) {
             renderSinglePart(entity, offset);
+        } else if (entity.component<UniMultipartDrawable>()) {
+            renderUniMultiPart(entity, offset);
         } else if(entity.component<GameText>()) {
             renderText(entity, offset, dt);
         }
