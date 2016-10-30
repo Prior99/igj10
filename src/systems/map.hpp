@@ -133,10 +133,10 @@ class MapSystem : public entityx::System<MapSystem> {
                     heightDifferenceModifier = rand() % tobergteDifficultyFunction(mapGeneratedX, 100);
                 }
                 createHouse(es, height, mapGeneratedX);
-                if (rand() % 5 == 0) {
+                if (rand() % 5 == 0 && mapGeneratedX > 800) {
                     createStomper(es, mapGeneratedX + 16, GAME_BOTTOM - height * 63 - 16 - 36 - 220);
                 }
-                if (rand() % 5 == 0) {
+                if (rand() % 5 == 0 && mapGeneratedX > 800) {
                     createSaw(es, mapGeneratedX - 50, GAME_BOTTOM - height * 63 - 16 - 36 - 40);
                 }
                 mapGeneratedX += houseWidth + minGap + rand() % variableGapSize + heightDifferenceModifier;

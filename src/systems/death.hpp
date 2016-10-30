@@ -4,6 +4,8 @@
 #include "components/drawable.hpp"
 #include "components/foreground.hpp"
 #include "components/game-text.hpp"
+#include "components/gravity.hpp"
+#include "components/velocity.hpp"
 #include "game.hpp"
 #include "game_config.hpp"
 #include "events.hpp"
@@ -49,20 +51,22 @@ class DeathSystem : public entityx::System<DeathSystem>, public entityx::Receive
                         splashAnimation.setAnimation("splash", AnimationPlaybackType::FREEZE);
                         splatter.assign<Drawable>("splash", 64, 24, splashAnimation);
                         splatter.assign<Position>(pos + glm::vec2(0, 0));
+                        player.remove<Gravity>();
+                        player.component<Velocity>()->setVelocity(glm::vec2(0, 0));
                     }
                     else if (pos.y >= GAME_BOTTOM - height) {
                         auto splatterAnimation = AnimationCollection("splatter");
                         splatterAnimation.addAnimation("splatter", 0, 7, 1.0, glm::vec2(64, 24));
                         splatterAnimation.setAnimation("splatter", AnimationPlaybackType::FREEZE);
                         splatter.assign<Drawable>("splatter", 64, 24, splatterAnimation);
-                        splatter.assign<Position>(pos + glm::vec2(0, 20));
+                        splatter.assign<Position>(pos + glm::vec2(0, 0));
                     }
                     else {
                         auto splatterAnimation = AnimationCollection("splatter-house");
                         splatterAnimation.addAnimation("splatter-house", 0, 7, 1.0, glm::vec2(64, 128));
                         splatterAnimation.setAnimation("splatter-house", AnimationPlaybackType::FREEZE);
                         splatter.assign<Drawable>("splatter-house", 64, 128, splatterAnimation);
-                        splatter.assign<Position>(pos + glm::vec2(0, 15));
+                        splatter.assign<Position>(pos + glm::vec2(0, -5));
                     }
 
                     splatter.assign<Foreground>();

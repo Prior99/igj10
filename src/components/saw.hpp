@@ -8,7 +8,8 @@
 #include <iostream>
 
 struct Saw : entityx::Component<Saw> {
-    Saw() {
+    bool doneInit;
+    Saw() : doneInit(false) {
     }
 };
 

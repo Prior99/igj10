@@ -18,6 +18,10 @@ struct Velocity : entityx::Component<Velocity> {
         return this->velocity;
     }
 
+    void setVelocity(glm::vec2 velocity) {
+        this->velocity = velocity;
+    }
+
     void drag(glm::vec2 velocity) {
         this->velocity += velocity;
     }
