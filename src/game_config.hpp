@@ -16,6 +16,8 @@ static const int GAME_HEIGHT = 225;
 
 static const bool DEBUG = false;
 
+static const bool HARDCORE = false;
+
 static const float SPEED = 66;
 static const float VELOCITY_LOSS = 0.8;
 static const float GRAVITY = 10;

@@ -1,5 +1,5 @@
-#ifndef GRAVITY_HPP
-#define GRAVITY_HPP
+#ifndef HIGHSCORE_HPP
+#define HIGHSCORE_HPP
 
 #include "entityx/entityx.h"
 #include <glm/vec2.hpp>
@@ -7,8 +7,8 @@
 #include "game_config.hpp"
 #include <iostream>
 
-struct Gravity : entityx::Component<Gravity> {
-    Gravity() {
+struct Highscore : entityx::Component<Highscore> {
+    Highscore() {
     }
 };
 

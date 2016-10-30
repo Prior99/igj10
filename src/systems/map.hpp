@@ -6,12 +6,15 @@
 
 #include "components/position.hpp"
 #include "components/player.hpp"
+#include "components/highscore.hpp"
+#include "components/text.hpp"
 
 #include "entityx/entityx.h"
 #include <glm/vec2.hpp>
 
 #include <iostream>
 #include <math.h>
+#include <string>
 
 static const int houseWidth = 128;
 
@@ -98,11 +101,22 @@ class MapSystem : public entityx::System<MapSystem> {
             }
         }
 
+        void drawDifficulty(entityx::EntityManager &es, glm::vec2 pos) {
+          entityx::ComponentHandle<Highscore> highscore;
+          entityx::ComponentHandle<Text> text;
+          for (entityx::Entity entity : es.entities_with_components(highscore,text)) {
+            (void) entity;
+            text->setText("Score: " + std::to_string(mapGeneratedX/100));
+          }
+        }
+
         void cleanup(entityx::EntityManager &es, glm::vec2 pos) {
             entityx::ComponentHandle<Position> position;
             for (entityx::Entity entity : es.entities_with_components(position)) {
                 if (position->getPosition().x < pos.x - PREGENERATE) {
+                  if (!entity.component<Text>()) {
                     entity.destroy();
+                  }
                 }
             }
         }
@@ -113,6 +127,7 @@ class MapSystem : public entityx::System<MapSystem> {
             pos = player.component<Position>()->getPosition();
             generateStreet(es, pos);
             generateBuildings(es, pos);
+            drawDifficulty(es, pos);
             cleanup(es, pos);
         }
 
