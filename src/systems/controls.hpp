@@ -49,12 +49,12 @@ class ControlSystem : public entityx::System<ControlSystem>, public entityx::Rec
             if (state[SDL_SCANCODE_R]) {
               std::cout << "reset" << std::endl;
               rand();
-              this->game->toggleFreeze();
+              this->game->setUnFreeze();
               this->game->reset();
             }
             if (state[SDL_SCANCODE_T]) {
               std::cout << "reset" << std::endl;
-              this->game->toggleFreeze();
+              this->game->setUnFreeze();
               this->game->reset();
             }
             if (died) {
