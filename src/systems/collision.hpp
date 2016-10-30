@@ -17,7 +17,7 @@
 
 class CollisionSystem : public entityx::System<CollisionSystem> {
     public:
-        CollisionSystem() { }
+        CollisionSystem(Game *game): game(game) { }
 
         void update(entityx::EntityManager &es, entityx::EventManager &events, double dt) {
             entityx::ComponentHandle<Position> collidingPos, boxPos;
@@ -64,7 +64,7 @@ class CollisionSystem : public entityx::System<CollisionSystem> {
                         } else if (min == down) {
                             outPos.x = colCoord.x;
                             outPos.y = boxCoord.y + boxSize.y + r;
-                            if (box->isDangerous(DANGEROUS_BOTTOM)) {
+                            if (box->isDangerous(DANGEROUS_BOTTOM) && !game->isFrozen()) {
                                 events.emit<GameOver>();
                             }
                         } else if (min == left) {
@@ -87,6 +87,8 @@ class CollisionSystem : public entityx::System<CollisionSystem> {
                 collidable->setIsTouching(isTouchingAnything && isTouchingBottom);
             }
         }
+    private:
+        Game *game;
 };
 
 #endif

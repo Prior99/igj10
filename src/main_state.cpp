@@ -10,7 +10,6 @@
 #include "components/box.hpp"
 #include "components/stomper.hpp"
 #include "components/gravity.hpp"
-#include "components/multipartDrawable.hpp"
 #include "components/foreground.hpp"
 #include "systems/collision.hpp"
 #include "systems/controls.hpp"
@@ -40,7 +39,7 @@ int MainState::init() {
     m_systems.add<ControlSystem>(m_game);
     m_systems.add<MovementSystem>();
     m_systems.add<GravitySystem>();
-    m_systems.add<CollisionSystem>();
+    m_systems.add<CollisionSystem>(m_game);
     m_systems.add<DeathSystem>(m_game);
     m_systems.add<MapSystem>(m_game);
     m_systems.add<InsanitySystem>(m_game);
@@ -70,6 +69,7 @@ int MainState::init() {
     lol.assign<Position>(glm::vec2(10.f, 10.f));
     lol.assign<Text>("LOL", SDL_Color {200, 100, 100, 150});
 
+<<<<<<< HEAD
     entityx::Entity highscore = entities.create();
     highscore.assign<Position>(glm::vec2(GAME_WIDTH * 0.66, 10.f));
     highscore.assign<Highscore>();
@@ -86,6 +86,8 @@ int MainState::init() {
     stomper.assign<Box>(glm::vec2(36.f, 47.f), false, false, true, false);
     stomper.assign<Stomper>(0, 100, 1000, true);
     stomper.component<MultipartDrawable>()->setHeight(80);
+=======
+>>>>>>> c074497abd8cb9bf9f606b868f5875297981229c
     return 0;
 }
 

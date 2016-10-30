@@ -10,7 +10,14 @@
 struct Stomper : entityx::Component<Stomper> {
     Stomper() : extended(0) {
     }
-    Stomper(int extended, int speedUp, int speedDown, bool running) : extended(extended), speedUp(speedUp), speedDown(speedDown), running(running), timeout(0) {
+    Stomper(int extended, int speedUp, int speedDown, bool running, double waiting = 1.0) :
+            extended(extended),
+            speedUp(speedUp),
+            speedDown(speedDown),
+            running(running),
+            timeout(0),
+            waiting(0.0),
+            maxWaiting(waiting){
     }
 
     int getExtended() {
@@ -57,9 +64,13 @@ struct Stomper : entityx::Component<Stomper> {
     }
     void resetTimeout() {
         this->timeout = 0;
+        this->waiting = 0;
     }
     void incTimeout(double dt) {
-        this->timeout += dt;
+        this->waiting += dt;
+        if (this->waiting > this->maxWaiting) {
+            this->timeout += dt;
+        }
     }
     void update(double dt){
         if(isRunning()){
@@ -79,6 +90,8 @@ struct Stomper : entityx::Component<Stomper> {
     bool running;
     bool extending;
     double timeout;
+    double waiting;
+    double maxWaiting;
 };
 
 #endif

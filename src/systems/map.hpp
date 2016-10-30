@@ -6,8 +6,15 @@
 
 #include "components/position.hpp"
 #include "components/player.hpp"
+<<<<<<< HEAD
 #include "components/highscore.hpp"
 #include "components/text.hpp"
+=======
+#include "components/stomper.hpp"
+#include "components/box.hpp"
+#include "components/multipartDrawable.hpp"
+#include "components/uniMultiDrawable.hpp"
+>>>>>>> c074497abd8cb9bf9f606b868f5875297981229c
 
 #include "entityx/entityx.h"
 #include <glm/vec2.hpp>
@@ -48,26 +55,46 @@ class MapSystem : public entityx::System<MapSystem> {
             }
         }
 
+        void createStomper(entityx::EntityManager &es, int x, int y) {
+            PartialDrawable top = {"stomper-top", 39};
+            PartialDrawable middle = {"stomper-middle", 8};
+            PartialDrawable bottom = {"stomper-bottom", 8};
+            entityx::Entity stomper = es.create();
+            stomper.assign<Position>(glm::vec2(x, y));
+            stomper.assign<MultipartDrawable>(36, top, middle, bottom);
+            stomper.assign<Box>(glm::vec2(36.f, 47.f), false, false, true, false);
+            stomper.assign<Stomper>(0, 100, 1000, true, (rand() % 40) / 10.0);
+            stomper.component<MultipartDrawable>()->setHeight(80);
+        }
+
         void createHouse(entityx::EntityManager &es, int height, int x) {
             static const int roofHeight = 16;
             static const int bottomHeight = 32;
             static const int middleHeight = 63;
             // Generate bottom part of house
-            entityx::Entity bottom = es.create();
-            bottom.assign<Position>(glm::vec2(x, GAME_BOTTOM - bottomHeight));
-            bottom.assign<Drawable>("house-01-bottom", houseWidth, bottomHeight);
-            // Generate middle parts of house, dependend on height
-            for (int j = 0; j < height; j++) {
-                entityx::Entity middle = es.create();
-                middle.assign<Position>(glm::vec2(x, GAME_BOTTOM - bottomHeight - (j + 1) * middleHeight));
-                middle.assign<Drawable>("house-01-middle", houseWidth, middleHeight);
-            }
-            const int totalMiddleHeight = middleHeight * height;
-            // Generate roof part of house
-            entityx::Entity roof = es.create();
-            roof.assign<Position>(glm::vec2(x, GAME_BOTTOM - bottomHeight - totalMiddleHeight - roofHeight));
-            roof.assign<Drawable>("house-01-roof", houseWidth, roofHeight);
-            roof.assign<Box>(glm::vec2((float)houseWidth, (float)roofHeight));
+            // entityx::Entity bottom = es.create();
+            // bottom.assign<Position>(glm::vec2(x, GAME_BOTTOM - bottomHeight));
+            // bottom.assign<Drawable>("house-01-bottom", houseWidth, bottomHeight);
+            // // Generate middle parts of house, dependend on height
+            // for (int j = 0; j < height; j++) {
+            //     entityx::Entity middle = es.create();
+            //     middle.assign<Position>(glm::vec2(x, GAME_BOTTOM - bottomHeight - (j + 1) * middleHeight));
+            //     middle.assign<Drawable>("house-01-middle", houseWidth, middleHeight);
+            // }
+            // const int totalMiddleHeight = middleHeight * height;
+            // // Generate roof part of house
+            // entityx::Entity roof = es.create();
+            // roof.assign<Position>(glm::vec2(x, GAME_BOTTOM - bottomHeight - totalMiddleHeight - roofHeight));
+            // roof.assign<Drawable>("house-01-roof", houseWidth, roofHeight);
+            // roof.assign<Box>(glm::vec2((float)houseWidth, (float)roofHeight));
+
+            int totalHeight = bottomHeight + height * middleHeight + roofHeight;
+            glm::i32vec2 reps = glm::i32vec2(1, height);
+
+            entityx::Entity house = es.create();
+            house.assign<Position>(glm::vec2(x, GAME_BOTTOM - totalHeight));
+            house.assign<Box>(glm::vec2(128, totalHeight));
+            house.assign<UniMultipartDrawable>("house-01", glm::vec2(128, 128), 0, 0, roofHeight, bottomHeight, reps);
         }
 
         void generateBuildings(entityx::EntityManager &es, glm::vec2 pos) {
@@ -97,6 +124,9 @@ class MapSystem : public entityx::System<MapSystem> {
                     heightDifferenceModifier = rand() % tobergteDifficultyFunction(mapGeneratedX, 100);
                 }
                 createHouse(es, height, mapGeneratedX);
+                if (rand() % 5 == 0) {
+                    createStomper(es, mapGeneratedX + 16, GAME_BOTTOM - height * 63 - 16 - 36 - 220);
+                }
                 mapGeneratedX += houseWidth + minGap + rand() % variableGapSize + heightDifferenceModifier;
             }
         }

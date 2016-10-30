@@ -64,6 +64,7 @@ int Game::init() {
     m_res_manager.load_texture("house-01-bottom", "res/house-1/bottom.png", m_render);
     m_res_manager.load_texture("house-01-middle", "res/house-1/middle.png", m_render);
     m_res_manager.load_texture("house-01-roof", "res/house-1/roof.png", m_render);
+    m_res_manager.load_texture("house-01", "res/hall.png", m_render);
     // Other
     m_res_manager.load_texture("gradient", "res/gradient.png", m_render);
     m_res_manager.load_texture("player", "res/player.png", m_render);
@@ -71,7 +72,7 @@ int Game::init() {
     m_res_manager.load_texture("street", "res/street.png", m_render);
     m_res_manager.load_texture("background", "res/background.png", m_render);
     m_res_manager.load_texture("splatter", "res/Splatter.png", m_render);
-    m_res_manager.load_texture("splatter-splatter", "res/SplatterHouse.png", m_render);
+    m_res_manager.load_texture("splatter-house", "res/SplatterHouse.png", m_render);
     // Fonts
     m_res_manager.load_font("font-big", "res/Munro.ttf", 20);
     m_res_manager.load_font("font-small", "res/Munro.ttf", 10);

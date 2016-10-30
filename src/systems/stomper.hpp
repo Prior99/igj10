@@ -35,20 +35,23 @@ class StomperSystem : public entityx::System<StomperSystem> {
             channel+=2;
             (void)stomperEntity;
             stomper->update(dt);
+            auto player = game->getPlayer();
+            auto pos = player.component<Position>()->getPosition();
+            auto volume = 40.f * (1.0f - glm::min(glm::abs(positionStomper->getPosition().x - pos.x), 600.f)/600.f);
             if(stomper->getExtended() <= 0) {
                 double timeout = stomper->getTimeout();
                 if (timeout < 0.01) {
-                    Mix_Volume(channel, 40);
+                    Mix_Volume(channel, volume);
                     Mix_PlayChannel(channel, game->res_manager().sound("stomper-warning"), 0);
                 }
-                if (glm::abs(timeout - 2.0) < 0.01) {
-                    Mix_Volume(channel, 40);
+                if (glm::abs(timeout - 1.2) < 0.01) {
+                    Mix_Volume(channel, volume);
                     Mix_PlayChannel(channel, game->res_manager().sound("stomper-lock"), 0);
                 }
-                if (glm::abs(timeout - 2.5) < 0.01) {
+                if (glm::abs(timeout - 1.6) < 0.01) {
                     stomper->toggleDirection();
                     stomper->setExtended(0);
-                    Mix_Volume(channel + 1, 40);
+                    Mix_Volume(channel + 1, volume);
                     Mix_PlayChannel(channel + 1, game->res_manager().sound("stomper-down"), 0);
                 } else {
                     stomper->incTimeout(dt);
@@ -69,9 +72,9 @@ class StomperSystem : public entityx::System<StomperSystem> {
                     if(boxTop < stomperBottom && boxLeft < stomperRight && boxRight > stomperLeft && stomper->isExtending()) {
                         stomper->subExtended(abs(stomperBottom - boxTop) + stomper->getSpeedUp() * dt);
                         stomper->toggleDirection();
-                        Mix_Volume(channel, 40);
+                        Mix_Volume(channel, volume);
                         Mix_PlayChannel(channel, game->res_manager().sound("stomper-smash"), 0);
-                        Mix_Volume(channel + 1, 40);
+                        Mix_Volume(channel + 1, volume);
                         Mix_PlayChannel(channel + 1, game->res_manager().sound("stomper-up"), 0);
                         stomper->resetTimeout();
                     }
