@@ -75,6 +75,7 @@ struct AnimationCollection {
             rect->y = animation->offset;
             rect->w = animation->size.x;
             rect->h = animation->size.y;
+
             return rect;
         } else {
             return NULL;
