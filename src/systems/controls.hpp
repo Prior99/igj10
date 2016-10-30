@@ -80,7 +80,6 @@ class ControlSystem : public entityx::System<ControlSystem>, public entityx::Rec
                 if (state[SDL_SCANCODE_M]) {
                     if (mutecount > 0.2) {
                       this->game->toggleMute();
-                      std::cout << "mute" << std::endl;
                       mutecount = 0;
                     }
                 }
