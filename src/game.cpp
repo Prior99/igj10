@@ -73,6 +73,8 @@ int Game::init() {
     m_res_manager.load_texture("player", "res/player.png", m_render);
     m_res_manager.load_texture("sidewalk", "res/sidewalk.png", m_render);
     m_res_manager.load_texture("street", "res/street.png", m_render);
+    m_res_manager.load_texture("lantern", "res/lamp.png", m_render);
+    m_res_manager.load_texture("parking-meter", "res/FunkyParkuhr.png", m_render);
     m_res_manager.load_texture("saw", "res/Saw.png", m_render);
     m_res_manager.load_texture("background", "res/background.png", m_render);
     m_res_manager.load_texture("splatter", "res/Splatter.png", m_render);

@@ -58,6 +58,10 @@ struct AnimationCollection {
         paused = pause;
     }
 
+    bool isRunning() {
+        return paused;
+    }
+
     std::string getTextureKey() {
         return textureKey;
     }
@@ -78,23 +82,30 @@ struct AnimationCollection {
     }
 
     void update(double dt) {
-        auto& animation = animations[currentAnimation];
-        if(!paused) {
-            animation->runTime += dt;
-        }
-        if (animation->runTime >= animation->duration) {
-            switch(playbackType) {
-                case AnimationPlaybackType::RESET:
-                    animation->runTime = 0;
-                    currentAnimation.erase();
-                    break;
-                case AnimationPlaybackType::FREEZE:
-                    animation->runTime = animation->duration - dt;
-                    paused = true;
-                    break;
-                case AnimationPlaybackType::LOOP:
-                    animation->runTime = 0;
-                    break;
+        if(initialized() && !currentAnimation.empty()){
+            auto& animation = animations[currentAnimation];
+            std::cout << "initialized " << textureKey << "\n";
+            if(!paused) {
+                std::cout << "paused\n";
+                animation->runTime += dt;
+            }
+            std::cout << "paused ende\n";
+            if (animation->runTime >= animation->duration) {
+                std::cout << "vor switch\n";
+                switch(playbackType) {
+                    case AnimationPlaybackType::RESET:
+                        animation->runTime = 0;
+                        currentAnimation.erase();
+                        break;
+                    case AnimationPlaybackType::FREEZE:
+                        animation->runTime = animation->duration - dt;
+                        paused = true;
+                        break;
+                    case AnimationPlaybackType::LOOP:
+                        animation->runTime = 0;
+                        break;
+                }
+                std::cout << "nach switch\n";
             }
         }
     }
