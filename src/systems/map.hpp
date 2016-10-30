@@ -6,15 +6,12 @@
 
 #include "components/position.hpp"
 #include "components/player.hpp"
-<<<<<<< HEAD
 #include "components/highscore.hpp"
 #include "components/text.hpp"
-=======
 #include "components/stomper.hpp"
 #include "components/box.hpp"
 #include "components/multipartDrawable.hpp"
 #include "components/uniMultiDrawable.hpp"
->>>>>>> c074497abd8cb9bf9f606b868f5875297981229c
 
 #include "entityx/entityx.h"
 #include <glm/vec2.hpp>
