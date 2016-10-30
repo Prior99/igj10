@@ -45,6 +45,14 @@ class SanitySystem : public entityx::System<SanitySystem> {
                     stomper->setRunning(true);
                 }
             }
+
+            entityx::Entity insanityCounter = game->getInsanityCounter();
+            double sanity = game->getSanity();
+            std::vector<Drawable> &layers = insanityCounter.component<StackedDrawable>()->getLayers();
+            int sec = glm::min(60, (int) sanity);
+            int millis = (sanity - (int) sanity) * 1000;
+            layers[2].setRotation(glm::max(0.0, 360.0/60.0 * sec));
+            layers[1].setRotation(glm::max(0.0, 360.0/1000.0 * millis));
         }
     private:
       Game *game;

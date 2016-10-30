@@ -43,6 +43,14 @@ struct Drawable : entityx::Component<Drawable> {
         return textureKey;
     }
 
+    double getRotation() {
+        return rotation;
+    }
+
+    void setRotation(double r) {
+        this->rotation = r;
+    }
+
     bool hasAnimation() {
         return !animation.getTextureKey().empty();
     }
@@ -56,6 +64,7 @@ struct Drawable : entityx::Component<Drawable> {
     float height;
     float width;
     AnimationCollection animation;
+    double rotation;
     glm::vec2 offset;
 };
 #endif
