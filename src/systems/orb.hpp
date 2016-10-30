@@ -32,7 +32,9 @@ class OrbSystem : public entityx::System<OrbSystem> {
             entityx::ComponentHandle<Velocity> orbVelocity;
             entityx::ComponentHandle<Position> posPlayer;
             entityx::ComponentHandle<Player> player;
+            int channel = 50;
             for(entityx::Entity orbEntity: es.entities_with_components(posOrb, orb, drawable, orbVelocity)) {
+                channel++;
                 for(entityx::Entity playerEntity: es.entities_with_components(posPlayer, player)) {
                     (void) playerEntity; 
                     if (glm::length(posPlayer->getPosition() - posOrb->getPosition()) < 4 + 12) {
@@ -40,6 +42,9 @@ class OrbSystem : public entityx::System<OrbSystem> {
                         drawable->getAnimation().setAnimation("crumble", AnimationPlaybackType::FREEZE);
                         orb->collect();
                         orbVelocity->drag(glm::vec2(0, -100));
+                        Mix_Volume(channel % 10, 30);
+                        int rnd = (rand() % 3) + 1;
+                        Mix_PlayChannel(channel % 10, game->res_manager().sound("orb-0" + std::to_string(rnd)), 0);
                     }
                     if(!orb->update(dt)) {
                         orbEntity.destroy();

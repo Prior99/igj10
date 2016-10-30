@@ -98,6 +98,10 @@ int Game::init() {
     // Saw
     m_res_manager.load_sound("saw", "res/sounds/Saw.wav");
     m_res_manager.load_sound("saw-cutting", "res/sounds/SawCutting.wav");
+    // Orbs
+    m_res_manager.load_sound("orb-01", "res/sounds/Orb1.wav");
+    m_res_manager.load_sound("orb-02", "res/sounds/Orb2.wav");
+    m_res_manager.load_sound("orb-03", "res/sounds/Orb3.wav");
     // Other
     m_res_manager.load_sound("splatter", "res/sounds/SplatterNew.wav");
     m_res_manager.load_sound("landing", "res/sounds/CrappyLanding.wav");
