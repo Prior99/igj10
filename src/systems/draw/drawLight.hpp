@@ -63,7 +63,7 @@ class LightDrawSystem {
             }
 
             auto sanity = glm::min(game->getSanity(), MAX_SANITY) / MAX_SANITY;
-            auto wLight = glm::max(light->scale() * sanity, 0.0f);
+            auto wLight = glm::max(light->scale() * sanity, 60.0f);
 
             // Converted position
             auto pos = glm::vec2(coord.x + wPlayer / 2 - wLight / 2, coord.y + hPlayer / 2 - wLight / 2) - (offset + privOffset);

@@ -47,7 +47,7 @@ class SawSystem : public entityx::System<SawSystem> {
                             (void) sawEntity;
                             (void) playerEntity;
                             if (glm::length(posPlayer->getPosition() - posSaw->getPosition()) < 18 + 12 - 3) {
-                                events.emit<GameOver>(true);
+                                events.emit<GameOver>(DeathReason::SAW);
                                 Mix_Volume(channel + 1, 30);
                                 Mix_PlayChannel(channel + 1, game->res_manager().sound("saw-cutting"), 0);
                                 drawable->getAnimation().setAnimation("turn-bloody", AnimationPlaybackType::LOOP);
