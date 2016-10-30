@@ -55,11 +55,12 @@ int MainState::init() {
     auto playerAnimations = AnimationCollection("player");
     playerAnimations.addAnimation("run", 0, 4, 0.3, glm::vec2(16, 24));
     playerAnimations.addAnimation("jump", 24, 3, 0.5, glm::vec2(16, 24));
+    playerAnimations.addAnimation("dissolve", 48, 11, 1.2, glm::vec2(16, 24));
     playerAnimations.setAnimation("run", AnimationPlaybackType::LOOP);
     entityx::Entity player = entities.create();
     player.assign<Position>(glm::vec2(20.f, 0.f));
     player.assign<Drawable>("player", 16, 24, playerAnimations);
-    player.component<Drawable>()->setOffset(glm::vec2(0, 16));
+    player.component<Drawable>()->setOffset(glm::vec2(0, 24));
     glm::i8vec3 testcolor = {255, 64, 16};
     player.assign<Light>("gradient", 500, testcolor);
     player.assign<Velocity>();

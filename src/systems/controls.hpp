@@ -90,7 +90,7 @@ class ControlSystem : public entityx::System<ControlSystem>, public entityx::Rec
                         player->resetJumpTime();
                         stoppedSpace = false;
                         auto& animation = drawable->getAnimation();
-                        if(animation.getCurrentAnimation() != "run") {
+                        if(animation.getCurrentAnimation() != "run" && animation.getCurrentAnimation() != "dissolve") {
                             animation.pause(false);
                             animation.setAnimation("run", AnimationPlaybackType::LOOP);
                             Mix_Volume(2, 50);
@@ -98,10 +98,12 @@ class ControlSystem : public entityx::System<ControlSystem>, public entityx::Rec
                         }
                     }
                 }
-                if (walking && !player->isJumping()) {
-                    drawable->getAnimation().pause(false);
-                } else {
-                    drawable->getAnimation().pause(true);
+                if (drawable->getAnimation().getCurrentAnimation() != "dissolve") {
+                    if (walking && !player->isJumping()) {
+                        drawable->getAnimation().pause(false);
+                    } else {
+                        drawable->getAnimation().pause(true);
+                    }
                 }
             }
         }

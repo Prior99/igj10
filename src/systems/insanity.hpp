@@ -2,6 +2,7 @@
 #define INSANITY_SYSTEM_HPP
 
 #include "game.hpp"
+#include "events.hpp"
 #include "game_config.hpp"
 #include "components/velocity.hpp"
 #include "components/stomper.hpp"
@@ -29,6 +30,9 @@ class SanitySystem : public entityx::System<SanitySystem> {
                 }
                 this->time += dt;
                 game->addSanity(-dt);
+                if (game->getSanity() < 0.0f) {
+                    events.emit<GameOver>(DeathReason::INSANE);
+                }
                 if (this->time > glm::max(glm::min(20.0f / game->getSanity(), 4.0f), 1.0f)) {
                     game->addSanity(0.5);
                     this->time = 0.0f;

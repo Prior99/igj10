@@ -190,7 +190,7 @@ void Game::setSanity(float f) {
 }
 
 void Game::addSanity(float f) {
-    this->sanity = glm::max(this->sanity + f, 1.5f);
+    this->sanity = this->sanity + f;
 }
 
 void Game::toggleMute() {

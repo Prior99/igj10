@@ -22,7 +22,7 @@
 
 class DeathSystem : public entityx::System<DeathSystem>, public entityx::Receiver<DeathSystem> {
     public:
-        DeathSystem(Game *game): game(game), died(false), done(false), last(0.0f), fromSaw(false) {
+        DeathSystem(Game *game): game(game), died(false), done(false), last(0.0f), reason(DeathReason::FALL) {
 
         }
 
@@ -33,7 +33,7 @@ class DeathSystem : public entityx::System<DeathSystem>, public entityx::Receive
         void receive(const GameOver &event) {
             (void)event;
             died = true;
-            fromSaw = event.fromSaw;
+            reason = event.reason;
         }
 
         void update(entityx::EntityManager &es, entityx::EventManager &events, double dt) {
@@ -43,9 +43,14 @@ class DeathSystem : public entityx::System<DeathSystem>, public entityx::Receive
             auto pos = player.component<Position>()->getPosition();
             if (died) {
                 if (!done) {
-                    auto height = player.component<Drawable>()->getHeight();
                     entityx::Entity splatter = es.create();
-                    if (fromSaw) {
+                    if (reason == DeathReason::INSANE) {
+                        player.component<Drawable>()->getAnimation().setAnimation("dissolve", AnimationPlaybackType::FREEZE);
+                        player.component<Drawable>()->getAnimation().pause(false);
+                        //player.remove<Gravity>();
+                        //player.component<Velocity>()->setVelocity(glm::vec2(0, 0));
+                    }
+                    else if (reason == DeathReason::SAW) {
                         auto splashAnimation = AnimationCollection("splash");
                         splashAnimation.addAnimation("splash", 0, 8, 1.0, glm::vec2(128, 128));
                         splashAnimation.setAnimation("splash", AnimationPlaybackType::FREEZE);
@@ -53,13 +58,19 @@ class DeathSystem : public entityx::System<DeathSystem>, public entityx::Receive
                         splatter.assign<Position>(pos + glm::vec2(0, 0));
                         player.remove<Gravity>();
                         player.component<Velocity>()->setVelocity(glm::vec2(0, 0));
+                        player.remove<Drawable>();
+                        Mix_Volume(5, 40);
+                        Mix_PlayChannel(5, game->res_manager().sound("splatter"), 0);
                     }
-                    else if (pos.y >= GAME_BOTTOM - height) {
+                    else if (reason == DeathReason::FALL) {
                         auto splatterAnimation = AnimationCollection("splatter");
                         splatterAnimation.addAnimation("splatter", 0, 7, 1.0, glm::vec2(64, 24));
                         splatterAnimation.setAnimation("splatter", AnimationPlaybackType::FREEZE);
                         splatter.assign<Drawable>("splatter", 64, 24, splatterAnimation);
                         splatter.assign<Position>(pos + glm::vec2(0, 0));
+                        player.remove<Drawable>();
+                        Mix_Volume(5, 40);
+                        Mix_PlayChannel(5, game->res_manager().sound("splatter"), 0);
                     }
                     else {
                         auto splatterAnimation = AnimationCollection("splatter-house");
@@ -67,13 +78,12 @@ class DeathSystem : public entityx::System<DeathSystem>, public entityx::Receive
                         splatterAnimation.setAnimation("splatter-house", AnimationPlaybackType::FREEZE);
                         splatter.assign<Drawable>("splatter-house", 64, 128, splatterAnimation);
                         splatter.assign<Position>(pos + glm::vec2(0, -5));
+                        player.remove<Drawable>();
+                        Mix_Volume(5, 40);
+                        Mix_PlayChannel(5, game->res_manager().sound("splatter"), 0);
                     }
-
                     splatter.assign<Foreground>();
                     done = true;
-                    player.remove<Drawable>();
-                    Mix_Volume(5, 40);
-                    Mix_PlayChannel(5, game->res_manager().sound("splatter"), 0);
                 }
                 last += dt;
                 if (last > 0.5f) {
@@ -90,6 +100,6 @@ class DeathSystem : public entityx::System<DeathSystem>, public entityx::Receive
         bool died;
         bool done;
         float last;
-        bool fromSaw;
+        DeathReason reason;
 };
 #endif
