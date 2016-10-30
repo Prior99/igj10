@@ -58,7 +58,7 @@ class CollisionSystem : public entityx::System<CollisionSystem> {
                             outPos.x = colCoord.x;
                             outPos.y = boxCoord.y - r;
                             isTouchingBottom = true;
-                            if (box->isDangerous(DANGEROUS_TOP) && !game->isFrozen()) {
+                            if (box->isDangerous(DANGEROUS_TOP)) {
                                 events.emit<GameOver>();
                             }
                         } else if (min == down) {
@@ -70,13 +70,13 @@ class CollisionSystem : public entityx::System<CollisionSystem> {
                         } else if (min == left) {
                             outPos.x = boxCoord.x - r;
                             outPos.y = colCoord.y;
-                            if (box->isDangerous(DANGEROUS_LEFT) && !game->isFrozen()) {
+                            if (box->isDangerous(DANGEROUS_LEFT)) {
                                 events.emit<GameOver>();
                             }
                         } else if (min == right) {
                             outPos.x = boxCoord.x + boxSize.x + r;
                             outPos.y = colCoord.y;
-                            if (box->isDangerous(DANGEROUS_RIGHT) && !game->isFrozen()) {
+                            if (box->isDangerous(DANGEROUS_RIGHT)) {
                                 events.emit<GameOver>();
                             }
                         }
