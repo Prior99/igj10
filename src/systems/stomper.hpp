@@ -37,7 +37,7 @@ class StomperSystem : public entityx::System<StomperSystem> {
             stomper->update(dt);
             auto player = game->getPlayer();
             auto pos = player.component<Position>()->getPosition();
-            auto volume = 40.f * (1.0f - glm::min(glm::abs(positionStomper->getPosition().x - pos.x), 600.f)/600.f);
+            auto volume = 70.f * (1.0f - glm::min(glm::abs(positionStomper->getPosition().x - pos.x), 600.f)/600.f);
             if(stomper->getExtended() <= 0) {
                 double timeout = stomper->getTimeout();
                 if (timeout < 0.01) {
