@@ -46,7 +46,7 @@ class ControlSystem : public entityx::System<ControlSystem>, public entityx::Rec
 
             const Uint8 *state = SDL_GetKeyboardState(NULL);
             std::cout << this->game->getSanity() << std::endl;
-            if (state[SDL_SCANCODE_R]) {
+            if (state[SDL_SCANCODE_R] || state[SDL_SCANCODE_Q] ) {
               std::cout << "reset" << std::endl;
               rand();
               this->game->setUnFreeze();
