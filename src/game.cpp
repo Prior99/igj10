@@ -107,10 +107,11 @@ int Game::init() {
     m_res_manager.load_sound("splatter", "res/sounds/SplatterNew.wav");
     m_res_manager.load_sound("landing", "res/sounds/CrappyLanding.wav");
     m_res_manager.load_sound("heartbeat", "res/sounds/HeartBeatSoftLoop.wav");
-    m_res_manager.load_music("chill-song", "res/sounds/ChillSongBeta.wav");
-    m_res_manager.load_music("scary-song", "res/sounds/ScaryShit.wav");
+    m_res_manager.load_sound("chill-song", "res/sounds/ChillSongBeta.wav");
+    m_res_manager.load_sound("scary-song", "res/sounds/ScaryShit.wav");
     Mix_VolumeMusic(30);
-    Mix_PlayMusic(m_res_manager.music("chill-song"), -1);
+    // Mix_PlayMusic(m_res_manager.music("chill-song"), -1);
+    Mix_PlayChannel(80,m_res_manager.sound("chill-song"), -1);
 
     SDL_RenderSetLogicalSize(m_render, WIDTH, HEIGHT);
 
@@ -127,12 +128,14 @@ void Game::toggleFreeze() {
     this->freeze = !this->freeze;
     if (!this->freeze) {
         if(!this->muted){
-            Mix_FadeInMusic(m_res_manager.music("chill-song"), -1, 200);
+            Mix_Pause(66);
+            Mix_FadeInChannel(80,m_res_manager.sound("chill-song"), -1, 200);
         }
     }
     else {
         if(!this->muted){
-            Mix_FadeInMusic(m_res_manager.music("scary-song"), -1, 200);
+            Mix_Pause(80);
+            Mix_FadeInChannel(66,m_res_manager.sound("scary-song"), -1, 200);
         }
     }
 }
@@ -193,14 +196,15 @@ void Game::addSanity(float f) {
 void Game::toggleMute() {
     this->muted = !this->muted;
     if(this->muted){
-        Mix_HaltMusic();
+        Mix_Pause(66);
+        Mix_Pause(80);
     }
     else {
       if (this->isFrozen()) {
-        Mix_FadeInMusic(m_res_manager.music("scary-song"), -1, 200);
+        Mix_Resume(66);
       }
       else {
-        Mix_FadeInMusic(m_res_manager.music("chill-song"), -1, 200);
+        Mix_Resume(80);
       }
     }
 }
