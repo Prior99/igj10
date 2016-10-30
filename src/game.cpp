@@ -128,6 +128,13 @@ int Game::init() {
     return 0;
 }
 
+void Game::reset() {
+    // this->states().pop();
+    this->states().push({"main", std::make_unique<MainState>(this)});
+    this->states().top().second->init();
+    this->setSanity(5.0f);
+}
+
 void Game::toggleFreeze() {
     this->freeze = !this->freeze;
     if (!this->freeze) {
