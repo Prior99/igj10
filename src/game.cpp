@@ -73,6 +73,8 @@ int Game::init() {
     m_res_manager.load_texture("player", "res/player.png", m_render);
     m_res_manager.load_texture("sidewalk", "res/sidewalk.png", m_render);
     m_res_manager.load_texture("street", "res/street.png", m_render);
+    m_res_manager.load_texture("lantern", "res/lamp.png", m_render);
+    m_res_manager.load_texture("parking-meter", "res/FunkyParkuhr.png", m_render);
     m_res_manager.load_texture("saw", "res/Saw.png", m_render);
     m_res_manager.load_texture("background", "res/background.png", m_render);
     m_res_manager.load_texture("splatter", "res/Splatter.png", m_render);
@@ -109,7 +111,9 @@ int Game::init() {
     m_res_manager.load_sound("heartbeat", "res/sounds/HeartBeatSoftLoop.mp3");
     m_res_manager.load_sound("chill-song", "res/sounds/ChillSongBeta.mp3");
     m_res_manager.load_sound("scary-song", "res/sounds/ScaryShit.mp3");
-    Mix_VolumeMusic(20);
+    m_res_manager.load_sound("dissolve", "res/sounds/Dissolve.mp3");
+    Mix_Volume(80, 40);
+    Mix_Volume(66, 30);
     // Mix_PlayMusic(m_res_manager.music("chill-song"), -1);
     Mix_PlayChannel(80,m_res_manager.sound("chill-song"), -1);
 
